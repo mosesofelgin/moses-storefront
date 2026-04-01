@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -131,6 +132,19 @@
   input[type="radio"]:not(:disabled) {
     @apply cursor-pointer;
   }
+  
+  /* Storefront typography */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Bebas Neue', sans-serif;
+  }
+  
+  body, button, input, textarea, select {
+    font-family: 'DM Mono', monospace;
+  }
+  
+  .serif-display {
+    font-family: 'Cormorant Garamond', serif;
+  }
 }
 
 @layer components {
@@ -173,5 +187,359 @@
       padding-right: 2rem;
       max-width: 1280px; /* Standard content width */
     }
+  }
+
+  /* Storefront-specific components */
+  .shop-root {
+    @apply max-w-[1100px] mx-auto px-8 pb-16 bg-[#0a0a0a] text-[#f5f2ed] min-h-screen;
+  }
+
+  .nav {
+    @apply flex justify-between items-center py-6 border-b border-[#222] sticky top-0 bg-[#0a0a0a] z-100;
+  }
+
+  .nav-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    @apply text-2xl tracking-widest text-[#f5f2ed];
+  }
+
+  .nav-right {
+    @apply flex items-center gap-8;
+  }
+
+  .cart-btn {
+    @apply border border-[#333] text-[#f5f2ed] font-mono text-xs tracking-widest px-4 py-2 cursor-pointer flex items-center gap-2 transition-all duration-200 hover:border-[#f5f2ed] hover:bg-[#111];
+  }
+
+  .cart-count {
+    @apply w-[18px] h-[18px] rounded-full bg-[#f5f2ed] text-[#0a0a0a] flex items-center justify-center text-xs font-medium;
+  }
+
+  .hero {
+    @apply py-20 border-b border-[#1a1a1a];
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    @apply text-7xl md:text-8xl leading-tight tracking-tight text-[#f5f2ed] mb-4;
+  }
+
+  .hero-sub {
+    font-family: 'Cormorant Garamond', serif;
+    @apply text-lg italic font-light text-[#8a8680] tracking-wide;
+  }
+
+  .hero-rule {
+    @apply w-12 h-px bg-[#444] my-8;
+  }
+
+  .section-header {
+    @apply flex justify-between items-baseline py-6 border-b border-[#1a1a1a] mb-8;
+  }
+
+  .section-label {
+    @apply text-xs tracking-widest uppercase text-[#8a8680];
+  }
+
+  .section-count {
+    @apply text-xs tracking-wide text-[#444];
+  }
+
+  .product-grid {
+    @apply grid grid-cols-3 gap-px bg-[#1a1a1a] border border-[#1a1a1a] mb-2;
+  }
+
+  @media (max-width: 768px) {
+    .product-grid {
+      @apply grid-cols-2;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .product-grid {
+      @apply grid-cols-1;
+    }
+  }
+
+  .product-card {
+    @apply bg-[#0a0a0a] p-0 flex flex-col cursor-pointer transition-colors duration-200 hover:bg-[#0e0e0e];
+  }
+
+  .cover-wrap {
+    @apply relative aspect-square overflow-hidden bg-[#111];
+  }
+
+  .cover-canvas {
+    @apply w-full h-full block;
+  }
+
+  .cover-overlay {
+    @apply absolute inset-0 bg-black/0 transition-all duration-300 flex items-center justify-center;
+  }
+
+  .product-card:hover .cover-overlay {
+    @apply bg-black/35;
+  }
+
+  .preview-tag {
+    @apply opacity-0 text-xs tracking-widest uppercase text-[#f5f2ed] border border-[rgba(245,242,237,0.5)] px-3 py-1 transition-opacity duration-300;
+  }
+
+  .product-card:hover .preview-tag {
+    @apply opacity-100;
+  }
+
+  .product-info {
+    @apply p-4 flex flex-col gap-1 flex-1;
+  }
+
+  .product-year {
+    @apply text-xs tracking-widest text-[#555];
+  }
+
+  .product-name {
+    font-family: 'Bebas Neue', sans-serif;
+    @apply text-2xl tracking-wider text-[#f5f2ed] leading-tight mt-1;
+  }
+
+  .product-type {
+    @apply text-xs tracking-widest uppercase text-[#8a8680];
+  }
+
+  .product-bottom {
+    @apply flex items-center justify-between mt-2 pt-2 border-t border-[#1e1e1e];
+  }
+
+  .product-price {
+    font-family: 'Cormorant Garamond', serif;
+    @apply text-lg font-semibold text-[#f5f2ed];
+  }
+
+  .add-btn {
+    @apply border border-[#333] text-[#8a8680] font-mono text-xs tracking-widest uppercase px-2 py-1 cursor-pointer transition-all duration-200 hover:border-[#f5f2ed] hover:text-[#f5f2ed] hover:bg-[#111];
+  }
+
+  .add-btn.added {
+    @apply border-[#555] text-[#666] cursor-default;
+  }
+
+  .add-btn:disabled {
+    @apply cursor-default;
+  }
+
+  /* Cart panel styles */
+  .cart-backdrop {
+    @apply hidden fixed inset-0 bg-black/70 z-50;
+  }
+
+  .cart-backdrop.open {
+    @apply block;
+  }
+
+  .cart-panel {
+    @apply fixed top-0 right-0 w-96 h-screen bg-[#0d0d0d] border-l border-[#222] z-[300] flex flex-col transition-all duration-350;
+    transform: translateX(100%);
+  }
+
+  .cart-panel.open {
+    transform: translateX(0);
+  }
+
+  .cart-header {
+    @apply p-6 border-b border-[#1e1e1e] flex justify-between items-center;
+  }
+
+  .cart-title {
+    font-family: 'Bebas Neue', sans-serif;
+    @apply text-xl tracking-widest text-[#f5f2ed];
+  }
+
+  .close-btn {
+    @apply bg-none border-none text-[#8a8680] font-mono text-xs cursor-pointer tracking-widest py-1 hover:text-[#f5f2ed] transition-colors duration-200;
+  }
+
+  .cart-items {
+    @apply flex-1 overflow-y-auto px-6 py-4;
+  }
+
+  .cart-empty {
+    @apply h-full flex flex-col items-center justify-center text-[#333] gap-2;
+  }
+
+  .cart-empty-icon {
+    @apply text-4xl text-[#222];
+  }
+
+  .cart-empty-text {
+    @apply text-xs tracking-widest uppercase;
+  }
+
+  .cart-item {
+    @apply flex gap-4 items-start py-4 border-b border-[#1a1a1a];
+  }
+
+  .cart-item-thumb {
+    @apply w-16 h-16 flex-shrink-0 border border-[#1e1e1e];
+  }
+
+  .cart-item-info {
+    @apply flex-1;
+  }
+
+  .cart-item-name {
+    font-family: 'Bebas Neue', sans-serif;
+    @apply text-base tracking-widest text-[#f5f2ed] block mb-1;
+  }
+
+  .cart-item-type {
+    @apply text-xs tracking-widest uppercase text-[#555];
+  }
+
+  .cart-item-price {
+    font-family: 'Cormorant Garamond', serif;
+    @apply text-base font-semibold text-[#f5f2ed];
+  }
+
+  .remove-item {
+    @apply bg-none border-none text-[#444] cursor-pointer text-xs py-1 font-mono tracking-widest mt-1 hover:text-[#8a8680] transition-colors duration-200;
+  }
+
+  .cart-footer {
+    @apply p-6 border-t border-[#1e1e1e];
+  }
+
+  .cart-subtotal {
+    @apply flex justify-between items-baseline mb-5;
+  }
+
+  .subtotal-label {
+    @apply text-xs tracking-widest uppercase text-[#8a8680];
+  }
+
+  .subtotal-amount {
+    font-family: 'Cormorant Garamond', serif;
+    @apply text-2xl font-semibold text-[#f5f2ed];
+  }
+
+  .checkout-btn {
+    @apply w-full bg-[#f5f2ed] border-none text-[#0a0a0a] font-mono text-xs tracking-widest uppercase px-4 py-4 cursor-pointer transition-colors duration-200 hover:bg-[#e0dcd6];
+  }
+
+  .checkout-btn:disabled {
+    @apply bg-[#1e1e1e] text-[#333] cursor-not-allowed;
+  }
+
+  /* Checkout modal */
+  .checkout-modal {
+    @apply hidden fixed inset-0 bg-black/92 z-[500] items-center justify-center;
+  }
+
+  .checkout-modal.open {
+    @apply flex;
+  }
+
+  .checkout-box {
+    @apply bg-[#0d0d0d] border border-[#222] w-full max-w-md px-10 py-10 max-h-[90vh] overflow-y-auto;
+  }
+
+  .checkout-title {
+    font-family: 'Bebas Neue', sans-serif;
+    @apply text-3xl tracking-widest text-[#f5f2ed] mb-2;
+  }
+
+  .checkout-sub {
+    @apply text-xs tracking-widest uppercase text-[#555] mb-8;
+  }
+
+  .form-group {
+    @apply mb-4;
+  }
+
+  .form-label {
+    @apply block text-xs tracking-widest uppercase text-[#555] mb-2;
+  }
+
+  .form-input {
+    @apply w-full bg-[#111] border border-[#222] text-[#f5f2ed] font-mono text-sm px-3 py-2 outline-none transition-colors duration-200;
+  }
+
+  .form-input:focus {
+    @apply border-[#555];
+  }
+
+  .form-row {
+    @apply grid grid-cols-2 gap-3;
+  }
+
+  .order-summary {
+    @apply border-t border-[#1e1e1e] mt-6 pt-6;
+  }
+
+  .order-line {
+    @apply flex justify-between text-xs tracking-widest text-[#8a8680] mb-2;
+  }
+
+  .order-total {
+    @apply flex justify-between py-3 border-t border-[#1e1e1e] mt-3;
+  }
+
+  .order-total-label {
+    @apply text-xs tracking-widest uppercase text-[#8a8680];
+  }
+
+  .order-total-amount {
+    font-family: 'Cormorant Garamond', serif;
+    @apply text-xl font-semibold text-[#f5f2ed];
+  }
+
+  .checkout-actions {
+    @apply flex gap-3 mt-8;
+  }
+
+  .btn-cancel {
+    @apply flex-1 border border-[#333] text-[#8a8680] font-mono text-xs tracking-widest uppercase px-4 py-3 cursor-pointer transition-all duration-200 hover:border-[#f5f2ed] hover:text-[#f5f2ed] hover:bg-[#111];
+  }
+
+  .btn-purchase {
+    @apply flex-1 bg-[#f5f2ed] border-none text-[#0a0a0a] font-mono text-xs tracking-widest uppercase px-4 py-3 cursor-pointer transition-colors duration-200 hover:bg-[#e0dcd6];
+  }
+
+  /* Success screen */
+  .success-screen {
+    @apply flex flex-col items-center justify-center text-center;
+  }
+
+  .success-mark {
+    @apply text-6xl text-[#f5f2ed] mb-6 font-bold;
+  }
+
+  .success-title {
+    font-family: 'Bebas Neue', sans-serif;
+    @apply text-2xl tracking-widest text-[#f5f2ed] mb-3;
+  }
+
+  .success-msg {
+    @apply text-sm text-[#8a8680] mb-8 leading-relaxed;
+  }
+
+  .download-list {
+    @apply w-full mb-8;
+  }
+
+  .download-item {
+    @apply flex justify-between items-center py-3 border-b border-[#1e1e1e] last:border-b-0;
+  }
+
+  .download-name {
+    font-family: 'Bebas Neue', sans-serif;
+    @apply text-sm tracking-widest text-[#f5f2ed];
+  }
+
+  .download-link {
+    @apply text-xs tracking-widest text-[#8a8680] cursor-pointer hover:text-[#f5f2ed] transition-colors duration-200;
+  }
+
+  .btn-done {
+    @apply bg-[#f5f2ed] border-none text-[#0a0a0a] font-mono text-xs tracking-widest uppercase px-8 py-3 cursor-pointer transition-colors duration-200 hover:bg-[#e0dcd6];
   }
 }
