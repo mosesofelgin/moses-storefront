@@ -3,8 +3,8 @@ import { PRODUCTS } from '@/data/products';
 import type { Product, CartItem } from '@/types/storefront';
 
 describe('Storefront - Products', () => {
-  it('should have exactly 5 products', () => {
-    expect(PRODUCTS).toHaveLength(5);
+  it('should have exactly 6 products', () => {
+    expect(PRODUCTS).toHaveLength(6);
   });
 
   it('should have all required product fields', () => {
@@ -33,7 +33,7 @@ describe('Storefront - Products', () => {
   });
 
   it('should have valid shape types', () => {
-    const validShapes = ['grid', 'circle', 'lines', 'dots', 'cross'];
+    const validShapes = ['grid', 'circle', 'lines', 'dots', 'cross', 'image'];
     PRODUCTS.forEach((product) => {
       expect(validShapes).toContain(product.shape);
     });
@@ -142,6 +142,7 @@ describe('Storefront - Product Details', () => {
       'MONOLITH',
       'STATIC MASS',
       'PRESSURE',
+      'CLARITY',
     ];
     PRODUCTS.forEach((product, index) => {
       expect(product.name).toBe(expectedNames[index]);
@@ -154,6 +155,7 @@ describe('Storefront - Product Details', () => {
     expect(PRODUCTS[2].type).toContain('ALBUM');
     expect(PRODUCTS[3].type).toContain('MIXTAPE');
     expect(PRODUCTS[4].type).toContain('SINGLE');
+    expect(PRODUCTS[5].type).toContain('ALBUM');
   });
 
   it('should have correct product years', () => {
@@ -162,5 +164,6 @@ describe('Storefront - Product Details', () => {
     expect(PRODUCTS[2].year).toBe('2023');
     expect(PRODUCTS[3].year).toBe('2022');
     expect(PRODUCTS[4].year).toBe('2022');
+    expect(PRODUCTS[5].year).toBe('2025');
   });
 });

@@ -10,6 +10,12 @@ export function drawCover(canvas: HTMLCanvasElement, product: Product): void {
   const s = canvas.width;
   const [c0, c1, c2, c3] = product.palette;
 
+  // Handle image-based covers
+  if (product.shape === 'image' && product.imageUrl) {
+    drawImageCover(ctx, s, product.imageUrl, product.name, c1, c3);
+    return;
+  }
+
   // Fill background
   ctx.fillStyle = c0;
   ctx.fillRect(0, 0, s, s);
@@ -35,6 +41,28 @@ export function drawCover(canvas: HTMLCanvasElement, product: Product): void {
   ctx.font = `bold ${s * 0.07}px 'Bebas Neue', sans-serif`;
   ctx.fillStyle = c3;
   ctx.fillText(product.name, s * 0.06, s * 0.93);
+}
+
+function drawImageCover(
+  ctx: CanvasRenderingContext2D,
+  s: number,
+  imageUrl: string,
+  productName: string,
+  footerColor: string,
+  textColor: string
+): void {
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = () => {
+    // Draw image to fill canvas
+    ctx.drawImage(img, 0, 0, s, s);
+  };
+  img.onerror = () => {
+    // Fallback: fill with dark color if image fails to load
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(0, 0, s, s);
+  };
+  img.src = imageUrl;
 }
 
 function drawGridPattern(

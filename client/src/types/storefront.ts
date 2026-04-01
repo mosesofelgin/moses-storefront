@@ -8,7 +8,8 @@ export interface Product {
   type: string;
   price: number;
   palette: [string, string, string, string];
-  shape: 'grid' | 'circle' | 'lines' | 'dots' | 'cross';
+  shape: 'grid' | 'circle' | 'lines' | 'dots' | 'cross' | 'image';
+  imageUrl?: string;
 }
 
 /**

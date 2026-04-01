@@ -80,6 +80,16 @@
 - [x] Test responsive breakpoints
 
 ## Deployment
-- [ ] Create checkpoint before delivery
-- [ ] Verify all features work end-to-end
-- [ ] Final visual polish and QA
+- [x] Create checkpoint before delivery
+- [x] Verify all features work end-to-end
+- [x] Final visual polish and QA
+- [x] Add Clarity album as first product upload
+- [x] All tests passing (19 tests)
+
+## New Product: Clarity Album
+- [x] Upload Clarity album cover image to CDN
+- [x] Add Clarity product to product data (6th product, $8)
+- [x] Update product grid to display 6 items
+- [x] Test Clarity album in cart and checkout flow
+- [x] Verify all 12 tracks are available for download after purchase
+- [x] Update tests to include Clarity album (6 products total)
