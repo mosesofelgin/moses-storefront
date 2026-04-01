@@ -33,9 +33,6 @@ export function ProductCard({ product, isInCart, onAddToCart }: ProductCardProps
           width={400}
           height={400}
         />
-        <div className="cover-overlay">
-          <span className="preview-tag">Preview</span>
-        </div>
       </div>
 
       <div className="product-info">
