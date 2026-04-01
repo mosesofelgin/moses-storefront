@@ -3,8 +3,8 @@ import { PRODUCTS } from '@/data/products';
 import type { Product, CartItem } from '@/types/storefront';
 
 describe('Storefront - Products', () => {
-  it('should have exactly 6 products', () => {
-    expect(PRODUCTS).toHaveLength(6);
+  it('should have exactly 1 product', () => {
+    expect(PRODUCTS).toHaveLength(1);
   });
 
   it('should have all required product fields', () => {
@@ -53,9 +53,9 @@ describe('Storefront - Products', () => {
 
 describe('Storefront - Cart Logic', () => {
   it('should calculate cart total correctly', () => {
-    const cartItems: CartItem[] = [PRODUCTS[0], PRODUCTS[1]];
+    const cartItems: CartItem[] = [PRODUCTS[0]];
     const total = cartItems.reduce((sum, item) => sum + item.price, 0);
-    expect(total).toBe(PRODUCTS[0].price + PRODUCTS[1].price);
+    expect(total).toBe(PRODUCTS[0].price);
   });
 
   it('should format price correctly', () => {
@@ -78,10 +78,10 @@ describe('Storefront - Cart Logic', () => {
   });
 
   it('should remove item from cart by ID', () => {
-    const cartItems: CartItem[] = [PRODUCTS[0], PRODUCTS[1], PRODUCTS[2]];
-    const itemIdToRemove = PRODUCTS[1].id;
+    const cartItems: CartItem[] = [PRODUCTS[0]];
+    const itemIdToRemove = PRODUCTS[0].id;
     const filtered = cartItems.filter((item) => item.id !== itemIdToRemove);
-    expect(filtered).toHaveLength(2);
+    expect(filtered).toHaveLength(0);
     expect(filtered.some((item) => item.id === itemIdToRemove)).toBe(false);
   });
 });
@@ -136,14 +136,7 @@ describe('Storefront - Checkout', () => {
 
 describe('Storefront - Product Details', () => {
   it('should have correct product names', () => {
-    const expectedNames = [
-      'VOID SIGNAL',
-      'COLLAPSE EP',
-      'MONOLITH',
-      'STATIC MASS',
-      'PRESSURE',
-      'CLARITY',
-    ];
+    const expectedNames = ['CLARITY'];
     PRODUCTS.forEach((product, index) => {
       expect(product.name).toBe(expectedNames[index]);
     });
@@ -151,19 +144,9 @@ describe('Storefront - Product Details', () => {
 
   it('should have correct product types', () => {
     expect(PRODUCTS[0].type).toContain('ALBUM');
-    expect(PRODUCTS[1].type).toContain('EP');
-    expect(PRODUCTS[2].type).toContain('ALBUM');
-    expect(PRODUCTS[3].type).toContain('MIXTAPE');
-    expect(PRODUCTS[4].type).toContain('SINGLE');
-    expect(PRODUCTS[5].type).toContain('ALBUM');
   });
 
   it('should have correct product years', () => {
-    expect(PRODUCTS[0].year).toBe('2024');
-    expect(PRODUCTS[1].year).toBe('2023');
-    expect(PRODUCTS[2].year).toBe('2023');
-    expect(PRODUCTS[3].year).toBe('2022');
-    expect(PRODUCTS[4].year).toBe('2022');
-    expect(PRODUCTS[5].year).toBe('2025');
+    expect(PRODUCTS[0].year).toBe('2025');
   });
 });
