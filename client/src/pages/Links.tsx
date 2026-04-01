@@ -1,4 +1,4 @@
-import { Music, Youtube, Radio, Globe } from 'lucide-react';
+import { Music, Youtube, Radio, Globe, Disc3 } from 'lucide-react';
 
 export default function Links() {
 
@@ -26,6 +26,27 @@ export default function Links() {
 
         {/* Links Grid */}
         <div className="space-y-4">
+          {/* Clarity Project */}
+          <a
+            href="/clarity"
+            className="block group"
+          >
+            <div className="border border-neutral-700 p-6 hover:border-neutral-500 transition-colors duration-300">
+              <div className="flex items-center gap-4">
+                <Disc3 className="w-6 h-6 text-neutral-400 group-hover:text-white transition-colors" />
+                <div className="flex-1">
+                  <h3 className="font-bebas text-xl tracking-wide">CLARITY</h3>
+                  <p className="text-neutral-500 text-sm font-dm-mono">
+                    Project Showcase
+                  </p>
+                </div>
+                <span className="text-neutral-600 group-hover:text-neutral-400 transition-colors">
+                  →
+                </span>
+              </div>
+            </div>
+          </a>
+
           {/* Shop Link */}
           <a
             href="/"
