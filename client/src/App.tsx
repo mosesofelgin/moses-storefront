@@ -6,11 +6,13 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Links from "./pages/Links";
+import ClarityProject from "./pages/ClarityProject";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
+      <Route path={"/clarity"} component={ClarityProject} />
       <Route path={"/links"} component={Links} />
       <Route path={"/"} component={Home} />
       <Route path={"/404"} component={NotFound} />
