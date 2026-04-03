@@ -176,7 +176,7 @@ export default function ClarityProject() {
             </div>
             <div className="flex justify-center">
               <img
-                src="https://cdn.manus.im/webdev/moses-storefront/clarity-cover.png"
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/ChatGPTImageMar31,2026,09_21_37PM_93a0c949.png"
                 alt="CLARITY Album Cover"
                 className="w-full max-w-sm rounded-lg shadow-2xl"
               />
