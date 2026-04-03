@@ -93,3 +93,12 @@
 - [x] Test Clarity album in cart and checkout flow
 - [x] Verify all 12 tracks are available for download after purchase
 - [x] Update tests to include Clarity album (6 products total)
+
+
+## P0 — CLARITY Sales Page Rewrite (Revenue Focus)
+- [x] Rewrite /clarity page with 7-section conversion copy
+- [x] Update price to $10 across all pages
+- [x] Add order bump option ($5 digital booklet)
+- [x] Ensure checkout flow is frictionless
+- [x] Test full purchase-to-delivery flow
+- [x] Verify all CTAs are functional
