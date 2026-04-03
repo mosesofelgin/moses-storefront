@@ -25,4 +25,22 @@ export const users = mysqlTable("users", {
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
-// TODO: Add your tables here
+/**
+ * Orders table for tracking CLARITY album purchases
+ * Stores minimal Stripe identifiers + customer email for delivery
+ */
+export const orders = mysqlTable("orders", {
+  id: int("id").autoincrement().primaryKey(),
+  stripePaymentIntentId: varchar("stripePaymentIntentId", { length: 255 }).notNull().unique(),
+  stripeCustomerId: varchar("stripeCustomerId", { length: 255 }),
+  customerEmail: varchar("customerEmail", { length: 320 }).notNull(),
+  customerName: varchar("customerName", { length: 255 }),
+  amount: int("amount").notNull(),
+  currency: varchar("currency", { length: 3 }).default("usd").notNull(),
+  status: mysqlEnum("status", ["pending", "succeeded", "failed", "canceled"]).default("pending").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Order = typeof orders.$inferSelect;
+export type InsertOrder = typeof orders.$inferInsert;

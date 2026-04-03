@@ -1,17 +1,19 @@
+'use client';
+
 import { useState } from 'react';
-import { Lock, Check } from 'lucide-react';
+import { Lock, Play } from 'lucide-react';
+import { trpc } from '@/lib/trpc';
+import { toast } from 'sonner';
 
 export default function ClarityProject() {
-  const [purchased, setPurchased] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
-  const [showOrderBump, setShowOrderBump] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    cardNumber: '',
-    expiry: '',
-    cvc: '',
   });
+  const [isLoading, setIsLoading] = useState(false);
+
+  const createCheckoutMutation = trpc.checkout.createSession.useMutation();
 
   const tracks = [
     { id: 1, title: 'Final Prayer by Moses', duration: '3:42' },
@@ -33,115 +35,34 @@ export default function ClarityProject() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handlePurchase = () => {
-    if (formData.name && formData.email && formData.cardNumber && formData.expiry && formData.cvc) {
-      setPurchased(true);
-      setShowCheckout(false);
+  const handleCheckout = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!formData.name || !formData.email) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const result = await createCheckoutMutation.mutateAsync({
+        customerEmail: formData.email,
+        customerName: formData.name,
+      });
+
+      if (result.url) {
+        window.open(result.url, '_blank');
+        toast.success('Redirecting to checkout...');
+        setShowCheckout(false);
+      }
+    } catch (error) {
+      toast.error('Failed to create checkout session');
+      console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
-
-  const handleOrderBump = () => {
-    setShowOrderBump(false);
-    // In a real system, this would process the additional charge
-  };
-
-  if (purchased && !showOrderBump) {
-    return (
-      <div className="min-h-screen bg-black text-white">
-        {/* Header */}
-        <div className="sticky top-0 z-50 border-b border-neutral-800 bg-black/95 backdrop-blur">
-          <div className="max-w-4xl mx-auto px-6 py-4">
-            <h1 className="text-2xl font-bebas tracking-widest">MOSES</h1>
-          </div>
-        </div>
-
-        {/* Success Content */}
-        <div className="max-w-4xl mx-auto px-6 py-20">
-          <div className="text-center mb-12">
-            <div className="flex justify-center mb-8">
-              <div className="w-16 h-16 bg-green-900/30 rounded-full flex items-center justify-center">
-                <Check className="w-8 h-8 text-green-400" />
-              </div>
-            </div>
-            <h2 className="text-5xl font-bebas tracking-widest mb-4">CLARITY UNLOCKED</h2>
-            <p className="text-neutral-400 font-cormorant text-xl italic mb-8">
-              Welcome to the project. Your download is ready.
-            </p>
-          </div>
-
-          {/* Download Section */}
-          <div className="bg-neutral-900/50 border border-neutral-800 p-8 rounded-lg mb-12">
-            <h3 className="font-bebas text-xl tracking-wide mb-6">Your Album</h3>
-            <div className="space-y-3">
-              {tracks.map((track) => (
-                <div key={track.id} className="flex items-center justify-between p-3 bg-black/50 rounded">
-                  <div>
-                    <p className="text-white font-dm-mono">{track.title}</p>
-                    <p className="text-neutral-500 text-sm">{track.duration}</p>
-                  </div>
-                  <a
-                    href="#"
-                    className="text-neutral-400 hover:text-white transition-colors font-dm-mono text-sm"
-                  >
-                    Download
-                  </a>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Message */}
-          <div className="text-center">
-            <p className="text-neutral-400 mb-6">
-              Thank you for supporting independent art.
-            </p>
-            <button
-              onClick={() => setShowOrderBump(true)}
-              className="px-8 py-3 bg-neutral-800 hover:bg-neutral-700 text-white font-bebas tracking-wide transition-colors"
-            >
-              Complete the Journey
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (showOrderBump) {
-    return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="max-w-2xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bebas tracking-widest mb-4">Complete the Journey</h2>
-            <p className="text-neutral-400 font-cormorant text-lg italic">
-              Add New Genesis to your collection
-            </p>
-          </div>
-
-          <div className="bg-neutral-900/50 border border-neutral-800 p-8 rounded-lg mb-8">
-            <p className="text-neutral-300 mb-6">
-              You've unlocked CLARITY. Now step deeper into the story.
-            </p>
-            <p className="text-2xl font-bebas tracking-wide mb-8">
-              CLARITY + New Genesis Bundle — $15
-            </p>
-            <button
-              onClick={handleOrderBump}
-              className="w-full px-8 py-4 bg-white text-black font-bebas tracking-wide hover:bg-neutral-200 transition-colors mb-4"
-            >
-              Add to Collection
-            </button>
-            <button
-              onClick={() => setShowOrderBump(false)}
-              className="w-full px-8 py-4 bg-neutral-800 hover:bg-neutral-700 text-white font-bebas tracking-wide transition-colors"
-            >
-              Skip for Now
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -153,217 +74,140 @@ export default function ClarityProject() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-6 py-16">
-        {/* SECTION 1: HERO */}
-        <section className="mb-20">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h1 className="text-5xl md:text-6xl font-bebas tracking-widest leading-tight mb-6">
-                10 years. One testimony. This is CLARITY.
-              </h1>
-              <p className="text-xl text-neutral-300 font-cormorant italic mb-6">
-                A 12-song project from Moses—where faith, hip-hop, and the Midwest collide.
-              </p>
-              <p className="text-neutral-500 font-dm-mono text-sm mb-8 tracking-wide">
-                CHICAGO × ELGIN × REAL LIFE × REAL GOD
-              </p>
-              <button
-                onClick={() => setShowCheckout(true)}
-                className="px-8 py-4 bg-white text-black font-bebas text-lg tracking-wide hover:bg-neutral-200 transition-colors"
-              >
-                Get CLARITY — $10
-              </button>
-            </div>
-            <div className="flex justify-center">
-              <img
-                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/ChatGPTImageMar31,2026,09_21_37PM_93a0c949.png"
-                alt="CLARITY Album Cover"
-                className="w-full max-w-sm rounded-lg shadow-2xl"
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* SECTION 2: IDENTITY */}
-        <section className="mb-20 border-t border-neutral-800 pt-16">
-          <h2 className="text-4xl font-bebas tracking-widest mb-8">This isn't for everybody.</h2>
-          <div className="space-y-6 text-neutral-300">
-            <p className="text-lg">
-              This is for people who've been through something.
-              <br />
-              Who have a story. A testimony.
-            </p>
-            <p className="text-lg">
-              For those who love rap—but need something real.
-              <br />
-              Something clean enough to live with.
-              <br />
-              Something honest enough to grow with.
-            </p>
-            <p className="font-bebas text-neutral-400 mt-8 tracking-wide">
-              If you've ever been:
-            </p>
-            <ul className="space-y-3 text-lg">
-              <li className="flex items-start gap-3">
-                <span className="text-neutral-500 mt-1">•</span>
-                <span>Rebuilding your life</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-neutral-500 mt-1">•</span>
-                <span>Searching for direction</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-neutral-500 mt-1">•</span>
-                <span>Walking with God while still loving the culture</span>
-              </li>
-            </ul>
-            <p className="text-lg mt-8 font-cormorant italic">This is for you.</p>
-          </div>
-        </section>
-
-        {/* SECTION 3: WHAT THIS IS */}
-        <section className="mb-20 border-t border-neutral-800 pt-16">
-          <h2 className="text-4xl font-bebas tracking-widest mb-8">More than music.</h2>
-          <div className="space-y-6 text-neutral-300">
-            <p className="text-lg">
-              CLARITY is a 10-year journey.
-            </p>
-            <p className="text-lg font-cormorant italic">
-              Recorded from the basement of Mount Pisgah Baptist Church.
-              <br />
-              Built between the South Side of Chicago and Elgin, Illinois.
-            </p>
-            <p className="font-bebas text-neutral-400 mt-8 tracking-wide">
-              It's where:
-            </p>
-            <ul className="space-y-3 text-lg">
-              <li className="flex items-start gap-3">
-                <span className="text-neutral-500 mt-1">•</span>
-                <span>Faith meets hip-hop</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-neutral-500 mt-1">•</span>
-                <span>Struggle meets purpose</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-neutral-500 mt-1">•</span>
-                <span>Life becomes art</span>
-              </li>
-            </ul>
-            <p className="text-lg mt-8">
-              This isn't just a project.
-              <br />
-              <span className="font-cormorant italic">It's part of a larger story. A trilogy. A transformation.</span>
-            </p>
-          </div>
-        </section>
-
-        {/* SECTION 4: WHAT YOU GET */}
-        <section className="mb-20 border-t border-neutral-800 pt-16">
-          <h2 className="text-4xl font-bebas tracking-widest mb-8">What you receive</h2>
-          <div className="bg-neutral-900/50 border border-neutral-800 p-8 rounded-lg mb-8">
-            <ul className="space-y-4">
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-neutral-400 mt-1 flex-shrink-0" />
-                <span className="text-lg">Full 12-song digital album</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-neutral-400 mt-1 flex-shrink-0" />
-                <span className="text-lg">Instant access after purchase</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-neutral-400 mt-1 flex-shrink-0" />
-                <span className="text-lg">High-quality audio files</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-neutral-400 mt-1 flex-shrink-0" />
-                <span className="text-lg">Direct connection to the artist</span>
-              </li>
-            </ul>
-          </div>
-          <button
-            onClick={() => setShowCheckout(true)}
-            className="w-full px-8 py-4 bg-white text-black font-bebas text-lg tracking-wide hover:bg-neutral-200 transition-colors"
-          >
-            Get the Album — $10
-          </button>
-        </section>
-
-        {/* SECTION 5: WHY BUY DIRECT */}
-        <section className="mb-20 border-t border-neutral-800 pt-16">
-          <h2 className="text-4xl font-bebas tracking-widest mb-8">Why buy CLARITY instead of streaming?</h2>
-          <div className="space-y-6 text-neutral-300">
-            <p className="text-lg font-cormorant italic">Streaming is passive.</p>
-            <p className="text-lg font-bebas tracking-wide text-white">This is participation.</p>
-            <p className="font-bebas text-neutral-400 mt-8 tracking-wide">
-              When you buy CLARITY:
-            </p>
-            <ul className="space-y-3 text-lg">
-              <li className="flex items-start gap-3">
-                <span className="text-neutral-500 mt-1">•</span>
-                <span>You own the project—not rent it</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-neutral-500 mt-1">•</span>
-                <span>You support independent art directly</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-neutral-500 mt-1">•</span>
-                <span>You become part of what's being built</span>
-              </li>
-            </ul>
-            <p className="text-lg mt-8">
-              One purchase does more than thousands of streams ever could.
-            </p>
-            <p className="text-lg font-cormorant italic mt-6">
-              This isn't about consumption.
-              <br />
-              It's about alignment.
-            </p>
-          </div>
-        </section>
-
-        {/* SECTION 6: ARTIST AUTHORITY */}
-        <section className="mb-20 border-t border-neutral-800 pt-16">
-          <h2 className="text-4xl font-bebas tracking-widest mb-8">Who is Moses?</h2>
-          <div className="space-y-6 text-neutral-300">
-            <p className="text-lg">
-              MIT-certified.
-              <br />
-              10 years in the craft.
-            </p>
-            <p className="text-lg">
-              Music rooted in faith.
-              <br />
-              Recorded in the church.
-            </p>
-            <p className="text-lg mt-8">
-              Not separating God from the art.
-              <br />
-              Not separating life from the music.
-            </p>
-            <p className="text-lg font-cormorant italic mt-8">
-              Building something bigger than songs—
-              <br />
-              something generational.
-              <br />
-              <br />
-              For the culture. For the people. For the future.
-            </p>
-          </div>
-        </section>
-
-        {/* SECTION 7: FINAL CLOSE */}
-        <section className="mb-20 border-t border-neutral-800 pt-16 text-center">
-          <h2 className="text-4xl font-bebas tracking-widest mb-8">If this resonates, don't wait.</h2>
-          <p className="text-2xl font-cormorant italic text-neutral-300 mb-12">
-            You already feel it.
-            <br />
-            Now step into it.
+      <div className="max-w-4xl mx-auto px-6 py-12">
+        {/* Hero Section */}
+        <section className="mb-16">
+          <h2 className="text-5xl md:text-6xl font-bebas tracking-widest mb-4">
+            10 years. One testimony. This is CLARITY.
+          </h2>
+          <p className="text-xl text-neutral-400 font-cormorant italic mb-8">
+            A 12-song project from Moses—where faith, hip-hop, and the Midwest collide.
           </p>
+          <p className="text-neutral-500 mb-8">
+            Chicago × Elgin × Real Life × Real God
+          </p>
+
+          <div className="flex justify-center">
+            <img
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/ChatGPTImageMar31,2026,09_21_37PM_93a0c949.png"
+              alt="CLARITY Album Cover"
+              className="w-full max-w-sm rounded-lg shadow-2xl"
+            />
+          </div>
+        </section>
+
+        {/* Identity Section */}
+        <section className="mb-16 bg-neutral-900/30 border border-neutral-800 p-8 rounded-lg">
+          <h3 className="text-3xl font-bebas tracking-wide mb-6">This isn't for everybody.</h3>
+          <p className="text-neutral-300 mb-4">
+            This is for people who've been through something. Who have a story. A testimony.
+          </p>
+          <p className="text-neutral-300 mb-4">
+            For those who love rap—but need something real. Something clean enough to live with. Something honest enough to grow with.
+          </p>
+          <p className="text-neutral-300">
+            If you've ever been rebuilding your life, searching for direction, or walking with God while still loving the culture—this is for you.
+          </p>
+        </section>
+
+        {/* What This Is */}
+        <section className="mb-16">
+          <h3 className="text-3xl font-bebas tracking-wide mb-6">More than music.</h3>
+          <p className="text-neutral-300 mb-4">
+            CLARITY is a 10-year journey. Recorded from the basement of Mount Pisgah Baptist Church. Built between the South Side of Chicago and Elgin, Illinois.
+          </p>
+          <p className="text-neutral-300 mb-4">
+            It's where faith meets hip-hop, struggle meets purpose, and life becomes art.
+          </p>
+          <p className="text-neutral-300">
+            This isn't just a project. It's part of a larger story. A trilogy. A transformation.
+          </p>
+        </section>
+
+        {/* Tracklist Section */}
+        <section className="mb-16">
+          <h3 className="text-3xl font-bebas tracking-wide mb-8">12 Songs. Locked.</h3>
+          <div className="space-y-3">
+            {tracks.map((track) => (
+              <div
+                key={track.id}
+                className="flex items-center justify-between p-4 bg-neutral-900/50 border border-neutral-800 rounded hover:border-neutral-700 transition"
+              >
+                <div className="flex items-center flex-1">
+                  <Lock className="w-4 h-4 text-neutral-600 mr-3" />
+                  <div>
+                    <p className="text-white font-dm-mono">{track.title}</p>
+                    <p className="text-neutral-500 text-sm">{track.duration}</p>
+                  </div>
+                </div>
+                <button disabled className="text-neutral-600 cursor-not-allowed">
+                  <Play className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* What You Get */}
+        <section className="mb-16 bg-neutral-900/30 border border-neutral-800 p-8 rounded-lg">
+          <h3 className="text-2xl font-bebas tracking-wide mb-6">What you receive</h3>
+          <ul className="space-y-3 text-neutral-300">
+            <li className="flex items-start">
+              <span className="text-red-500 mr-3">•</span>
+              <span>Full 12-song digital album</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-red-500 mr-3">•</span>
+              <span>Instant access after purchase</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-red-500 mr-3">•</span>
+              <span>High-quality audio files</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-red-500 mr-3">•</span>
+              <span>4 brand-aligned images</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-red-500 mr-3">•</span>
+              <span>Final Prayer lyric book (PDF)</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-red-500 mr-3">•</span>
+              <span>Direct connection to the artist</span>
+            </li>
+          </ul>
+        </section>
+
+        {/* Why Buy Direct */}
+        <section className="mb-16">
+          <h3 className="text-2xl font-bebas tracking-wide mb-6">Why buy direct</h3>
+          <p className="text-neutral-300 mb-4">
+            When you buy CLARITY: You own the project—not rent it. You support independent art directly. You become part of what's being built.
+          </p>
+          <p className="text-neutral-300">
+            One purchase does more than thousands of streams ever could. This isn't about consumption. It's about alignment.
+          </p>
+        </section>
+
+        {/* Artist Authority */}
+        <section className="mb-16 bg-neutral-900/30 border border-neutral-800 p-8 rounded-lg">
+          <h3 className="text-2xl font-bebas tracking-wide mb-6">Who is Moses?</h3>
+          <p className="text-neutral-300 mb-4">
+            MIT-certified. 10 years in the craft. Music rooted in faith. Recorded in the church.
+          </p>
+          <p className="text-neutral-300">
+            Not separating God from the art. Not separating life from the music. Building something bigger than songs—something generational. For the culture. For the people. For the future.
+          </p>
+        </section>
+
+        {/* CTA Section */}
+        <section className="mb-16 text-center">
+          <h3 className="text-3xl font-bebas tracking-wide mb-6">If this resonates, don't wait.</h3>
+          <p className="text-neutral-400 mb-8">You already feel it. Now step into it.</p>
           <button
             onClick={() => setShowCheckout(true)}
-            className="px-12 py-4 bg-white text-black font-bebas text-lg tracking-wide hover:bg-neutral-200 transition-colors"
+            className="px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bebas tracking-wide text-lg transition-colors"
           >
             Get CLARITY — $10
           </button>
@@ -372,81 +216,73 @@ export default function ClarityProject() {
 
       {/* Checkout Modal */}
       {showCheckout && (
-        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
           <div className="bg-neutral-900 border border-neutral-800 rounded-lg max-w-md w-full p-8">
-            <h3 className="text-2xl font-bebas tracking-widest mb-6">Get CLARITY</h3>
+            <h2 className="text-2xl font-bebas tracking-wide mb-6">Get CLARITY</h2>
 
-            {/* Order Summary */}
-            <div className="bg-black/50 p-4 rounded mb-6">
-              <div className="flex justify-between mb-2">
-                <span className="text-neutral-400">CLARITY Album</span>
-                <span className="text-white">$10.00</span>
-              </div>
-              <div className="border-t border-neutral-700 pt-2 mt-2 flex justify-between font-bebas">
-                <span>Total</span>
-                <span>$10.00</span>
-              </div>
-            </div>
-
-            {/* Form */}
-            <div className="space-y-4 mb-6">
-              <input
-                type="text"
-                name="name"
-                placeholder="Full Name"
-                value={formData.name}
-                onChange={handleInputChange}
-                className="w-full bg-black border border-neutral-700 px-4 py-2 text-white placeholder-neutral-500 focus:outline-none focus:border-neutral-500"
-              />
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className="w-full bg-black border border-neutral-700 px-4 py-2 text-white placeholder-neutral-500 focus:outline-none focus:border-neutral-500"
-              />
-              <input
-                type="text"
-                name="cardNumber"
-                placeholder="Card Number"
-                value={formData.cardNumber}
-                onChange={handleInputChange}
-                className="w-full bg-black border border-neutral-700 px-4 py-2 text-white placeholder-neutral-500 focus:outline-none focus:border-neutral-500"
-              />
-              <div className="grid grid-cols-2 gap-4">
+            <form onSubmit={handleCheckout} className="space-y-4">
+              <div>
+                <label className="block text-sm font-dm-mono text-neutral-400 mb-2">
+                  Full Name
+                </label>
                 <input
                   type="text"
-                  name="expiry"
-                  placeholder="MM / YY"
-                  value={formData.expiry}
+                  name="name"
+                  value={formData.name}
                   onChange={handleInputChange}
-                  className="bg-black border border-neutral-700 px-4 py-2 text-white placeholder-neutral-500 focus:outline-none focus:border-neutral-500"
-                />
-                <input
-                  type="text"
-                  name="cvc"
-                  placeholder="CVC"
-                  value={formData.cvc}
-                  onChange={handleInputChange}
-                  className="bg-black border border-neutral-700 px-4 py-2 text-white placeholder-neutral-500 focus:outline-none focus:border-neutral-500"
+                  className="w-full bg-black border border-neutral-800 rounded px-4 py-2 text-white focus:outline-none focus:border-red-600"
+                  placeholder="Your name"
+                  required
                 />
               </div>
-            </div>
 
-            {/* Buttons */}
-            <button
-              onClick={handlePurchase}
-              className="w-full px-6 py-3 bg-white text-black font-bebas tracking-wide hover:bg-neutral-200 transition-colors mb-3"
-            >
-              Complete Purchase
-            </button>
-            <button
-              onClick={() => setShowCheckout(false)}
-              className="w-full px-6 py-3 bg-neutral-800 text-white font-bebas tracking-wide hover:bg-neutral-700 transition-colors"
-            >
-              Cancel
-            </button>
+              <div>
+                <label className="block text-sm font-dm-mono text-neutral-400 mb-2">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full bg-black border border-neutral-800 rounded px-4 py-2 text-white focus:outline-none focus:border-red-600"
+                  placeholder="your@email.com"
+                  required
+                />
+              </div>
+
+              <div className="bg-black/50 border border-neutral-800 p-4 rounded mt-6 mb-6">
+                <p className="text-sm text-neutral-400 mb-2">Order Summary</p>
+                <div className="flex justify-between mb-2">
+                  <span>CLARITY Album Bundle</span>
+                  <span>$10.00</span>
+                </div>
+                <div className="border-t border-neutral-800 pt-2 mt-2 flex justify-between font-bebas">
+                  <span>Total</span>
+                  <span>$10.00</span>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-red-600 hover:bg-red-700 disabled:bg-neutral-700 text-white font-bebas tracking-wide py-3 rounded transition-colors"
+              >
+                {isLoading ? 'Processing...' : 'Proceed to Checkout'}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setShowCheckout(false)}
+                className="w-full bg-neutral-800 hover:bg-neutral-700 text-white font-bebas tracking-wide py-3 rounded transition-colors"
+              >
+                Cancel
+              </button>
+            </form>
+
+            <p className="text-xs text-neutral-500 text-center mt-6">
+              Secure payment powered by Stripe. Your information is encrypted and safe.
+            </p>
           </div>
         </div>
       )}
