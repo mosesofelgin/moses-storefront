@@ -42,7 +42,7 @@ export const appRouter = router({
                     name: "CLARITY Album Bundle",
                     description: "12 tracks + 4 brand images + lyric book",
                   },
-                  unit_amount: 1000,
+                  unit_amount: 100,
                 },
                 quantity: 1,
               },
