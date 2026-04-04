@@ -5,6 +5,7 @@ import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import Stripe from "stripe";
 import { createOrder } from "./orders";
+import { generateDownloadToken, verifyDownloadToken } from "./downloads";
 
 export const appRouter = router({
   system: systemRouter,
@@ -65,6 +66,15 @@ export const appRouter = router({
           console.error("Stripe session creation error:", error);
           throw new Error("Failed to create checkout session");
         }
+      }),
+  }),
+
+  downloads: router({
+    verifyToken: publicProcedure
+      .input(z.object({ token: z.string() }))
+      .query(async ({ input }) => {
+        const result = await verifyDownloadToken(input.token);
+        return result ? { valid: true, email: result.customerEmail } : { valid: false };
       }),
   }),
 });

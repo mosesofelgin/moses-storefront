@@ -44,3 +44,19 @@ export const orders = mysqlTable("orders", {
 
 export type Order = typeof orders.$inferSelect;
 export type InsertOrder = typeof orders.$inferInsert;
+
+/**
+ * Downloads table for tracking customer access tokens
+ * Allows customers to access downloads anytime with a unique token
+ */
+export const downloads = mysqlTable("downloads", {
+  id: int("id").autoincrement().primaryKey(),
+  orderId: int("orderId").notNull(),
+  downloadToken: varchar("downloadToken", { length: 255 }).notNull().unique(),
+  customerEmail: varchar("customerEmail", { length: 320 }).notNull(),
+  expiresAt: timestamp("expiresAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Download = typeof downloads.$inferSelect;
+export type InsertDownload = typeof downloads.$inferInsert;

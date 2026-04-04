@@ -8,12 +8,14 @@ import Home from "./pages/Home";
 import Links from "./pages/Links";
 import ClarityProject from "./pages/ClarityProject";
 import Success from "./pages/Success";
+import Downloads from "./pages/Downloads";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/success"} component={Success} />
+      <Route path={"/downloads"} component={Downloads} />
       <Route path={"/clarity"} component={ClarityProject} />
       <Route path={"/links"} component={Links} />
       <Route path={"/"} component={Home} />
