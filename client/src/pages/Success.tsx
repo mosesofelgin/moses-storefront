@@ -8,8 +8,7 @@ export default function Success() {
   const [location, navigate] = useLocation();
   const [playingTrack, setPlayingTrack] = useState<number | null>(null);
 
-  const GITHUB_REPO = "https://github.com/mosesofelgin/clarity-album";
-  const GITHUB_RAW_BASE = "https://raw.githubusercontent.com/mosesofelgin/clarity-album/main";
+  const GITHUB_ZIP = "https://github.com/mosesofelgin/clarity-album/archive/refs/heads/main.zip";
 
   const handleDownload = (url: string, filename: string) => {
     const link = document.createElement('a');
@@ -40,15 +39,15 @@ export default function Success() {
         {/* Quick Download Section */}
         <div className="bg-gradient-to-r from-red-600 to-red-700 rounded-lg p-8 mb-8 border border-red-500">
           <h2 className="text-2xl font-display font-bold mb-4">Get Your Album</h2>
-          <p className="text-red-100 mb-6">Download all files from GitHub.</p>
-          <a href={GITHUB_REPO} target="_blank" rel="noopener noreferrer" className="block">
+          <p className="text-red-100 mb-6">Download all 12 tracks, images, and lyric book as a single ZIP file.</p>
+          <a href={GITHUB_ZIP} className="block">
             <Button className="w-full bg-white text-red-600 hover:bg-gray-100 font-bold py-3 text-lg">
-              <ExternalLink className="w-5 h-5 mr-2" />
-              View on GitHub
+              <Download className="w-5 h-5 mr-2" />
+              Download Everything (ZIP)
             </Button>
           </a>
           <p className="text-red-100 text-sm mt-3">
-            Click individual files below to download, or visit GitHub to download all files at once.
+            All files packaged in one ZIP file from GitHub
           </p>
         </div>
 
@@ -56,52 +55,49 @@ export default function Success() {
         <div className="bg-zinc-900 rounded-lg p-8 mb-8 border border-zinc-800">
           <h2 className="text-2xl font-display font-bold mb-6">Play Your Tracks</h2>
           <div className="space-y-4">
-            {CLARITY_BUNDLE.tracks.map((track) => {
-              const githubUrl = `${GITHUB_RAW_BASE}/tracks/${String(track.id).padStart(2, '0')}-${track.title}.mp3`;
-              return (
-                <div
-                  key={track.id}
-                  className="bg-zinc-800 rounded-lg p-4 hover:bg-zinc-700 transition"
-                >
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex-1">
-                      <p className="font-semibold">{track.id}. {track.title}</p>
-                      <p className="text-sm text-gray-400">From CLARITY</p>
-                    </div>
-                    <button
-                      onClick={() => setPlayingTrack(playingTrack === track.id ? null : track.id)}
-                      className="text-red-500 hover:text-red-400 transition ml-4"
-                    >
-                      <Play className="w-6 h-6" fill="currentColor" />
-                    </button>
+            {CLARITY_BUNDLE.tracks.map((track) => (
+              <div
+                key={track.id}
+                className="bg-zinc-800 rounded-lg p-4 hover:bg-zinc-700 transition"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex-1">
+                    <p className="font-semibold">{track.id}. {track.title}</p>
+                    <p className="text-sm text-gray-400">From CLARITY</p>
                   </div>
-                  
-                  {/* Audio Player */}
-                  {playingTrack === track.id && (
-                    <audio
-                      controls
-                      autoPlay
-                      className="w-full mb-3"
-                      style={{
-                        accentColor: '#dc2626',
-                      }}
-                    >
-                      <source src={track.url} type="audio/mpeg" />
-                      Your browser does not support the audio element.
-                    </audio>
-                  )}
-
-                  {/* Download Button */}
                   <button
-                    onClick={() => handleDownload(githubUrl, `${String(track.id).padStart(2, '0')}-${track.title}.mp3`)}
-                    className="text-sm text-gray-400 hover:text-gray-200 transition flex items-center"
+                    onClick={() => setPlayingTrack(playingTrack === track.id ? null : track.id)}
+                    className="text-red-500 hover:text-red-400 transition ml-4"
                   >
-                    <Download className="w-4 h-4 mr-1" />
-                    Download MP3
+                    <Play className="w-6 h-6" fill="currentColor" />
                   </button>
                 </div>
-              );
-            })}
+                
+                {/* Audio Player */}
+                {playingTrack === track.id && (
+                  <audio
+                    controls
+                    autoPlay
+                    className="w-full mb-3"
+                    style={{
+                      accentColor: '#dc2626',
+                    }}
+                  >
+                    <source src={track.url} type="audio/mpeg" />
+                    Your browser does not support the audio element.
+                  </audio>
+                )}
+
+                {/* Download Button */}
+                <button
+                  onClick={() => handleDownload(track.url, `${String(track.id).padStart(2, '0')}-${track.title}.mp3`)}
+                  className="text-sm text-gray-400 hover:text-gray-200 transition flex items-center"
+                >
+                  <Download className="w-4 h-4 mr-1" />
+                  Download MP3
+                </button>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -133,19 +129,16 @@ export default function Success() {
               Brand Images (4)
             </h3>
             <div className="grid grid-cols-2 gap-3">
-              {CLARITY_BUNDLE.images.map((image) => {
-                const githubUrl = `${GITHUB_RAW_BASE}/images/${image.title}.jpg`;
-                return (
-                  <button
-                    key={image.id}
-                    onClick={() => handleDownload(githubUrl, `${image.title}.jpg`)}
-                    className="bg-zinc-800 p-3 rounded hover:bg-zinc-700 transition text-left"
-                  >
-                    <div className="text-sm font-medium mb-2">{image.title}</div>
-                    <Download className="w-4 h-4 text-red-500" />
-                  </button>
-                );
-              })}
+              {CLARITY_BUNDLE.images.map((image) => (
+                <button
+                  key={image.id}
+                  onClick={() => handleDownload(image.url, `${image.title}.jpg`)}
+                  className="bg-zinc-800 p-3 rounded hover:bg-zinc-700 transition text-left"
+                >
+                  <div className="text-sm font-medium mb-2">{image.title}</div>
+                  <Download className="w-4 h-4 text-red-500" />
+                </button>
+              ))}
             </div>
           </div>
 
@@ -157,7 +150,7 @@ export default function Success() {
             </h3>
             <button
               onClick={() => handleDownload(
-                `${GITHUB_RAW_BASE}/CLARITY-Lyric-Book.pdf`,
+                CLARITY_BUNDLE.lyricBook.url,
                 'CLARITY-Lyric-Book.pdf'
               )}
               className="w-full bg-zinc-800 p-4 rounded hover:bg-zinc-700 transition text-left flex items-center justify-between"
@@ -174,7 +167,7 @@ export default function Success() {
           <ul className="space-y-3 text-gray-300">
             <li className="flex items-start">
               <span className="text-red-500 mr-3 mt-1">•</span>
-              <span>Click any download button to get the file</span>
+              <span>Click "Download Everything" to get the ZIP file</span>
             </li>
             <li className="flex items-start">
               <span className="text-red-500 mr-3 mt-1">•</span>
