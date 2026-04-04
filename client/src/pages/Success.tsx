@@ -7,7 +7,8 @@ import { Download, CheckCircle, Music, Image as ImageIcon, FileText, Play, Exter
 export default function Success() {
   const [location, navigate] = useLocation();
   const [playingTrack, setPlayingTrack] = useState<number | null>(null);
-  const [downloadingZip, setDownloadingZip] = useState(false);
+
+  const GOOGLE_DRIVE_LINK = "https://drive.google.com/drive/folders/1LcmHRHs4kyURhQaACO4_6Tad5WAjUJTp?usp=sharing";
 
   const handleDownload = (url: string, filename: string) => {
     const link = document.createElement('a');
@@ -16,61 +17,6 @@ export default function Success() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  };
-
-  const handleDownloadZip = async () => {
-    setDownloadingZip(true);
-    try {
-      console.log('[Success] Starting ZIP download...');
-      const response = await fetch('/api/download/zip');
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const blob = await response.blob();
-      console.log('[Success] ZIP blob received:', blob.size, 'bytes');
-      
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'CLARITY-Album-Bundle.zip';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-      
-      console.log('[Success] ZIP download complete');
-    } catch (error) {
-      console.error('[Success] ZIP download failed:', error);
-      alert('Failed to download ZIP file. Please try downloading individual files instead.');
-    } finally {
-      setDownloadingZip(false);
-    }
-  };
-
-  const handleDownloadAll = () => {
-    // Download all tracks
-    CLARITY_BUNDLE.tracks.forEach((track, index) => {
-      setTimeout(() => {
-        handleDownload(track.url, `${String(track.id).padStart(2, '0')}-${track.title}.mp3`);
-      }, index * 300);
-    });
-
-    // Download all images
-    CLARITY_BUNDLE.images.forEach((image, index) => {
-      setTimeout(() => {
-        handleDownload(image.url, `${image.title}.jpg`);
-      }, (CLARITY_BUNDLE.tracks.length + index) * 300);
-    });
-
-    // Download lyric book
-    setTimeout(() => {
-      handleDownload(
-        CLARITY_BUNDLE.lyricBook.url,
-        'CLARITY-Lyric-Book.pdf'
-      );
-    }, (CLARITY_BUNDLE.tracks.length + CLARITY_BUNDLE.images.length) * 300);
   };
 
   return (
@@ -93,17 +39,15 @@ export default function Success() {
         {/* Quick Download Section */}
         <div className="bg-gradient-to-r from-red-600 to-red-700 rounded-lg p-8 mb-8 border border-red-500">
           <h2 className="text-2xl font-display font-bold mb-4">Get Your Album</h2>
-          <p className="text-red-100 mb-6">Download all 12 tracks, images, and lyric book as a single ZIP file.</p>
-          <Button
-            onClick={handleDownloadZip}
-            disabled={downloadingZip}
-            className="w-full bg-white text-red-600 hover:bg-gray-100 font-bold py-3 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <Download className="w-5 h-5 mr-2" />
-            {downloadingZip ? 'Creating ZIP... This may take 30-60 seconds' : 'Download Everything (ZIP)'}
-          </Button>
+          <p className="text-red-100 mb-6">Download all 12 tracks, images, and lyric book from Google Drive.</p>
+          <a href={GOOGLE_DRIVE_LINK} target="_blank" rel="noopener noreferrer" className="block">
+            <Button className="w-full bg-white text-red-600 hover:bg-gray-100 font-bold py-3 text-lg">
+              <Download className="w-5 h-5 mr-2" />
+              Download from Google Drive
+            </Button>
+          </a>
           <p className="text-red-100 text-sm mt-3">
-            Alternatively, you can download individual files below
+            All files are available in one folder. You can download them individually or select all.
           </p>
         </div>
 
@@ -223,11 +167,11 @@ export default function Success() {
           <ul className="space-y-3 text-gray-300">
             <li className="flex items-start">
               <span className="text-red-500 mr-3 mt-1">•</span>
-              <span>All files are ready to download immediately</span>
+              <span>Click "Download from Google Drive" to access all files</span>
             </li>
             <li className="flex items-start">
               <span className="text-red-500 mr-3 mt-1">•</span>
-              <span>Check your email for a receipt and download links</span>
+              <span>Check your email for a receipt and download link</span>
             </li>
             <li className="flex items-start">
               <span className="text-red-500 mr-3 mt-1">•</span>
