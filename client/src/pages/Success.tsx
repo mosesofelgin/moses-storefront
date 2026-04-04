@@ -7,6 +7,7 @@ import { Download, CheckCircle, Music, Image as ImageIcon, FileText, Play, Exter
 export default function Success() {
   const [location, navigate] = useLocation();
   const [playingTrack, setPlayingTrack] = useState<number | null>(null);
+  const [downloadingZip, setDownloadingZip] = useState(false);
 
   const handleDownload = (url: string, filename: string) => {
     const link = document.createElement('a');
@@ -15,6 +16,37 @@ export default function Success() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const handleDownloadZip = async () => {
+    setDownloadingZip(true);
+    try {
+      console.log('[Success] Starting ZIP download...');
+      const response = await fetch('/api/download/zip');
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+      console.log('[Success] ZIP blob received:', blob.size, 'bytes');
+      
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'CLARITY-Album-Bundle.zip';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      console.log('[Success] ZIP download complete');
+    } catch (error) {
+      console.error('[Success] ZIP download failed:', error);
+      alert('Failed to download ZIP file. Please try downloading individual files instead.');
+    } finally {
+      setDownloadingZip(false);
+    }
   };
 
   const handleDownloadAll = () => {
@@ -61,14 +93,18 @@ export default function Success() {
         {/* Quick Download Section */}
         <div className="bg-gradient-to-r from-red-600 to-red-700 rounded-lg p-8 mb-8 border border-red-500">
           <h2 className="text-2xl font-display font-bold mb-4">Get Your Album</h2>
-          <p className="text-red-100 mb-6">Download all 12 tracks, images, and lyric book.</p>
+          <p className="text-red-100 mb-6">Download all 12 tracks, images, and lyric book as a single ZIP file.</p>
           <Button
-            onClick={handleDownloadAll}
-            className="w-full bg-white text-red-600 hover:bg-gray-100 font-bold py-3 text-lg"
+            onClick={handleDownloadZip}
+            disabled={downloadingZip}
+            className="w-full bg-white text-red-600 hover:bg-gray-100 font-bold py-3 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Download className="w-5 h-5 mr-2" />
-            Download Everything
+            {downloadingZip ? 'Creating ZIP... This may take 30-60 seconds' : 'Download Everything (ZIP)'}
           </Button>
+          <p className="text-red-100 text-sm mt-3">
+            Alternatively, you can download individual files below
+          </p>
         </div>
 
         {/* Music Players Section */}

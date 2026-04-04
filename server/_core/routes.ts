@@ -2,6 +2,7 @@ import { Express, Request, Response } from "express";
 import { verifyDownloadToken, getOrderByToken } from "../downloads";
 import { createClarityBundle } from "../zip-service";
 import { verifyWebhookSignature, processWebhookEvent } from "./stripe-webhook";
+import { streamZipDownload, getClarityAlbumFiles } from "./zip-download";
 import https from "https";
 import http from "http";
 
@@ -139,6 +140,23 @@ export function registerRoutes(app: Express) {
       console.error("[Download ZIP] Error:", error);
       if (!res.headersSent) {
         res.status(500).json({ error: "Failed to download ZIP" });
+      }
+    }
+  });
+
+  /**
+   * GET /api/download/zip
+   * Download CLARITY album as ZIP (no token required for testing)
+   */
+  app.get("/api/download/zip", async (req: Request, res: Response) => {
+    try {
+      console.log("[ZIP Download] Request received");
+      const files = getClarityAlbumFiles();
+      await streamZipDownload(files, res, "CLARITY-Album-Bundle.zip");
+    } catch (error) {
+      console.error("[ZIP Download] Error:", error);
+      if (!res.headersSent) {
+        res.status(500).json({ error: "Failed to create ZIP file" });
       }
     }
   });
