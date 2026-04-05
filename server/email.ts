@@ -1,14 +1,6 @@
-import nodemailer from "nodemailer";
+import { Resend } from 'resend';
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || "smtp.gmail.com",
-  port: parseInt(process.env.SMTP_PORT || "587"),
-  secure: process.env.SMTP_SECURE === "true",
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASSWORD,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export interface EmailOptions {
   to: string;
@@ -18,23 +10,27 @@ export interface EmailOptions {
 }
 
 /**
- * Send an email using the configured SMTP server
+ * Send an email using Resend
  */
 export async function sendEmail(options: EmailOptions): Promise<boolean> {
   try {
-    // Check if SMTP is configured
-    if (!process.env.SMTP_USER || !process.env.SMTP_PASSWORD) {
-      console.warn("[Email] SMTP not configured, skipping email send");
+    // Check if Resend API key is configured
+    if (!process.env.RESEND_API_KEY) {
+      console.warn("[Email] Resend API key not configured, skipping email send");
       return false;
     }
 
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM || process.env.SMTP_USER,
+    const result = await resend.emails.send({
+      from: 'MOSES Storefront <noreply@resend.dev>',
       to: options.to,
       subject: options.subject,
       html: options.html,
-      text: options.text,
     });
+
+    if (result.error) {
+      console.error("[Email] Failed to send email:", result.error);
+      return false;
+    }
 
     console.log(`[Email] Sent email to ${options.to}`);
     return true;
@@ -53,38 +49,66 @@ export async function sendPurchaseConfirmationEmail(
   downloadToken: string,
   downloadUrl: string
 ): Promise<boolean> {
-  const subject = "Your CLARITY Album - Download Now";
+  const subject = "🎵 Your CLARITY Album is Ready to Download";
   const html = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h1 style="color: #333;">Thank You for Your Purchase!</h1>
-      
-      <p>Hi ${escapeHtml(customerName)},</p>
-      
-      <p>Your purchase of <strong>CLARITY</strong> by MOSES has been confirmed. You can now download your album bundle.</p>
-      
-      <div style="background-color: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
-        <h2 style="margin-top: 0;">Your Download Link</h2>
-        <p>
-          <a href="${downloadUrl}" style="display: inline-block; background-color: #000; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">
-            Download CLARITY Bundle
-          </a>
-        </p>
-        <p style="font-size: 12px; color: #666;">This link will remain active for 365 days.</p>
-      </div>
-      
-      <h3>What You're Getting:</h3>
-      <ul>
-        <li>12 tracks (MP3 format)</li>
-        <li>4 brand images</li>
-        <li>Lyric book (PDF)</li>
-      </ul>
-      
-      <p>If you have any questions, feel free to reach out.</p>
-      
-      <p style="color: #666; font-size: 12px; margin-top: 40px;">
-        This is an automated message. Please do not reply to this email.
-      </p>
-    </div>
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { text-align: center; margin-bottom: 30px; }
+          .header h1 { color: #dc2626; margin: 0; font-size: 28px; }
+          .content { background: #f9fafb; padding: 30px; border-radius: 8px; margin-bottom: 30px; }
+          .button { display: inline-block; background: #dc2626; color: white; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-weight: bold; margin: 20px 0; }
+          .button:hover { background: #b91c1c; }
+          .footer { text-align: center; color: #666; font-size: 12px; border-top: 1px solid #e5e7eb; padding-top: 20px; }
+          .track-list { background: white; padding: 20px; border-radius: 6px; margin: 20px 0; }
+          .track-list h3 { color: #dc2626; margin-top: 0; }
+          .track-item { padding: 8px 0; border-bottom: 1px solid #e5e7eb; }
+          .track-item:last-child { border-bottom: none; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>🎵 CLARITY</h1>
+            <p style="margin: 10px 0 0 0; color: #666;">Thank you for your purchase!</p>
+          </div>
+
+          <div class="content">
+            <p>Hi ${escapeHtml(customerName)},</p>
+            
+            <p>Thank you for purchasing <strong>CLARITY</strong>! Your album is ready to download.</p>
+
+            <p style="text-align: center;">
+              <a href="${downloadUrl}" class="button">📥 Download Your Album</a>
+            </p>
+
+            <p>This link will always be available, so you can come back and download your files anytime.</p>
+
+            <div class="track-list">
+              <h3>📀 What You're Getting:</h3>
+              <div class="track-item">✓ 12 Premium Tracks (MP3)</div>
+              <div class="track-item">✓ 4 Brand Images (High Resolution)</div>
+              <div class="track-item">✓ Complete Lyric Book (PDF)</div>
+            </div>
+
+            <p><strong>Stream Everywhere:</strong></p>
+            <p>Listen to CLARITY on all major platforms:</p>
+            <p style="text-align: center;">
+              <a href="https://distrokid.com/hyperfollow/mosesofelgin/clarity?ref=release" style="color: #dc2626; text-decoration: none; font-weight: bold;">🎧 Apple Music • Spotify • YouTube Music & More</a>
+            </p>
+          </div>
+
+          <div class="footer">
+            <p>© 2026 MOSES Storefront. All rights reserved.</p>
+            <p>Questions? Reply to this email or visit our website.</p>
+          </div>
+        </div>
+      </body>
+    </html>
   `;
 
   return sendEmail({
