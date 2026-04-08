@@ -40,10 +40,10 @@ export const appRouter = router({
                 price_data: {
                   currency: "usd",
                   product_data: {
-                    name: "CLARITY Album Bundle",
-                    description: "12 tracks + 4 brand images + lyric book",
+                    name: "CLARITY by Moses",
+                    description: "Full digital album — 12 tracks + 5 photos (instant download)",
                   },
-                  unit_amount: 100,
+                  unit_amount: 1200,
                 },
                 quantity: 1,
               },
