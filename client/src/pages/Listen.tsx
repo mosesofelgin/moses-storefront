@@ -1,14 +1,32 @@
 import { Link } from 'wouter';
 import { CLARITY_BUNDLE } from '@/data/clarity-bundle';
-import { useState } from 'react';
-import { Play, Pause } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { Play, Pause, Volume2 } from 'lucide-react';
 
 export default function Listen() {
   const [playingTrackId, setPlayingTrackId] = useState<number | null>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   const handleBuyClick = () => {
     // Navigate to store for purchase
     window.location.href = '/store';
+  };
+
+  const handlePlayTrack = (trackId: number, url: string) => {
+    if (playingTrackId === trackId) {
+      // Pause
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      setPlayingTrackId(null);
+    } else {
+      // Play new track
+      if (audioRef.current) {
+        audioRef.current.src = url;
+        audioRef.current.play();
+      }
+      setPlayingTrackId(trackId);
+    }
   };
 
   return (
@@ -34,9 +52,7 @@ export default function Listen() {
               >
                 <div className="flex items-center gap-4 flex-1 min-w-0">
                   <button
-                    onClick={() =>
-                      setPlayingTrackId(playingTrackId === track.id ? null : track.id)
-                    }
+                    onClick={() => handlePlayTrack(track.id, track.url)}
                     className="flex-shrink-0 w-10 h-10 rounded-full bg-green-500 text-black flex items-center justify-center hover:bg-green-600 transition"
                   >
                     {playingTrackId === track.id ? (
@@ -54,7 +70,23 @@ export default function Listen() {
               </div>
             ))}
           </div>
+          {/* Hidden audio player */}
+          <audio
+            ref={audioRef}
+            onEnded={() => setPlayingTrackId(null)}
+            className="hidden"
+          />
         </div>
+
+        {/* Now Playing Indicator */}
+        {playingTrackId && (
+          <div className="bg-green-500 text-black p-3 rounded mb-8 flex items-center gap-2">
+            <Volume2 className="w-4 h-4" />
+            <span className="text-sm font-medium">
+              Now playing: {CLARITY_BUNDLE.tracks.find(t => t.id === playingTrackId)?.title}
+            </span>
+          </div>
+        )}
 
         {/* Purchase CTA */}
         <div className="mb-8">
