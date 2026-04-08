@@ -62,16 +62,16 @@ export default function Home() {
           </div>
 
           {/* Secondary CTA - Digital Transformation */}
-          <div className="mb-12">
+          <div className="mb-12 w-full md:max-w-md mx-auto">
             <a
               href="https://www.sharetheicecream.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 px-6 py-3 bg-neutral-900/50 border border-neutral-700 text-neutral-200 rounded-lg hover:border-neutral-500 hover:bg-neutral-800/50 transition-all duration-300 group"
+              className="group relative overflow-hidden w-full bg-gradient-to-r from-yellow-500 to-amber-600 text-black font-bebas tracking-wide py-4 px-6 rounded-lg transition-all duration-300 hover:shadow-2xl hover:shadow-yellow-500/50 transform hover:-translate-y-1 flex items-center justify-center gap-2"
             >
-              <Zap className="w-4 h-4 text-yellow-500" />
-              <span className="text-sm font-dm-mono">Digital Transformation</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <Zap className="w-5 h-5" />
+              <span className="text-lg">DIGITAL TRANSFORMATION</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </a>
           </div>
 
