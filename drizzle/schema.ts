@@ -60,3 +60,19 @@ export const downloads = mysqlTable("downloads", {
 
 export type Download = typeof downloads.$inferSelect;
 export type InsertDownload = typeof downloads.$inferInsert;
+
+/**
+ * Subscribers table for email list capture via Connect page
+ * Owned audience for direct communication (DotCom Secrets: "The List")
+ */
+export const subscribers = mysqlTable("subscribers", {
+  id: int("id").autoincrement().primaryKey(),
+  email: varchar("email", { length: 320 }).notNull().unique(),
+  source: varchar("source", { length: 64 }).default("connect_page").notNull(),
+  status: mysqlEnum("status", ["active", "unsubscribed"]).default("active").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Subscriber = typeof subscribers.$inferSelect;
+export type InsertSubscriber = typeof subscribers.$inferInsert;

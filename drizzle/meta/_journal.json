@@ -22,6 +22,13 @@
       "when": 1775199249233,
       "tag": "0002_mysterious_silver_samurai",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1775667644238,
+      "tag": "0003_elite_goblin_queen",
+      "breakpoints": true
     }
   ]
 }

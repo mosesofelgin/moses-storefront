@@ -6,6 +6,7 @@ import { z } from "zod";
 import Stripe from "stripe";
 import { createOrder } from "./orders";
 import { generateDownloadToken, verifyDownloadToken } from "./downloads";
+import { subscribeEmail, getSubscriberCount } from "./subscribers";
 
 export const appRouter = router({
   system: systemRouter,
@@ -76,6 +77,20 @@ export const appRouter = router({
         const result = await verifyDownloadToken(input.token);
         return result ? { valid: true, email: result.customerEmail } : { valid: false };
       }),
+  }),
+
+  subscribe: router({
+    addEmail: publicProcedure
+      .input(z.object({ email: z.string().email() }))
+      .mutation(async ({ input }) => {
+        const result = await subscribeEmail(input.email);
+        return result;
+      }),
+
+    getCount: publicProcedure.query(async () => {
+      const count = await getSubscriberCount();
+      return { count };
+    }),
   }),
 });
 

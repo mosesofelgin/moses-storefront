@@ -2,10 +2,12 @@ import { Link } from 'wouter';
 import { Mail, Youtube, Instagram, Twitter } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { trpc } from '../lib/trpc';
 
 export default function Connect() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
+  const subscribeMutation = trpc.subscribe.addEmail.useMutation();
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,10 +18,15 @@ export default function Connect() {
 
     setLoading(true);
     try {
-      // TODO: Integrate with email service (Resend/Mailchimp)
-      toast.success('Thanks for signing up!');
-      setEmail('');
+      const result = await subscribeMutation.mutateAsync({ email });
+      if (result.success) {
+        toast.success('Thanks for signing up! Check your email for a welcome message.');
+        setEmail('');
+      } else {
+        toast.error(result.message || 'Failed to sign up. Please try again.');
+      }
     } catch (error) {
+      console.error('Subscribe error:', error);
       toast.error('Failed to sign up. Please try again.');
     } finally {
       setLoading(false);
