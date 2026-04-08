@@ -1,89 +1,41 @@
-import { useState } from 'react';
-import { Navigation } from '@/components/Navigation';
-import { Hero } from '@/components/Hero';
-import { ProductGrid } from '@/components/ProductGrid';
-import { CartPanel } from '@/components/CartPanel';
-import { CheckoutModal, type CheckoutFormData } from '@/components/CheckoutModal';
-import { SuccessScreen } from '@/components/SuccessScreen';
-import { PRODUCTS } from '@/data/products';
-import type { Product, CartItem } from '@/types/storefront';
+import { Link } from 'wouter';
 
 export default function Home() {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
-  const [purchasedItems, setPurchasedItems] = useState<CartItem[]>([]);
-
-  const handleAddToCart = (product: Product) => {
-    if (!cartItems.find((item) => item.id === product.id)) {
-      setCartItems((prev) => [...prev, product]);
-    }
-  };
-
-  const handleRemoveFromCart = (id: number) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  const handleOpenCheckout = () => {
-    setIsCartOpen(false);
-    setIsCheckoutOpen(true);
-  };
-
-  const handleCloseCheckout = () => {
-    setIsCheckoutOpen(false);
-  };
-
-  const handleCompleteCheckout = (formData: CheckoutFormData) => {
-    // Store purchased items for success screen
-    setPurchasedItems([...cartItems]);
-
-    // Reset cart and close checkout
-    setCartItems([]);
-    setIsCheckoutOpen(false);
-    setIsSuccessOpen(true);
-  };
-
-  const handleContinueShopping = () => {
-    setIsSuccessOpen(false);
-    setPurchasedItems([]);
-  };
-
   return (
-    <div className="shop-root">
-      <Navigation
-        cartCount={cartItems.length}
-        onCartClick={() => setIsCartOpen(true)}
-      />
+    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-4">
+      <div className="text-center max-w-md">
+        {/* Date Stamp */}
+        <div className="text-sm opacity-70 mb-8 tracking-widest">
+          Clarity Season 1: April 2026
+        </div>
 
-      <Hero />
+        {/* Brand */}
+        <h1 className="text-5xl font-light mb-6">Moses</h1>
 
-      <ProductGrid
-        products={PRODUCTS}
-        cartItems={cartItems}
-        onAddToCart={handleAddToCart}
-      />
+        {/* CTAs */}
+        <div className="space-y-3 mb-12">
+          <Link href="/listen">
+            <a className="block w-full py-3 px-6 bg-green-500 text-black font-medium rounded hover:bg-green-600 transition transform hover:-translate-y-0.5">
+              Listen
+            </a>
+          </Link>
+          <Link href="/store">
+            <a className="block w-full py-3 px-6 border border-white text-white font-medium rounded hover:bg-white hover:text-black transition transform hover:-translate-y-0.5">
+              Store
+            </a>
+          </Link>
+          <Link href="/connect">
+            <a className="block w-full py-3 px-6 bg-blue-400 text-black font-medium rounded hover:bg-blue-500 transition transform hover:-translate-y-0.5">
+              Connect
+            </a>
+          </Link>
+        </div>
 
-      <CartPanel
-        isOpen={isCartOpen}
-        items={cartItems}
-        onClose={() => setIsCartOpen(false)}
-        onRemoveItem={handleRemoveFromCart}
-        onCheckout={handleOpenCheckout}
-      />
-
-      <CheckoutModal
-        isOpen={isCheckoutOpen}
-        items={cartItems}
-        onClose={handleCloseCheckout}
-        onSubmit={handleCompleteCheckout}
-      />
-
-      <SuccessScreen
-        isOpen={isSuccessOpen}
-        items={purchasedItems}
-        onContinue={handleContinueShopping}
-      />
+        {/* Footer */}
+        <p className="text-xs opacity-60">
+          Truth-driven music • Direct-to-consumer • Owned infrastructure
+        </p>
+      </div>
     </div>
   );
 }

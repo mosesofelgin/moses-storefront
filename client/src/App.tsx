@@ -9,6 +9,9 @@ import Links from "./pages/Links";
 import ClarityProject from "./pages/ClarityProject";
 import Success from "./pages/Success";
 import Downloads from "./pages/Downloads";
+import Listen from "./pages/Listen";
+import Store from "./pages/Store";
+import Connect from "./pages/Connect";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -18,6 +21,9 @@ function Router() {
       <Route path={"/downloads"} component={Downloads} />
       <Route path={"/clarity"} component={ClarityProject} />
       <Route path={"/links"} component={Links} />
+      <Route path={"/listen"} component={Listen} />
+      <Route path={"/store"} component={Store} />
+      <Route path={"/connect"} component={Connect} />
       <Route path={"/"} component={Home} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
