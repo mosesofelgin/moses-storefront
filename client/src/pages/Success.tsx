@@ -17,8 +17,6 @@ export default function Success() {
   const [, navigate] = useLocation();
   const [playingId, setPlayingId] = useState<number | null>(null);
   const [audioEl, setAudioEl] = useState<HTMLAudioElement | null>(null);
-  const [zipping, setZipping] = useState(false);
-
   const playTrack = (track: (typeof CLARITY_BUNDLE.tracks)[0]) => {
     if (audioEl) {
       audioEl.pause();
@@ -36,28 +34,6 @@ export default function Success() {
     };
     setAudioEl(a);
     setPlayingId(track.id);
-  };
-
-  const downloadZip = async () => {
-    setZipping(true);
-    try {
-      // Fetch the ZIP from the server and trigger a browser download
-      const response = await fetch("/api/download/zip");
-      if (!response.ok) throw new Error("ZIP failed");
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "CLARITY-by-Moses.zip";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } catch {
-      alert("Download failed. Please try again or use the individual links below.");
-    } finally {
-      setZipping(false);
-    }
   };
 
   return (
@@ -83,27 +59,18 @@ export default function Success() {
           <PackageOpen className="w-10 h-10 mx-auto mb-3 text-white" />
           <h2 className="text-xl font-bold mb-1">Download Everything</h2>
           <p className="text-gray-400 text-sm mb-5">
-            One ZIP file — all 12 tracks + 5 photos bundled together.
+            One ZIP file — all 12 tracks + 5 photos bundled together (~130MB).
           </p>
-          <Button
-            onClick={downloadZip}
-            disabled={zipping}
-            className="w-full bg-white text-black hover:bg-gray-200 font-bold py-4 text-base disabled:opacity-60"
+          <a
+            href="/api/download/zip"
+            download="CLARITY-by-Moses.zip"
+            className="flex items-center justify-center gap-2 w-full bg-white text-black hover:bg-gray-200 font-bold py-4 text-base rounded-md transition"
           >
-            {zipping ? (
-              <>
-                <Download className="w-5 h-5 mr-2 animate-bounce" />
-                Building your ZIP… this takes ~10 seconds
-              </>
-            ) : (
-              <>
-                <Download className="w-5 h-5 mr-2" />
-                Download CLARITY.zip (17 files)
-              </>
-            )}
-          </Button>
+            <Download className="w-5 h-5" />
+            Download CLARITY.zip (17 files)
+          </a>
           <p className="text-gray-600 text-xs mt-3">
-            ZIP builds on our server — do not close the tab while it loads.
+            The file is ~130MB — your browser will start downloading automatically.
           </p>
         </section>
 
