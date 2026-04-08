@@ -1,5 +1,5 @@
 import { Link } from 'wouter';
-import { Mail, Youtube, Instagram, Twitter } from 'lucide-react';
+import { Mail, Youtube, Instagram, Twitter, Music } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { trpc } from '../lib/trpc';
@@ -100,36 +100,60 @@ export default function Connect() {
         {/* Social Links */}
         <div className="flex justify-center gap-6 mb-12">
           <a
-            href="https://youtube.com"
+            href="https://youtube.com/@mosessog"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-zinc-700 transition"
+            className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-red-600 transition"
             aria-label="YouTube"
+            title="YouTube: @mosessog"
           >
             <Youtube className="w-6 h-6" />
           </a>
           <a
-            href="https://instagram.com"
+            href="https://instagram.com/moses_sog"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-zinc-700 transition"
+            className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-pink-600 transition"
             aria-label="Instagram"
+            title="Instagram: @moses_sog"
           >
             <Instagram className="w-6 h-6" />
           </a>
           <a
-            href="https://twitter.com"
+            href="https://x.com/sogmoses"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-zinc-700 transition"
-            aria-label="Twitter/X"
+            className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-white hover:text-black transition"
+            aria-label="X (Twitter)"
+            title="X: @sogmoses"
           >
             <Twitter className="w-6 h-6" />
           </a>
           <a
-            href="mailto:contact@moses.com"
-            className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-zinc-700 transition"
+            href="https://twitch.tv/mosessog"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-purple-600 transition"
+            aria-label="Twitch"
+            title="Twitch: mosessog"
+          >
+            <Music className="w-6 h-6" />
+          </a>
+          <a
+            href="https://tiktok.com/@mosessog"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-black transition border border-white"
+            aria-label="TikTok"
+            title="TikTok: @mosessog"
+          >
+            <span className="text-sm font-bold">TK</span>
+          </a>
+          <a
+            href="mailto:mosessog@gmail.com"
+            className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-blue-600 transition"
             aria-label="Email"
+            title="Email: mosessog@gmail.com"
           >
             <Mail className="w-6 h-6" />
           </a>
