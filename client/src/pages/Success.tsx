@@ -17,6 +17,7 @@ export default function Success() {
   const [, navigate] = useLocation();
   const [playingId, setPlayingId] = useState<number | null>(null);
   const [audioEl, setAudioEl] = useState<HTMLAudioElement | null>(null);
+  const [zipping, setZipping] = useState(false);
 
   const playTrack = (track: (typeof CLARITY_BUNDLE.tracks)[0]) => {
     if (audioEl) {
@@ -37,43 +38,26 @@ export default function Success() {
     setPlayingId(track.id);
   };
 
-  const downloadFile = (url: string, filename: string) => {
-    // Open in new tab — most reliable cross-browser download from CDN
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  };
-
-  const [downloading, setDownloading] = useState(false);
-  const [downloadProgress, setDownloadProgress] = useState(0);
-
-  const downloadAll = async () => {
-    setDownloading(true);
-    setDownloadProgress(0);
-    const allFiles = [
-      ...CLARITY_BUNDLE.tracks.map((t) => ({ url: t.url, filename: t.filename })),
-      ...CLARITY_BUNDLE.images.map((i) => ({ url: i.url, filename: i.filename })),
-    ];
-    for (let i = 0; i < allFiles.length; i++) {
-      const { url, filename } = allFiles[i];
+  const downloadZip = async () => {
+    setZipping(true);
+    try {
+      // Fetch the ZIP from the server and trigger a browser download
+      const response = await fetch("/api/download/zip");
+      if (!response.ok) throw new Error("ZIP failed");
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = filename;
-      a.target = "_blank";
-      a.rel = "noopener noreferrer";
+      a.download = "CLARITY-by-Moses.zip";
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      setDownloadProgress(i + 1);
-      // Small delay so browser doesn't block multiple downloads
-      await new Promise((r) => setTimeout(r, 600));
+      URL.revokeObjectURL(url);
+    } catch {
+      alert("Download failed. Please try again or use the individual links below.");
+    } finally {
+      setZipping(false);
     }
-    setDownloading(false);
   };
 
   return (
@@ -88,45 +72,45 @@ export default function Success() {
           <CheckCircle className="w-14 h-14 text-green-400 mx-auto mb-4" />
           <h1 className="text-5xl font-black tracking-tight mb-3">THANK YOU</h1>
           <p className="text-xl text-gray-300 mb-1">Your copy of CLARITY is ready.</p>
-          <p className="text-gray-500 text-sm">Download your files below or stream on all platforms.</p>
+          <p className="text-gray-500 text-sm">All 12 tracks + 5 photos — download below.</p>
         </div>
       </div>
 
       <div className="max-w-2xl mx-auto px-4 pb-20 space-y-10">
 
-        {/* ── DOWNLOAD ALL ── */}
-        <section className="bg-zinc-900 border border-zinc-700 rounded-xl p-6">
-          <div className="flex items-center gap-3 mb-3">
-            <PackageOpen className="w-6 h-6 text-white" />
-            <h2 className="text-lg font-bold">Download All Files</h2>
-          </div>
+        {/* ── DOWNLOAD EVERYTHING ── */}
+        <section className="bg-zinc-900 border border-zinc-700 rounded-xl p-6 text-center">
+          <PackageOpen className="w-10 h-10 mx-auto mb-3 text-white" />
+          <h2 className="text-xl font-bold mb-1">Download Everything</h2>
           <p className="text-gray-400 text-sm mb-5">
-            Downloads all 12 tracks and 5 photos one by one directly to your device.
-            Your browser may ask permission to download multiple files — click <strong className="text-white">Allow</strong>.
+            One ZIP file — all 12 tracks + 5 photos bundled together.
           </p>
           <Button
-            onClick={downloadAll}
-            disabled={downloading}
-            className="w-full bg-white text-black hover:bg-gray-200 font-bold py-3 text-base disabled:opacity-60"
+            onClick={downloadZip}
+            disabled={zipping}
+            className="w-full bg-white text-black hover:bg-gray-200 font-bold py-4 text-base disabled:opacity-60"
           >
-            {downloading ? (
+            {zipping ? (
               <>
                 <Download className="w-5 h-5 mr-2 animate-bounce" />
-                Downloading {downloadProgress} / {CLARITY_BUNDLE.tracks.length + CLARITY_BUNDLE.images.length}...
+                Building your ZIP… this takes ~10 seconds
               </>
             ) : (
               <>
                 <Download className="w-5 h-5 mr-2" />
-                Download All ({CLARITY_BUNDLE.tracks.length + CLARITY_BUNDLE.images.length} files)
+                Download CLARITY.zip (17 files)
               </>
             )}
           </Button>
+          <p className="text-gray-600 text-xs mt-3">
+            ZIP builds on our server — do not close the tab while it loads.
+          </p>
         </section>
 
         {/* ── TRACKS ── */}
         <section>
           <h2 className="text-xs font-bold tracking-widest text-gray-500 uppercase mb-4 flex items-center gap-2">
-            <Music className="w-4 h-4" /> 12 Tracks
+            <Music className="w-4 h-4" /> 12 Tracks — individual downloads
           </h2>
           <div className="space-y-2">
             {CLARITY_BUNDLE.tracks.map((track) => (
@@ -134,12 +118,9 @@ export default function Success() {
                 key={track.id}
                 className="flex items-center gap-3 bg-zinc-900 hover:bg-zinc-800 transition rounded-lg px-4 py-3"
               >
-                {/* Track number */}
                 <span className="text-gray-600 text-sm w-5 text-right shrink-0">
                   {track.id}
                 </span>
-
-                {/* Play button */}
                 <button
                   onClick={() => playTrack(track)}
                   className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-white text-black hover:bg-gray-200 transition"
@@ -151,18 +132,17 @@ export default function Success() {
                     <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
                   )}
                 </button>
-
-                {/* Title */}
                 <span className="flex-1 font-medium text-sm">{track.title}</span>
-
-                {/* Download */}
-                <button
-                  onClick={() => downloadFile(track.url, track.filename)}
+                <a
+                  href={track.url}
+                  download={track.filename}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="shrink-0 text-gray-500 hover:text-white transition"
                   aria-label={`Download ${track.title}`}
                 >
                   <Download className="w-4 h-4" />
-                </button>
+                </a>
               </div>
             ))}
           </div>
@@ -171,7 +151,7 @@ export default function Success() {
         {/* ── IMAGES ── */}
         <section>
           <h2 className="text-xs font-bold tracking-widest text-gray-500 uppercase mb-4 flex items-center gap-2">
-            <ImageIcon className="w-4 h-4" /> 5 Photos
+            <ImageIcon className="w-4 h-4" /> 5 Photos — individual downloads
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {CLARITY_BUNDLE.images.map((img) => (
@@ -184,12 +164,15 @@ export default function Success() {
                 />
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex flex-col items-center justify-center gap-2 p-2">
                   <p className="text-xs text-center text-white font-medium">{img.title}</p>
-                  <button
-                    onClick={() => downloadFile(img.url, img.filename)}
+                  <a
+                    href={img.url}
+                    download={img.filename}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex items-center gap-1 bg-white text-black text-xs font-bold px-3 py-1.5 rounded-full hover:bg-gray-200 transition"
                   >
                     <Download className="w-3 h-3" /> Download
-                  </button>
+                  </a>
                 </div>
               </div>
             ))}
@@ -208,12 +191,8 @@ export default function Success() {
               Stream on Apple Music, Spotify & More
             </Button>
           </a>
-          <p className="text-center text-gray-600 text-xs mt-2">
-            Also available on all major platforms via DistroKid
-          </p>
         </section>
 
-        {/* ── BACK ── */}
         <Button
           onClick={() => navigate("/")}
           variant="outline"
