@@ -1,194 +1,166 @@
-import { useEffect, useState } from 'react';
-import { useLocation } from 'wouter';
-import { CLARITY_BUNDLE } from '@/data/clarity-bundle';
-import { Button } from '@/components/ui/button';
-import { Download, CheckCircle, Music, Image as ImageIcon, FileText, Play, ExternalLink } from 'lucide-react';
+import { useState } from "react";
+import { useLocation } from "wouter";
+import { CLARITY_BUNDLE } from "@/data/clarity-bundle";
+import { Button } from "@/components/ui/button";
+import {
+  CheckCircle,
+  Download,
+  Play,
+  Pause,
+  ExternalLink,
+  Music,
+  Image as ImageIcon,
+} from "lucide-react";
 
 export default function Success() {
-  const [location, navigate] = useLocation();
-  const [playingTrack, setPlayingTrack] = useState<number | null>(null);
+  const [, navigate] = useLocation();
+  const [playingId, setPlayingId] = useState<number | null>(null);
+  const [audioEl, setAudioEl] = useState<HTMLAudioElement | null>(null);
 
-  const GITHUB_ZIP = "https://github.com/mosesofelgin/clarity-album/archive/refs/heads/main.zip";
+  const playTrack = (track: (typeof CLARITY_BUNDLE.tracks)[0]) => {
+    if (audioEl) {
+      audioEl.pause();
+    }
+    if (playingId === track.id) {
+      setPlayingId(null);
+      setAudioEl(null);
+      return;
+    }
+    const a = new Audio(track.url);
+    a.play();
+    a.onended = () => {
+      setPlayingId(null);
+      setAudioEl(null);
+    };
+    setAudioEl(a);
+    setPlayingId(track.id);
+  };
 
-  const handleDownload = (url: string, filename: string) => {
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const downloadFile = (url: string, filename: string) => {
+    // Open in new tab — most reliable cross-browser download from CDN
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   };
 
   return (
-    <div className="min-h-screen bg-black text-white py-12 px-4">
-      <div className="max-w-3xl mx-auto">
-        {/* Success Header */}
-        <div className="text-center mb-12">
-          <div className="flex justify-center mb-6">
-            <CheckCircle className="w-16 h-16 text-green-500" />
-          </div>
-          <h1 className="text-4xl font-display font-bold mb-4">Thank You!</h1>
-          <p className="text-xl text-gray-300 mb-2">
-            Your purchase of CLARITY is complete.
-          </p>
-          <p className="text-gray-400">
-            Download your album and stream it everywhere.
-          </p>
+    <div className="min-h-screen bg-black text-white">
+      {/* Hero */}
+      <div className="relative overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-20"
+          style={{ backgroundImage: `url(${CLARITY_BUNDLE.images[0].url})` }}
+        />
+        <div className="relative z-10 text-center py-20 px-4">
+          <CheckCircle className="w-14 h-14 text-green-400 mx-auto mb-4" />
+          <h1 className="text-5xl font-black tracking-tight mb-3">THANK YOU</h1>
+          <p className="text-xl text-gray-300 mb-1">Your copy of CLARITY is ready.</p>
+          <p className="text-gray-500 text-sm">Download your files below or stream on all platforms.</p>
         </div>
+      </div>
 
-        {/* Quick Download Section */}
-        <div className="bg-gradient-to-r from-red-600 to-red-700 rounded-lg p-8 mb-8 border border-red-500">
-          <h2 className="text-2xl font-display font-bold mb-4">Get Your Album</h2>
-          <p className="text-red-100 mb-6">Download all 12 tracks, images, and lyric book as a single ZIP file.</p>
-          <a href={GITHUB_ZIP} className="block">
-            <Button className="w-full bg-white text-red-600 hover:bg-gray-100 font-bold py-3 text-lg">
-              <Download className="w-5 h-5 mr-2" />
-              Download Everything (ZIP)
-            </Button>
-          </a>
-          <p className="text-red-100 text-sm mt-3">
-            All files packaged in one ZIP file from GitHub
-          </p>
-        </div>
+      <div className="max-w-2xl mx-auto px-4 pb-20 space-y-10">
 
-        {/* Music Players Section */}
-        <div className="bg-zinc-900 rounded-lg p-8 mb-8 border border-zinc-800">
-          <h2 className="text-2xl font-display font-bold mb-6">Play Your Tracks</h2>
-          <div className="space-y-4">
+        {/* ── TRACKS ── */}
+        <section>
+          <h2 className="text-xs font-bold tracking-widest text-gray-500 uppercase mb-4 flex items-center gap-2">
+            <Music className="w-4 h-4" /> 12 Tracks
+          </h2>
+          <div className="space-y-2">
             {CLARITY_BUNDLE.tracks.map((track) => (
               <div
                 key={track.id}
-                className="bg-zinc-800 rounded-lg p-4 hover:bg-zinc-700 transition"
+                className="flex items-center gap-3 bg-zinc-900 hover:bg-zinc-800 transition rounded-lg px-4 py-3"
               >
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex-1">
-                    <p className="font-semibold">{track.id}. {track.title}</p>
-                    <p className="text-sm text-gray-400">From CLARITY</p>
-                  </div>
-                  <button
-                    onClick={() => setPlayingTrack(playingTrack === track.id ? null : track.id)}
-                    className="text-red-500 hover:text-red-400 transition ml-4"
-                  >
-                    <Play className="w-6 h-6" fill="currentColor" />
-                  </button>
-                </div>
-                
-                {/* Audio Player */}
-                {playingTrack === track.id && (
-                  <audio
-                    controls
-                    autoPlay
-                    className="w-full mb-3"
-                    style={{
-                      accentColor: '#dc2626',
-                    }}
-                  >
-                    <source src={track.url} type="audio/mpeg" />
-                    Your browser does not support the audio element.
-                  </audio>
-                )}
+                {/* Track number */}
+                <span className="text-gray-600 text-sm w-5 text-right shrink-0">
+                  {track.id}
+                </span>
 
-                {/* Download Button */}
+                {/* Play button */}
                 <button
-                  onClick={() => handleDownload(track.url, `${String(track.id).padStart(2, '0')}-${track.title}.mp3`)}
-                  className="text-sm text-gray-400 hover:text-gray-200 transition flex items-center"
+                  onClick={() => playTrack(track)}
+                  className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-white text-black hover:bg-gray-200 transition"
+                  aria-label={playingId === track.id ? "Pause" : "Play"}
                 >
-                  <Download className="w-4 h-4 mr-1" />
-                  Download MP3
+                  {playingId === track.id ? (
+                    <Pause className="w-4 h-4" fill="currentColor" />
+                  ) : (
+                    <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
+                  )}
+                </button>
+
+                {/* Title */}
+                <span className="flex-1 font-medium text-sm">{track.title}</span>
+
+                {/* Download */}
+                <button
+                  onClick={() => downloadFile(track.url, track.filename)}
+                  className="shrink-0 text-gray-500 hover:text-white transition"
+                  aria-label={`Download ${track.title}`}
+                >
+                  <Download className="w-4 h-4" />
                 </button>
               </div>
             ))}
           </div>
-        </div>
+        </section>
 
-        {/* Stream Everywhere Section */}
-        <div className="bg-zinc-900 rounded-lg p-8 mb-8 border border-zinc-800">
-          <h2 className="text-2xl font-display font-bold mb-6">Stream Everywhere</h2>
-          <p className="text-gray-300 mb-6">Listen to CLARITY on all major streaming platforms:</p>
+        {/* ── IMAGES ── */}
+        <section>
+          <h2 className="text-xs font-bold tracking-widest text-gray-500 uppercase mb-4 flex items-center gap-2">
+            <ImageIcon className="w-4 h-4" /> 5 Photos
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {CLARITY_BUNDLE.images.map((img) => (
+              <div key={img.id} className="relative group rounded-lg overflow-hidden bg-zinc-900">
+                <img
+                  src={img.url}
+                  alt={img.title}
+                  className="w-full aspect-[3/4] object-cover"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex flex-col items-center justify-center gap-2 p-2">
+                  <p className="text-xs text-center text-white font-medium">{img.title}</p>
+                  <button
+                    onClick={() => downloadFile(img.url, img.filename)}
+                    className="flex items-center gap-1 bg-white text-black text-xs font-bold px-3 py-1.5 rounded-full hover:bg-gray-200 transition"
+                  >
+                    <Download className="w-3 h-3" /> Download
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── STREAM ── */}
+        <section>
           <a
             href="https://distrokid.com/hyperfollow/mosesofelgin/clarity?ref=release"
             target="_blank"
             rel="noopener noreferrer"
-            className="block"
           >
-            <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 font-bold py-3 text-lg">
+            <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 font-bold py-4 text-base">
               <ExternalLink className="w-5 h-5 mr-2" />
               Stream on Apple Music, Spotify & More
             </Button>
           </a>
-        </div>
+          <p className="text-center text-gray-600 text-xs mt-2">
+            Also available on all major platforms via DistroKid
+          </p>
+        </section>
 
-        {/* Downloads Section */}
-        <div className="bg-zinc-900 rounded-lg p-8 mb-8 border border-zinc-800">
-          <h2 className="text-2xl font-display font-bold mb-6">All Downloads</h2>
-
-          {/* Images */}
-          <div className="mb-8">
-            <h3 className="text-lg font-semibold mb-4 flex items-center">
-              <ImageIcon className="w-5 h-5 mr-2 text-red-500" />
-              Brand Images (4)
-            </h3>
-            <div className="grid grid-cols-2 gap-3">
-              {CLARITY_BUNDLE.images.map((image) => (
-                <button
-                  key={image.id}
-                  onClick={() => handleDownload(image.url, `${image.title}.jpg`)}
-                  className="bg-zinc-800 p-3 rounded hover:bg-zinc-700 transition text-left"
-                >
-                  <div className="text-sm font-medium mb-2">{image.title}</div>
-                  <Download className="w-4 h-4 text-red-500" />
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Lyric Book */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4 flex items-center">
-              <FileText className="w-5 h-5 mr-2 text-red-500" />
-              Bonus Content
-            </h3>
-            <button
-              onClick={() => handleDownload(
-                CLARITY_BUNDLE.lyricBook.url,
-                'CLARITY-Lyric-Book.pdf'
-              )}
-              className="w-full bg-zinc-800 p-4 rounded hover:bg-zinc-700 transition text-left flex items-center justify-between"
-            >
-              <span className="font-medium">{CLARITY_BUNDLE.lyricBook.title}</span>
-              <Download className="w-4 h-4 text-red-500" />
-            </button>
-          </div>
-        </div>
-
-        {/* Next Steps */}
-        <div className="bg-zinc-900 rounded-lg p-8 border border-zinc-800 mb-8">
-          <h3 className="text-lg font-semibold mb-4">What's Next?</h3>
-          <ul className="space-y-3 text-gray-300">
-            <li className="flex items-start">
-              <span className="text-red-500 mr-3 mt-1">•</span>
-              <span>Click "Download Everything" to get the ZIP file</span>
-            </li>
-            <li className="flex items-start">
-              <span className="text-red-500 mr-3 mt-1">•</span>
-              <span>Check your email for a receipt and download link</span>
-            </li>
-            <li className="flex items-start">
-              <span className="text-red-500 mr-3 mt-1">•</span>
-              <span>Share CLARITY with your network</span>
-            </li>
-            <li className="flex items-start">
-              <span className="text-red-500 mr-3 mt-1">•</span>
-              <span>Follow for updates on the next project</span>
-            </li>
-          </ul>
-        </div>
-
-        {/* Continue Shopping */}
+        {/* ── BACK ── */}
         <Button
-          onClick={() => navigate('/')}
+          onClick={() => navigate("/")}
           variant="outline"
-          className="w-full border-gray-600 text-white hover:bg-zinc-900"
+          className="w-full border-zinc-700 text-white hover:bg-zinc-900"
         >
           Back to Home
         </Button>
