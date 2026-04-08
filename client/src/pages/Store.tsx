@@ -26,44 +26,6 @@ const PRODUCTS: Product[] = [
       'Lifetime access',
     ],
   },
-  {
-    id: 'clarity-exclusive',
-    name: 'Clarity + Exclusive',
-    description: 'Full album + behind-the-scenes content + early New Genesis access',
-    price: 25,
-    badge: 'Bundle',
-    details: [
-      'All CLARITY content',
-      'BTS voice note from Moses',
-      'Early access to New Genesis',
-      'Exclusive community access',
-    ],
-  },
-  {
-    id: 'clarity-deluxe',
-    name: 'Clarity Deluxe',
-    description: 'Premium edition with bonus tracks + signed digital certificate',
-    price: 35,
-    badge: 'Premium',
-    details: [
-      'All CLARITY tracks + 3 bonus tracks',
-      'Signed digital certificate',
-      '4 brand images (high-res)',
-      'Lyric book + extended notes',
-    ],
-  },
-  {
-    id: 'new-genesis',
-    name: 'New Genesis',
-    description: '17-track album - proven sales, ready for direct release',
-    price: 15,
-    details: [
-      'Full 17-track album',
-      'High-quality MP3s',
-      'Album artwork',
-      'Lifetime access',
-    ],
-  },
 ];
 
 export default function Store() {
@@ -106,11 +68,11 @@ export default function Store() {
             Clarity Season 1: April 2026
           </div>
           <h1 className="text-4xl font-light">Store</h1>
-          <p className="text-sm opacity-60 mt-2">Choose your entry point into the CLARITY ecosystem</p>
+          <p className="text-sm opacity-60 mt-2">Get CLARITY - 12 tracks of truth-driven music</p>
         </div>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 gap-6 mb-8 max-w-md mx-auto">
           {PRODUCTS.map((product) => (
             <div
               key={product.id}
