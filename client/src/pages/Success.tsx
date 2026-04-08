@@ -10,6 +10,7 @@ import {
   ExternalLink,
   Music,
   Image as ImageIcon,
+  PackageOpen,
 } from "lucide-react";
 
 export default function Success() {
@@ -48,6 +49,33 @@ export default function Success() {
     document.body.removeChild(a);
   };
 
+  const [downloading, setDownloading] = useState(false);
+  const [downloadProgress, setDownloadProgress] = useState(0);
+
+  const downloadAll = async () => {
+    setDownloading(true);
+    setDownloadProgress(0);
+    const allFiles = [
+      ...CLARITY_BUNDLE.tracks.map((t) => ({ url: t.url, filename: t.filename })),
+      ...CLARITY_BUNDLE.images.map((i) => ({ url: i.url, filename: i.filename })),
+    ];
+    for (let i = 0; i < allFiles.length; i++) {
+      const { url, filename } = allFiles[i];
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setDownloadProgress(i + 1);
+      // Small delay so browser doesn't block multiple downloads
+      await new Promise((r) => setTimeout(r, 600));
+    }
+    setDownloading(false);
+  };
+
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Hero */}
@@ -65,6 +93,35 @@ export default function Success() {
       </div>
 
       <div className="max-w-2xl mx-auto px-4 pb-20 space-y-10">
+
+        {/* ── DOWNLOAD ALL ── */}
+        <section className="bg-zinc-900 border border-zinc-700 rounded-xl p-6">
+          <div className="flex items-center gap-3 mb-3">
+            <PackageOpen className="w-6 h-6 text-white" />
+            <h2 className="text-lg font-bold">Download All Files</h2>
+          </div>
+          <p className="text-gray-400 text-sm mb-5">
+            Downloads all 12 tracks and 5 photos one by one directly to your device.
+            Your browser may ask permission to download multiple files — click <strong className="text-white">Allow</strong>.
+          </p>
+          <Button
+            onClick={downloadAll}
+            disabled={downloading}
+            className="w-full bg-white text-black hover:bg-gray-200 font-bold py-3 text-base disabled:opacity-60"
+          >
+            {downloading ? (
+              <>
+                <Download className="w-5 h-5 mr-2 animate-bounce" />
+                Downloading {downloadProgress} / {CLARITY_BUNDLE.tracks.length + CLARITY_BUNDLE.images.length}...
+              </>
+            ) : (
+              <>
+                <Download className="w-5 h-5 mr-2" />
+                Download All ({CLARITY_BUNDLE.tracks.length + CLARITY_BUNDLE.images.length} files)
+              </>
+            )}
+          </Button>
+        </section>
 
         {/* ── TRACKS ── */}
         <section>
