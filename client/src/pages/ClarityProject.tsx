@@ -154,7 +154,7 @@ export default function ClarityProject() {
           <ul className="space-y-3 text-neutral-300">
             <li className="flex items-start">
               <span className="text-red-500 mr-3">•</span>
-                <span>Full 12-song digital album (TEST PRICE $1)</span>
+                <span>Full 12-song digital album</span>
             </li>
             <li className="flex items-start">
               <span className="text-red-500 mr-3">•</span>
@@ -205,12 +205,12 @@ export default function ClarityProject() {
         <section className="mb-16 text-center">
           <h3 className="text-3xl font-bebas tracking-wide mb-6">If this resonates, don't wait.</h3>
           <p className="text-neutral-400 mb-8">You already feel it. Now step into it.</p>
-          <button
-            onClick={() => setShowCheckout(true)}
-            className="px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bebas tracking-wide text-lg transition-colors"
-          >
-            Get CLARITY — $1
-          </button>
+            <button
+              onClick={() => setShowCheckout(true)}
+              className="px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bebas tracking-wide text-lg transition-colors"
+            >
+              Get CLARITY — $12
+            </button>
         </section>
       </div>
 
@@ -255,11 +255,11 @@ export default function ClarityProject() {
                 <p className="text-sm text-neutral-400 mb-2">Order Summary</p>
                 <div className="flex justify-between mb-2">
                   <span>CLARITY Album Bundle</span>
-                  <span>$1.00</span>
+                  <span>$12.00</span>
                 </div>
                 <div className="border-t border-neutral-800 pt-2 mt-2 flex justify-between font-bebas">
                   <span>Total</span>
-                  <span>$1.00</span>
+                  <span>$12.00</span>
                 </div>
               </div>
 
