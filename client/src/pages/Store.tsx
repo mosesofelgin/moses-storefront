@@ -2,7 +2,7 @@ import { Link } from 'wouter';
 import { trpc } from '@/lib/trpc';
 import { toast } from 'sonner';
 import { useState } from 'react';
-import { Check } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 
 interface Product {
   id: string;
@@ -29,17 +29,24 @@ const PRODUCTS: Product[] = [
 ];
 
 export default function Store() {
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const createCheckout = trpc.checkout.createSession.useMutation();
 
-  const handleBuyClick = async (product: Product) => {
-    // Prompt for email and name
-    const email = prompt('Enter your email:');
-    if (!email) return;
+  const handleBuyClick = () => {
+    setShowCheckoutModal(true);
+  };
+
+  const handleCheckoutSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     
-    const name = prompt('Enter your name:');
-    if (!name) return;
-    
+    if (!email || !name) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+
     setLoading(true);
     try {
       const session = await createCheckout.mutateAsync({
@@ -48,8 +55,12 @@ export default function Store() {
       });
 
       if (session?.url) {
+        // Open Stripe checkout in new tab
         window.open(session.url, '_blank');
-        toast.success(`Redirecting to checkout...`);
+        toast.success('Opening checkout...');
+        setShowCheckoutModal(false);
+        setEmail('');
+        setName('');
       }
     } catch (error) {
       toast.error('Failed to start checkout. Please try again.');
@@ -102,9 +113,9 @@ export default function Store() {
                 ${product.price}
               </div>
               <button
-                onClick={() => handleBuyClick(product)}
+                onClick={handleBuyClick}
                 disabled={loading}
-                className="w-full py-2 px-4 border border-white text-white font-medium rounded hover:bg-white hover:text-black transition disabled:opacity-50 mt-auto"
+                className="w-full py-3 px-4 bg-green-500 text-black font-medium rounded hover:bg-green-600 transition disabled:opacity-50 mt-auto"
               >
                 {loading ? 'Processing...' : 'Buy Now'}
               </button>
@@ -141,6 +152,76 @@ export default function Store() {
           </Link>
         </div>
       </div>
+
+      {/* Checkout Modal */}
+      {showCheckoutModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-zinc-900 rounded-lg border border-zinc-800 p-8 max-w-md w-full">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-light">Checkout</h2>
+              <button
+                onClick={() => setShowCheckoutModal(false)}
+                className="text-gray-400 hover:text-white transition"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            {/* Order Summary */}
+            <div className="bg-zinc-800 rounded p-4 mb-6">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm opacity-70">CLARITY Album</span>
+                <span className="font-medium">$12.00</span>
+              </div>
+              <div className="border-t border-zinc-700 pt-2 mt-2">
+                <div className="flex justify-between items-center">
+                  <span className="font-medium">Total</span>
+                  <span className="text-lg font-bold text-green-500">$12.00</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Checkout Form */}
+            <form onSubmit={handleCheckoutSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Email</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded text-white placeholder-gray-500 focus:outline-none focus:border-green-500 transition"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Full Name</label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Your name"
+                  className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded text-white placeholder-gray-500 focus:outline-none focus:border-green-500 transition"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3 px-4 bg-green-500 text-black font-medium rounded hover:bg-green-600 transition disabled:opacity-50 mt-6"
+              >
+                {loading ? 'Processing...' : 'Continue to Payment'}
+              </button>
+
+              <p className="text-xs text-center opacity-60 mt-4">
+                You'll be redirected to Stripe to complete your purchase securely.
+              </p>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
