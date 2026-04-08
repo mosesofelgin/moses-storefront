@@ -7,6 +7,7 @@ import Stripe from "stripe";
 import { createOrder } from "./orders";
 import { generateDownloadToken, verifyDownloadToken } from "./downloads";
 import { subscribeEmail, getSubscriberCount } from "./subscribers";
+import { verifyStripeSession } from "./session-verification";
 
 export const appRouter = router({
   system: systemRouter,
@@ -76,6 +77,15 @@ export const appRouter = router({
       .query(async ({ input }) => {
         const result = await verifyDownloadToken(input.token);
         return result ? { valid: true, email: result.customerEmail } : { valid: false };
+      }),
+  }),
+
+  session: router({
+    verify: publicProcedure
+      .input(z.object({ sessionId: z.string() }))
+      .query(async ({ input }) => {
+        const result = await verifyStripeSession(input.sessionId);
+        return result;
       }),
   }),
 
