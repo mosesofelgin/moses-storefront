@@ -161,34 +161,4 @@ export function registerRoutes(app: Express) {
     }
   });
 
-  /**
-   * POST /api/stripe/webhook
-   * Stripe webhook handler for payment events
-   */
-  app.post("/api/stripe/webhook", async (req: Request, res: Response) => {
-    try {
-      const signature = req.headers["stripe-signature"] as string;
-      if (!signature) {
-        return res.status(400).json({ error: "Missing stripe-signature header" });
-      }
-
-      // Get raw body for signature verification
-      const body = (req as any).rawBody || JSON.stringify(req.body);
-
-      // Verify webhook signature
-      const event = verifyWebhookSignature(body, signature);
-      if (!event) {
-        return res.status(400).json({ error: "Invalid webhook signature" });
-      }
-
-      // Process the event
-      await processWebhookEvent(event);
-
-      // Return success to Stripe
-      res.json({ received: true });
-    } catch (error) {
-      console.error("[Stripe Webhook] Error:", error);
-      res.status(500).json({ error: "Webhook processing failed" });
-    }
-  });
 }
