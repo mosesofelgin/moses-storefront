@@ -37,27 +37,21 @@ export default function Home() {
           {/* Main CTAs */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
             {/* Listen */}
-            <Link href="/listen">
-              <a className="group relative overflow-hidden bg-gradient-to-r from-green-500 to-emerald-600 text-black font-bebas tracking-wide py-4 px-6 rounded-lg transition-all duration-300 hover:shadow-2xl hover:shadow-green-500/50 transform hover:-translate-y-1 flex items-center justify-center gap-2">
-                <span className="text-lg">LISTEN</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </a>
+            <Link href="/listen" className="group relative overflow-hidden bg-gradient-to-r from-green-500 to-emerald-600 text-black font-bebas tracking-wide py-4 px-6 rounded-lg transition-all duration-300 hover:shadow-2xl hover:shadow-green-500/50 transform hover:-translate-y-1 flex items-center justify-center gap-2">
+              <span className="text-lg">LISTEN</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
 
             {/* Store */}
-            <Link href="/store">
-              <a className="group relative overflow-hidden border-2 border-white text-white font-bebas tracking-wide py-4 px-6 rounded-lg transition-all duration-300 hover:bg-white hover:text-black hover:shadow-2xl hover:shadow-white/50 transform hover:-translate-y-1 flex items-center justify-center gap-2">
-                <span className="text-lg">STORE</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </a>
+            <Link href="/store" className="group relative overflow-hidden border-2 border-white text-white font-bebas tracking-wide py-4 px-6 rounded-lg transition-all duration-300 hover:bg-white hover:text-black hover:shadow-2xl hover:shadow-white/50 transform hover:-translate-y-1 flex items-center justify-center gap-2">
+              <span className="text-lg">STORE</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
 
             {/* Connect */}
-            <Link href="/connect">
-              <a className="group relative overflow-hidden bg-gradient-to-r from-blue-500 to-cyan-600 text-black font-bebas tracking-wide py-4 px-6 rounded-lg transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/50 transform hover:-translate-y-1 flex items-center justify-center gap-2">
-                <span className="text-lg">CONNECT</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </a>
+            <Link href="/connect" className="group relative overflow-hidden bg-gradient-to-r from-blue-500 to-cyan-600 text-black font-bebas tracking-wide py-4 px-6 rounded-lg transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/50 transform hover:-translate-y-1 flex items-center justify-center gap-2">
+              <span className="text-lg">CONNECT</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
 
