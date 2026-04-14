@@ -4,7 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import Stripe from "stripe";
-import { createOrder } from "./orders";
+import { createOrder, getOrdersByEmail } from "./orders";
 import { generateDownloadToken, verifyDownloadToken } from "./downloads";
 import { subscribeEmail, getSubscriberCount } from "./subscribers";
 import { verifyStripeSession } from "./session-verification";
@@ -98,8 +98,9 @@ export const appRouter = router({
       .mutation(async ({ input, ctx }) => {
         try {
           // Create order record for free transaction
-          const result = await createOrder({
-            stripePaymentIntentId: `free-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          const stripePaymentIntentId = `free-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+          await createOrder({
+            stripePaymentIntentId,
             customerEmail: input.customerEmail,
             customerName: input.customerName,
             amount: 0,
@@ -107,11 +108,13 @@ export const appRouter = router({
             status: "succeeded",
           });
 
-          // Extract orderId from insert result
-          const orderId = (result as any).insertId || (result as any)[0]?.id;
-          if (!orderId) {
-            throw new Error("Failed to get order ID from insert result");
+          // Query the order to get its ID
+          const orders = await getOrdersByEmail(input.customerEmail);
+          const order = orders.find(o => o.stripePaymentIntentId === stripePaymentIntentId);
+          if (!order || !order.id) {
+            throw new Error("Failed to retrieve created order");
           }
+          const orderId = order.id;
 
           // Generate download token
           const token = await generateDownloadToken(orderId, input.customerEmail);
