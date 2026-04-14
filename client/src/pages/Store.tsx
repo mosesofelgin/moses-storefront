@@ -8,7 +8,7 @@ interface Product {
   id: string;
   name: string;
   description: string;
-  price?: number;
+  minPrice: number;
   badge?: string;
   details?: string[];
   isPayWhatYouWant?: boolean;
@@ -19,25 +19,15 @@ const PRODUCTS: Product[] = [
     id: 'clarity',
     name: 'Clarity',
     description: '12-track digital album - truth-driven music rooted in alignment',
-    price: 12,
+    minPrice: 12,
+    badge: 'PAY WHAT YOU WANT',
+    isPayWhatYouWant: true,
     details: [
       'All 12 CLARITY tracks',
       '4 brand images (high-res)',
       'Lyric book PDF',
       'Lifetime access',
-    ],
-  },
-  {
-    id: 'brand-images',
-    name: 'Brand Images + Lyric PDF',
-    description: 'Pay what you want - 4 high-res brand images + lyric book PDF',
-    badge: 'PAY WHAT YOU WANT',
-    isPayWhatYouWant: true,
-    details: [
-      '4 brand images (high-res)',
-      'CLARITY lyric book PDF',
-      'Lifetime access',
-      'Support the mission',
+      '$12 = 3,000 streams worth',
     ],
   },
 ];
@@ -55,7 +45,7 @@ export default function Store() {
   const handleBuyClick = (product: Product) => {
     setSelectedProduct(product);
     setShowCheckoutModal(true);
-    setCustomAmount('');
+    setCustomAmount(product.minPrice.toString());
     setEmail('');
     setName('');
   };
@@ -68,85 +58,64 @@ export default function Store() {
       return;
     }
 
-    // For pay-what-you-want, validate amount
-    if (selectedProduct?.isPayWhatYouWant) {
-      if (!customAmount || isNaN(parseFloat(customAmount))) {
-        toast.error('Please enter a valid amount');
-        return;
-      }
+    if (!selectedProduct?.isPayWhatYouWant) {
+      toast.error('Invalid product');
+      return;
+    }
 
-      const amountInCents = Math.round(parseFloat(customAmount) * 100);
+    if (!customAmount || isNaN(parseFloat(customAmount))) {
+      toast.error('Please enter a valid amount');
+      return;
+    }
 
-      // If $0, create free order
-      if (amountInCents === 0) {
-        setLoading(true);
-        try {
-          await createFreeOrder.mutateAsync({
-            customerEmail: email,
-            customerName: name,
-            productId: 'brand-images',
-          });
-          toast.success('Thank you! Check your email for download link.');
-          setShowCheckoutModal(false);
-          setEmail('');
-          setName('');
-          setCustomAmount('');
-        } catch (error) {
-          toast.error('Failed to process order. Please try again.');
-          console.error(error);
-        } finally {
-          setLoading(false);
-        }
-        return;
-      }
+    const amountInCents = Math.round(parseFloat(customAmount) * 100);
 
-      // If paid amount, create Stripe session
+    // If $0, create free order
+    if (amountInCents === 0) {
       setLoading(true);
       try {
-        const session = await createCheckout.mutateAsync({
-          customerEmail: email,
-          customerName: name,
-          amountInCents,
-          productId: 'brand-images',
-        });
-
-        if (session?.url) {
-          window.open(session.url, '_blank');
-          toast.success('Opening checkout...');
-          setShowCheckoutModal(false);
-          setEmail('');
-          setName('');
-          setCustomAmount('');
-        }
-      } catch (error) {
-        toast.error('Failed to start checkout. Please try again.');
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    } else {
-      // Fixed price (CLARITY)
-      setLoading(true);
-      try {
-        const session = await createCheckout.mutateAsync({
+        await createFreeOrder.mutateAsync({
           customerEmail: email,
           customerName: name,
           productId: 'clarity',
         });
-
-        if (session?.url) {
-          window.open(session.url, '_blank');
-          toast.success('Opening checkout...');
-          setShowCheckoutModal(false);
-          setEmail('');
-          setName('');
-        }
+        toast.success('Thank you! Check your email for download link.');
+        setShowCheckoutModal(false);
+        setEmail('');
+        setName('');
+        setCustomAmount('');
       } catch (error) {
-        toast.error('Failed to start checkout. Please try again.');
+        toast.error('Failed to process order. Please try again.');
         console.error(error);
       } finally {
         setLoading(false);
       }
+      return;
+    }
+
+    // If paid amount, create Stripe session
+    setLoading(true);
+    try {
+      const session = await createCheckout.mutateAsync({
+        customerEmail: email,
+        customerName: name,
+        amountInCents,
+        productId: 'clarity',
+      });
+
+      if (session?.url) {
+        window.open(session.url, '_blank');
+        toast.success('Opening checkout...');
+        setShowCheckoutModal(false);
+        setEmail('');
+        setName('');
+        setCustomAmount('');
+      }
+    } catch (error) {
+      toast.error('Failed to start checkout. Please try again.');
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -159,11 +128,11 @@ export default function Store() {
             Clarity Season 1: April 2026
           </div>
           <h1 className="text-4xl font-light">Store</h1>
-          <p className="text-sm opacity-60 mt-2">Get CLARITY - 12 tracks of truth-driven music</p>
+          <p className="text-sm opacity-60 mt-2">Support the music. Direct-to-consumer. No middlemen.</p>
         </div>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 max-w-2xl mx-auto">
+        <div className="grid grid-cols-1 gap-6 mb-8 max-w-md mx-auto">
           {PRODUCTS.map((product) => (
             <div
               key={product.id}
@@ -189,11 +158,9 @@ export default function Store() {
                 </ul>
               )}
               
-              {product.price !== undefined && !product.isPayWhatYouWant && (
-                <div className="text-2xl font-bold text-green-500 mb-4">
-                  ${product.price}
-                </div>
-              )}
+              <div className="text-2xl font-bold text-green-500 mb-4">
+                Starting at ${product.minPrice}
+              </div>
               
               <button
                 onClick={() => handleBuyClick(product)}
@@ -208,19 +175,19 @@ export default function Store() {
 
         {/* Info Section */}
         <div className="bg-zinc-900 rounded-lg p-6 border border-zinc-800 mb-8">
-          <h3 className="text-lg font-light mb-4">What You Get</h3>
+          <h3 className="text-lg font-light mb-4">Why Direct Support Matters</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+            <div>
+              <p className="font-medium mb-2">3x Streaming Value</p>
+              <p className="opacity-70">One $12 purchase = 3,000 streams worth to the artist</p>
+            </div>
             <div>
               <p className="font-medium mb-2">Instant Access</p>
               <p className="opacity-70">Download all files immediately after purchase</p>
             </div>
             <div>
-              <p className="font-medium mb-2">Lifetime Ownership</p>
-              <p className="opacity-70">Keep your files forever with no expiration</p>
-            </div>
-            <div>
-              <p className="font-medium mb-2">Direct Support</p>
-              <p className="opacity-70">Direct connection to Moses and the community</p>
+              <p className="font-medium mb-2">Direct Relationship</p>
+              <p className="opacity-70">No algorithms. No middlemen. Pure connection.</p>
             </div>
           </div>
         </div>
@@ -254,22 +221,14 @@ export default function Store() {
             <div className="bg-zinc-800 rounded p-4 mb-6">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm opacity-70">{selectedProduct.name}</span>
-                {selectedProduct.isPayWhatYouWant ? (
-                  <span className="font-medium">Custom Amount</span>
-                ) : (
-                  <span className="font-medium">${selectedProduct.price}.00</span>
-                )}
+                <span className="font-medium">Custom Amount</span>
               </div>
               <div className="border-t border-zinc-700 pt-2 mt-2">
                 <div className="flex justify-between items-center">
                   <span className="font-medium">Total</span>
-                  {selectedProduct.isPayWhatYouWant ? (
-                    <span className="text-lg font-bold text-green-500">
-                      {customAmount ? `$${parseFloat(customAmount).toFixed(2)}` : '$0.00'}
-                    </span>
-                  ) : (
-                    <span className="text-lg font-bold text-green-500">${selectedProduct.price}.00</span>
-                  )}
+                  <span className="text-lg font-bold text-green-500">
+                    {customAmount ? `$${parseFloat(customAmount).toFixed(2)}` : '$0.00'}
+                  </span>
                 </div>
               </div>
             </div>
@@ -300,47 +259,40 @@ export default function Store() {
                 />
               </div>
 
-              {selectedProduct.isPayWhatYouWant && (
-                <div>
-                  <label className="block text-sm font-medium mb-2">Amount (USD)</label>
-                  <div className="flex items-center gap-2">
-                    <span className="text-white">$</span>
-                    <input
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      value={customAmount}
-                      onChange={(e) => setCustomAmount(e.target.value)}
-                      placeholder="0.00"
-                      className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded text-white placeholder-gray-500 focus:outline-none focus:border-green-500 transition"
-                      required
-                    />
-                  </div>
-                  <p className="text-xs text-gray-400 mt-1">Enter any amount, including $0</p>
+              <div>
+                <label className="block text-sm font-medium mb-2">Amount (USD)</label>
+                <div className="flex items-center gap-2">
+                  <span className="text-white">$</span>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={customAmount}
+                    onChange={(e) => setCustomAmount(e.target.value)}
+                    placeholder="12.00"
+                    className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded text-white placeholder-gray-500 focus:outline-none focus:border-green-500 transition"
+                    required
+                  />
                 </div>
-              )}
+                <p className="text-xs text-gray-400 mt-1">Minimum $12. Pay more to support the mission.</p>
+              </div>
 
               <button
                 type="submit"
                 disabled={loading}
                 className="w-full py-3 px-4 bg-green-500 text-black font-medium rounded hover:bg-green-600 transition disabled:opacity-50 mt-6"
               >
-                {loading ? 'Processing...' : selectedProduct.isPayWhatYouWant && customAmount === '0' ? 'Get Free Download' : 'Continue to Payment'}
+                {loading ? 'Processing...' : customAmount === '0' ? 'Get Free Download' : 'Continue to Payment'}
               </button>
 
-              {selectedProduct.isPayWhatYouWant && customAmount !== '0' && (
+              {customAmount !== '0' && (
                 <p className="text-xs text-center opacity-60 mt-4">
                   You'll be redirected to Stripe to complete your purchase securely.
                 </p>
               )}
-              {selectedProduct.isPayWhatYouWant && customAmount === '0' && (
+              {customAmount === '0' && (
                 <p className="text-xs text-center opacity-60 mt-4">
                   We'll send you a download link via email.
-                </p>
-              )}
-              {!selectedProduct.isPayWhatYouWant && (
-                <p className="text-xs text-center opacity-60 mt-4">
-                  You'll be redirected to Stripe to complete your purchase securely.
                 </p>
               )}
             </form>
