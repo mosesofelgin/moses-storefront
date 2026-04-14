@@ -8,9 +8,10 @@ interface Product {
   id: string;
   name: string;
   description: string;
-  price: number;
+  price?: number;
   badge?: string;
   details?: string[];
+  isPayWhatYouWant?: boolean;
 }
 
 const PRODUCTS: Product[] = [
@@ -26,17 +27,37 @@ const PRODUCTS: Product[] = [
       'Lifetime access',
     ],
   },
+  {
+    id: 'brand-images',
+    name: 'Brand Images + Lyric PDF',
+    description: 'Pay what you want - 4 high-res brand images + lyric book PDF',
+    badge: 'PAY WHAT YOU WANT',
+    isPayWhatYouWant: true,
+    details: [
+      '4 brand images (high-res)',
+      'CLARITY lyric book PDF',
+      'Lifetime access',
+      'Support the mission',
+    ],
+  },
 ];
 
 export default function Store() {
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
+  const [customAmount, setCustomAmount] = useState('');
   const [loading, setLoading] = useState(false);
   const createCheckout = trpc.checkout.createSession.useMutation();
+  const createFreeOrder = trpc.checkout.createFreeOrder.useMutation();
 
-  const handleBuyClick = () => {
+  const handleBuyClick = (product: Product) => {
+    setSelectedProduct(product);
     setShowCheckoutModal(true);
+    setCustomAmount('');
+    setEmail('');
+    setName('');
   };
 
   const handleCheckoutSubmit = async (e: React.FormEvent) => {
@@ -47,26 +68,85 @@ export default function Store() {
       return;
     }
 
-    setLoading(true);
-    try {
-      const session = await createCheckout.mutateAsync({
-        customerEmail: email,
-        customerName: name,
-      });
-
-      if (session?.url) {
-        // Open Stripe checkout in new tab
-        window.open(session.url, '_blank');
-        toast.success('Opening checkout...');
-        setShowCheckoutModal(false);
-        setEmail('');
-        setName('');
+    // For pay-what-you-want, validate amount
+    if (selectedProduct?.isPayWhatYouWant) {
+      if (!customAmount || isNaN(parseFloat(customAmount))) {
+        toast.error('Please enter a valid amount');
+        return;
       }
-    } catch (error) {
-      toast.error('Failed to start checkout. Please try again.');
-      console.error(error);
-    } finally {
-      setLoading(false);
+
+      const amountInCents = Math.round(parseFloat(customAmount) * 100);
+
+      // If $0, create free order
+      if (amountInCents === 0) {
+        setLoading(true);
+        try {
+          await createFreeOrder.mutateAsync({
+            customerEmail: email,
+            customerName: name,
+            productId: 'brand-images',
+          });
+          toast.success('Thank you! Check your email for download link.');
+          setShowCheckoutModal(false);
+          setEmail('');
+          setName('');
+          setCustomAmount('');
+        } catch (error) {
+          toast.error('Failed to process order. Please try again.');
+          console.error(error);
+        } finally {
+          setLoading(false);
+        }
+        return;
+      }
+
+      // If paid amount, create Stripe session
+      setLoading(true);
+      try {
+        const session = await createCheckout.mutateAsync({
+          customerEmail: email,
+          customerName: name,
+          amountInCents,
+          productId: 'brand-images',
+        });
+
+        if (session?.url) {
+          window.open(session.url, '_blank');
+          toast.success('Opening checkout...');
+          setShowCheckoutModal(false);
+          setEmail('');
+          setName('');
+          setCustomAmount('');
+        }
+      } catch (error) {
+        toast.error('Failed to start checkout. Please try again.');
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      // Fixed price (CLARITY)
+      setLoading(true);
+      try {
+        const session = await createCheckout.mutateAsync({
+          customerEmail: email,
+          customerName: name,
+          productId: 'clarity',
+        });
+
+        if (session?.url) {
+          window.open(session.url, '_blank');
+          toast.success('Opening checkout...');
+          setShowCheckoutModal(false);
+          setEmail('');
+          setName('');
+        }
+      } catch (error) {
+        toast.error('Failed to start checkout. Please try again.');
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -83,7 +163,7 @@ export default function Store() {
         </div>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-1 gap-6 mb-8 max-w-md mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 max-w-2xl mx-auto">
           {PRODUCTS.map((product) => (
             <div
               key={product.id}
@@ -109,11 +189,14 @@ export default function Store() {
                 </ul>
               )}
               
-              <div className="text-2xl font-bold text-green-500 mb-4">
-                ${product.price}
-              </div>
+              {product.price !== undefined && !product.isPayWhatYouWant && (
+                <div className="text-2xl font-bold text-green-500 mb-4">
+                  ${product.price}
+                </div>
+              )}
+              
               <button
-                onClick={handleBuyClick}
+                onClick={() => handleBuyClick(product)}
                 disabled={loading}
                 className="w-full py-3 px-4 bg-green-500 text-black font-medium rounded hover:bg-green-600 transition disabled:opacity-50 mt-auto"
               >
@@ -154,7 +237,7 @@ export default function Store() {
       </div>
 
       {/* Checkout Modal */}
-      {showCheckoutModal && (
+      {showCheckoutModal && selectedProduct && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-zinc-900 rounded-lg border border-zinc-800 p-8 max-w-md w-full">
             <div className="flex justify-between items-center mb-6">
@@ -170,13 +253,23 @@ export default function Store() {
             {/* Order Summary */}
             <div className="bg-zinc-800 rounded p-4 mb-6">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm opacity-70">CLARITY Album</span>
-                <span className="font-medium">$12.00</span>
+                <span className="text-sm opacity-70">{selectedProduct.name}</span>
+                {selectedProduct.isPayWhatYouWant ? (
+                  <span className="font-medium">Custom Amount</span>
+                ) : (
+                  <span className="font-medium">${selectedProduct.price}.00</span>
+                )}
               </div>
               <div className="border-t border-zinc-700 pt-2 mt-2">
                 <div className="flex justify-between items-center">
                   <span className="font-medium">Total</span>
-                  <span className="text-lg font-bold text-green-500">$12.00</span>
+                  {selectedProduct.isPayWhatYouWant ? (
+                    <span className="text-lg font-bold text-green-500">
+                      {customAmount ? `$${parseFloat(customAmount).toFixed(2)}` : '$0.00'}
+                    </span>
+                  ) : (
+                    <span className="text-lg font-bold text-green-500">${selectedProduct.price}.00</span>
+                  )}
                 </div>
               </div>
             </div>
@@ -207,17 +300,49 @@ export default function Store() {
                 />
               </div>
 
+              {selectedProduct.isPayWhatYouWant && (
+                <div>
+                  <label className="block text-sm font-medium mb-2">Amount (USD)</label>
+                  <div className="flex items-center gap-2">
+                    <span className="text-white">$</span>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={customAmount}
+                      onChange={(e) => setCustomAmount(e.target.value)}
+                      placeholder="0.00"
+                      className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded text-white placeholder-gray-500 focus:outline-none focus:border-green-500 transition"
+                      required
+                    />
+                  </div>
+                  <p className="text-xs text-gray-400 mt-1">Enter any amount, including $0</p>
+                </div>
+              )}
+
               <button
                 type="submit"
                 disabled={loading}
                 className="w-full py-3 px-4 bg-green-500 text-black font-medium rounded hover:bg-green-600 transition disabled:opacity-50 mt-6"
               >
-                {loading ? 'Processing...' : 'Continue to Payment'}
+                {loading ? 'Processing...' : selectedProduct.isPayWhatYouWant && customAmount === '0' ? 'Get Free Download' : 'Continue to Payment'}
               </button>
 
-              <p className="text-xs text-center opacity-60 mt-4">
-                You'll be redirected to Stripe to complete your purchase securely.
-              </p>
+              {selectedProduct.isPayWhatYouWant && customAmount !== '0' && (
+                <p className="text-xs text-center opacity-60 mt-4">
+                  You'll be redirected to Stripe to complete your purchase securely.
+                </p>
+              )}
+              {selectedProduct.isPayWhatYouWant && customAmount === '0' && (
+                <p className="text-xs text-center opacity-60 mt-4">
+                  We'll send you a download link via email.
+                </p>
+              )}
+              {!selectedProduct.isPayWhatYouWant && (
+                <p className="text-xs text-center opacity-60 mt-4">
+                  You'll be redirected to Stripe to complete your purchase securely.
+                </p>
+              )}
             </form>
           </div>
         </div>

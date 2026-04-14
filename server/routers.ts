@@ -8,6 +8,7 @@ import { createOrder } from "./orders";
 import { generateDownloadToken, verifyDownloadToken } from "./downloads";
 import { subscribeEmail, getSubscriberCount } from "./subscribers";
 import { verifyStripeSession } from "./session-verification";
+import { sendPurchaseConfirmationEmail } from "./email";
 
 export const appRouter = router({
   system: systemRouter,
@@ -28,11 +29,26 @@ export const appRouter = router({
         z.object({
           customerEmail: z.string().email(),
           customerName: z.string().min(1),
+          amountInCents: z.number().int().min(0).optional(),
+          productId: z.string().optional(),
         })
       )
       .mutation(async ({ input, ctx }) => {
         const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
         const origin = ctx.req.headers.origin || "https://moses-storefront.manus.space";
+
+        // Determine product details based on productId
+        let productName = "CLARITY by Moses";
+        let productDescription = "Full digital album — 12 tracks + 5 photos (instant download)";
+        let unitAmount = 1200; // Default to $12 for CLARITY
+
+        if (input.productId === "brand-images") {
+          productName = "Brand Images + Lyric PDF";
+          productDescription = "4 high-res brand images + CLARITY lyric book PDF";
+          unitAmount = input.amountInCents || 0;
+        } else if (input.amountInCents) {
+          unitAmount = input.amountInCents;
+        }
 
         try {
           const session = await stripe.checkout.sessions.create({
@@ -42,10 +58,10 @@ export const appRouter = router({
                 price_data: {
                   currency: "usd",
                   product_data: {
-                    name: "CLARITY by Moses",
-                    description: "Full digital album — 12 tracks + 5 photos (instant download)",
+                    name: productName,
+                    description: productDescription,
                   },
-                  unit_amount: 1200,
+                  unit_amount: unitAmount,
                 },
                 quantity: 1,
               },
@@ -53,10 +69,11 @@ export const appRouter = router({
             mode: "payment",
             customer_email: input.customerEmail,
             success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${origin}/clarity`,
+            cancel_url: `${origin}/store`,
             metadata: {
               customer_email: input.customerEmail,
               customer_name: input.customerName,
+              product_id: input.productId || "clarity",
             },
           });
 
@@ -67,6 +84,56 @@ export const appRouter = router({
         } catch (error) {
           console.error("Stripe session creation error:", error);
           throw new Error("Failed to create checkout session");
+        }
+      }),
+
+    createFreeOrder: publicProcedure
+      .input(
+        z.object({
+          customerEmail: z.string().email(),
+          customerName: z.string().min(1),
+          productId: z.string(),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        try {
+          // Create order record for free transaction
+          const result = await createOrder({
+            stripePaymentIntentId: `free-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            customerEmail: input.customerEmail,
+            customerName: input.customerName,
+            amount: 0,
+            currency: "usd",
+            status: "succeeded",
+          });
+
+          // Extract orderId from insert result
+          const orderId = (result as any).insertId || (result as any)[0]?.id;
+          if (!orderId) {
+            throw new Error("Failed to get order ID from insert result");
+          }
+
+          // Generate download token
+          const token = await generateDownloadToken(orderId, input.customerEmail);
+          const origin = ctx.req.headers.origin || "https://moses-storefront.manus.space";
+          const downloadUrl = `${origin}/downloads?token=${token}`;
+
+          // Send confirmation email
+          await sendPurchaseConfirmationEmail(
+            input.customerEmail,
+            input.customerName,
+            token,
+            downloadUrl
+          );
+
+          return {
+            success: true,
+            orderId,
+            token,
+          };
+        } catch (error) {
+          console.error("Free order creation error:", error);
+          throw new Error("Failed to create free order");
         }
       }),
   }),

@@ -71,6 +71,39 @@ export async function createZipArchive(
 }
 
 /**
+ * Create a ZIP archive for the Brand Images + Lyric PDF product
+ */
+export async function createBrandImagesBundle(): Promise<{ stream: Readable; size: number }> {
+  const files: AssetFile[] = [
+    // Brand Images
+    {
+      url: "https://d1o3xwbqmqkzlb.cloudfront.net/ChatGPTImageMar31,2026,09_21_37PM.png",
+      filename: "album-cover.png",
+    },
+    {
+      url: "https://d1o3xwbqmqkzlb.cloudfront.net/TOP_01.jpg",
+      filename: "brand-image-01.jpg",
+    },
+    {
+      url: "https://d1o3xwbqmqkzlb.cloudfront.net/TOP_04.jpg",
+      filename: "brand-image-02.jpg",
+    },
+    {
+      url: "https://d1o3xwbqmqkzlb.cloudfront.net/TOP_05.jpg",
+      filename: "brand-image-03.jpg",
+    },
+
+    // Lyric book
+    {
+      url: "https://d1o3xwbqmqkzlb.cloudfront.net/FINAL_PRAYER_PROCESS_LOG_001_9e12e531.pdf",
+      filename: "lyric-book.pdf",
+    },
+  ];
+
+  return createZipArchive(files);
+}
+
+/**
  * Create a ZIP archive for the CLARITY album bundle
  */
 export async function createClarityBundle(): Promise<{ stream: Readable; size: number }> {
