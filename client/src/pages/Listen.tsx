@@ -64,13 +64,15 @@ export default function Listen() {
   };
 
   const handlePrevious = () => {
+    const trackList = isShuffled ? shuffledTracks : tracks;
     if (activeTrackIndex <= 0) return;
-    playTrack(tracks[activeTrackIndex - 1].id);
+    playTrack(trackList[activeTrackIndex - 1].id);
   };
 
   const handleNext = () => {
-    if (activeTrackIndex < 0 || activeTrackIndex >= tracks.length - 1) return;
-    playTrack(tracks[activeTrackIndex + 1].id);
+    const trackList = isShuffled ? shuffledTracks : tracks;
+    if (activeTrackIndex < 0 || activeTrackIndex >= trackList.length - 1) return;
+    playTrack(trackList[activeTrackIndex + 1].id);
   };
 
   const handleTrackEnd = () => {
