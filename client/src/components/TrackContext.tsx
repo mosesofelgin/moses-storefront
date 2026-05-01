@@ -4,28 +4,28 @@ interface TrackContextProps {
   trackId: number | null;
 }
 
-export default function TrackContext({ trackId }: TrackContextProps) {
-  if (!trackId) return null;
+const albumMessage = 'Press play on any track to step into CLARITY — a story of faith, discipline, and transformation.';
 
-  const track = CLARITY_BUNDLE.getTrack(trackId);
-  if (!track || !track.experience) return null;
+export default function TrackContext({ trackId }: TrackContextProps) {
+  const track = trackId ? CLARITY_BUNDLE.getTrack(trackId) : null;
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-8">
-      <div className="flex items-start gap-4">
-        <div className="flex-1">
-          <div className="text-sm opacity-60 mb-2 tracking-widest uppercase">Now Playing</div>
-          <h2 className="text-2xl font-light mb-3">
+    <div className="mb-6 rounded-xl border border-zinc-800 bg-zinc-900/80 p-5">
+      <p className="mb-2 text-xs uppercase tracking-[0.2em] text-zinc-400">Track Context</p>
+      {track ? (
+        <>
+          <h2 className="text-xl font-semibold text-zinc-100 sm:text-2xl">
             {String(track.id).padStart(2, '0')}. {track.title}
           </h2>
-          <p className="text-lg opacity-80 italic mb-3">
-            "{track.experience.meaning.hook}"
-          </p>
-          <p className="text-sm opacity-70 leading-relaxed">
-            {track.experience.meaning.description}
-          </p>
-        </div>
-      </div>
+          <p className="mt-2 text-sm leading-relaxed text-zinc-200">{track.experience?.meaning.hook}</p>
+          <p className="mt-2 text-xs leading-relaxed text-zinc-400">{track.experience?.meaning.pull}</p>
+        </>
+      ) : (
+        <>
+          <h2 className="text-xl font-semibold text-zinc-100">CLARITY</h2>
+          <p className="mt-2 text-sm leading-relaxed text-zinc-300">{albumMessage}</p>
+        </>
+      )}
     </div>
   );
 }
