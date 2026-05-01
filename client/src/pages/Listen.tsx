@@ -1,16 +1,14 @@
 import { Link } from 'wouter';
 import { CLARITY_BUNDLE } from '@/data/clarity-bundle';
 import { useState, useRef } from 'react';
-import { Play, Pause, Volume2 } from 'lucide-react';
+import { Play, Pause } from 'lucide-react';
+import AlbumArtDisplay from '@/components/AlbumArtDisplay';
+import TrackContext from '@/components/TrackContext';
+import PersistentCTA from '@/components/PersistentCTA';
 
 export default function Listen() {
   const [playingTrackId, setPlayingTrackId] = useState<number | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
-
-  const handleBuyClick = () => {
-    // Navigate to store for purchase
-    window.location.href = '/store';
-  };
 
   const handlePlayTrack = (trackId: number, url: string) => {
     if (playingTrackId === trackId) {
@@ -37,18 +35,28 @@ export default function Listen() {
           <div className="text-sm opacity-70 mb-4 tracking-widest">
             Clarity Season 1: April 2026
           </div>
-          <h1 className="text-4xl font-light mb-2">Clarity</h1>
-          <p className="opacity-70">12-track digital album</p>
+          <h1 className="text-4xl font-light mb-2">Listen</h1>
+          <p className="opacity-70">Experience the full album. Support the artist.</p>
         </div>
 
+        {/* Album Art Display */}
+        <AlbumArtDisplay isPlaying={playingTrackId !== null} />
+
+        {/* Track Context (Now Playing) */}
+        <TrackContext trackId={playingTrackId} />
+
         {/* Track Preview Section */}
-        <div className="bg-zinc-900 rounded-lg p-6 mb-8">
-          <h2 className="text-xl font-light mb-6">Track Preview</h2>
+        <div className="bg-zinc-900 rounded-lg p-6 mb-8 border border-zinc-800">
+          <h2 className="text-xl font-light mb-6">All Tracks</h2>
           <div className="space-y-3">
-            {CLARITY_BUNDLE.tracks.map((track) => (
+            {CLARITY_BUNDLE.getAllTracks().map((track) => (
               <div
                 key={track.id}
-                className="flex items-center justify-between p-3 bg-zinc-800 rounded hover:bg-zinc-700 transition"
+                className={`flex items-center justify-between p-3 rounded transition ${
+                  playingTrackId === track.id
+                    ? 'bg-green-500 bg-opacity-20 border border-green-500'
+                    : 'bg-zinc-800 border border-transparent hover:bg-zinc-700'
+                }`}
               >
                 <div className="flex items-center gap-4 flex-1 min-w-0">
                   <button
@@ -65,6 +73,11 @@ export default function Listen() {
                     <p className="font-medium truncate">
                       {String(track.id).padStart(2, '0')}. {track.title}
                     </p>
+                    {track.experience && (
+                      <p className="text-xs opacity-60 truncate">
+                        {track.experience.meaning.hook}
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -78,25 +91,8 @@ export default function Listen() {
           />
         </div>
 
-        {/* Now Playing Indicator */}
-        {playingTrackId && (
-          <div className="bg-green-500 text-black p-3 rounded mb-8 flex items-center gap-2">
-            <Volume2 className="w-4 h-4" />
-            <span className="text-sm font-medium">
-              Now playing: {CLARITY_BUNDLE.tracks.find(t => t.id === playingTrackId)?.title}
-            </span>
-          </div>
-        )}
-
-        {/* Purchase CTA */}
-        <div className="mb-8">
-          <button
-            onClick={handleBuyClick}
-            className="w-full py-3 px-6 bg-green-500 text-black font-medium rounded hover:bg-green-600 transition transform hover:-translate-y-0.5"
-          >
-            Buy Full Album ($12)
-          </button>
-        </div>
+        {/* Persistent CTA */}
+        <PersistentCTA isPlaying={playingTrackId !== null} />
 
         {/* Navigation */}
         <div className="flex justify-between items-center text-sm">
@@ -104,7 +100,7 @@ export default function Listen() {
             <a className="text-blue-400 hover:underline">← Back to Home</a>
           </Link>
           <Link href="/store">
-            <a className="text-blue-400 hover:underline">View All Products →</a>
+            <a className="text-blue-400 hover:underline">View Store →</a>
           </Link>
         </div>
       </div>

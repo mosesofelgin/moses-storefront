@@ -6,6 +6,14 @@
 
 const CDN = "https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk";
 
+export interface TrackExperience {
+  trackId: number;
+  meaning: {
+    hook: string;
+    description: string;
+  };
+}
+
 export const CLARITY_BUNDLE = {
   tracks: [
     {
@@ -129,5 +137,107 @@ export const CLARITY_BUNDLE = {
     title: "CLARITY – Lyric Book",
     url: `${CDN}/FINAL_PRAYER_PROCESS_LOG_001_9e12e531.pdf`,
     filename: "CLARITY-Lyric-Book.pdf",
+  },
+  experiences: {
+    1: {
+      trackId: 1,
+      meaning: {
+        hook: "A moment of surrender.",
+        description: "Where it all begins. A prayer for clarity in the midst of chaos.",
+      },
+    },
+    2: {
+      trackId: 2,
+      meaning: {
+        hook: "Longing for what was lost.",
+        description: "A reflection on absence and the weight of missing someone.",
+      },
+    },
+    3: {
+      trackId: 3,
+      meaning: {
+        hook: "The grind never stops.",
+        description: "Dedication to the craft. The journey to mastery.",
+      },
+    },
+    4: {
+      trackId: 4,
+      meaning: {
+        hook: "When it's all said and done.",
+        description: "Acceptance of endings and the peace that follows.",
+      },
+    },
+    5: {
+      trackId: 5,
+      meaning: {
+        hook: "Watching dreams dissolve.",
+        description: "The struggle of letting go and moving forward.",
+      },
+    },
+    6: {
+      trackId: 6,
+      meaning: {
+        hook: "Crowned in struggle.",
+        description: "Finding royalty in the midst of hardship.",
+      },
+    },
+    7: {
+      trackId: 7,
+      meaning: {
+        hook: "A warrior's journey.",
+        description: "Standing firm in faith and conviction.",
+      },
+    },
+    8: {
+      trackId: 8,
+      meaning: {
+        hook: "Honoring the fallen.",
+        description: "A tribute to legacy and inspiration.",
+      },
+    },
+    9: {
+      trackId: 9,
+      meaning: {
+        hook: "Refined by fire.",
+        description: "Transformation through struggle and perseverance.",
+      },
+    },
+    10: {
+      trackId: 10,
+      meaning: {
+        hook: "Gratitude in abundance.",
+        description: "Recognizing blessings and celebrating progress.",
+      },
+    },
+    11: {
+      trackId: 11,
+      meaning: {
+        hook: "Building your platform.",
+        description: "The power of voice and the responsibility it carries.",
+      },
+    },
+    12: {
+      trackId: 12,
+      meaning: {
+        hook: "Rest in clarity.",
+        description: "The final destination. Peace after the journey.",
+      },
+    },
+  } as Record<number, TrackExperience>,
+
+  getTrack(trackId: number) {
+    const track = this.tracks.find(t => t.id === trackId);
+    if (!track) return null;
+    return {
+      ...track,
+      experience: this.experiences[trackId],
+    };
+  },
+
+  getAllTracks() {
+    return this.tracks.map(track => ({
+      ...track,
+      experience: this.experiences[track.id],
+    }));
   },
 };
