@@ -40,9 +40,9 @@ export const CLARITY_BUNDLE = {
     {
       id: 4,
       title: "Over",
-      url: `${CDN}/04-Moses-Over_6f624126.wav`,
-      filename: "04-Over.wav",
-      type: "audio/wav",
+      url: `${CDN}/over_3b8e9f0f.mp3`,
+      filename: "04-Over.mp3",
+      type: "audio/mpeg",
     },
     {
       id: 5,
