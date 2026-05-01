@@ -1,7 +1,7 @@
 import { Link } from 'wouter';
 import { CLARITY_BUNDLE } from '@/data/clarity-bundle';
 import { useMemo, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pause, Play, Repeat, Repeat1, Shuffle } from 'lucide-react';
 import TrackContext from '@/components/TrackContext';
 import PersistentCTA from '@/components/PersistentCTA';
 
@@ -17,8 +17,11 @@ export default function Listen() {
   const [playingTrackId, setPlayingTrackId] = useState<number | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [loopMode, setLoopMode] = useState<'off' | 'all' | 'one'>('off'); // off, all, one
+  const [isShuffled, setIsShuffled] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const albumCover = CLARITY_BUNDLE.images.find((img) => img.title === 'CLARITY Album Cover');
+  const [shuffledTracks, setShuffledTracks] = useState<typeof tracks>([]);
 
   const activeTrackIndex = tracks.findIndex((track) => track.id === playingTrackId);
   const progressPercent = duration > 0 ? Math.min((currentTime / duration) * 100, 100) : 0;
@@ -71,13 +74,44 @@ export default function Listen() {
   };
 
   const handleTrackEnd = () => {
-    if (activeTrackIndex >= 0 && activeTrackIndex < tracks.length - 1) {
-      playTrack(tracks[activeTrackIndex + 1].id);
+    if (loopMode === 'one') {
+      // Repeat current track
+      playTrack(playingTrackId!);
+      return;
+    }
+
+    const trackList = isShuffled ? shuffledTracks : tracks;
+    if (activeTrackIndex >= 0 && activeTrackIndex < trackList.length - 1) {
+      playTrack(trackList[activeTrackIndex + 1].id);
+      return;
+    }
+
+    if (loopMode === 'all') {
+      // Loop back to first track
+      playTrack(trackList[0].id);
       return;
     }
 
     setPlayingTrackId(null);
     setCurrentTime(0);
+  };
+
+  const toggleShuffle = () => {
+    if (isShuffled) {
+      setIsShuffled(false);
+      setShuffledTracks([]);
+    } else {
+      const shuffled = [...tracks].sort(() => Math.random() - 0.5);
+      setShuffledTracks(shuffled);
+      setIsShuffled(true);
+    }
+  };
+
+  const toggleLoop = () => {
+    const modes: ('off' | 'all' | 'one')[] = ['off', 'all', 'one'];
+    const currentIndex = modes.indexOf(loopMode);
+    const nextMode = modes[(currentIndex + 1) % modes.length];
+    setLoopMode(nextMode);
   };
 
   return (
@@ -123,6 +157,17 @@ export default function Listen() {
           />
           <div className="mt-4 flex items-center justify-center gap-3">
             <button
+              onClick={toggleShuffle}
+              className={`rounded-full border p-2 transition ${
+                isShuffled
+                  ? 'border-white/40 bg-zinc-800 text-white'
+                  : 'border-zinc-700 text-zinc-200 hover:text-white'
+              }`}
+              aria-label="Toggle shuffle"
+            >
+              <Shuffle className="h-4 w-4" />
+            </button>
+            <button
               onClick={handlePrevious}
               disabled={activeTrackIndex <= 0}
               className="rounded-full border border-zinc-700 p-2 text-zinc-200 disabled:cursor-not-allowed disabled:opacity-40"
@@ -145,6 +190,18 @@ export default function Listen() {
               aria-label="Next track"
             >
               <ChevronRight className="h-4 w-4" />
+            </button>
+            <button
+              onClick={toggleLoop}
+              className={`rounded-full border p-2 transition ${
+                loopMode === 'off'
+                  ? 'border-zinc-700 text-zinc-200 hover:text-white'
+                  : 'border-white/40 bg-zinc-800 text-white'
+              }`}
+              aria-label={`Loop mode: ${loopMode}`}
+              title={`Loop: ${loopMode}`}
+            >
+              {loopMode === 'one' ? <Repeat1 className="h-4 w-4" /> : <Repeat className="h-4 w-4" />}
             </button>
           </div>
         </section>
