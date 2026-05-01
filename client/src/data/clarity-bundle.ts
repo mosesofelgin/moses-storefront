@@ -10,7 +10,7 @@ export interface TrackExperience {
   trackId: number;
   meaning: {
     hook: string;
-    description: string;
+    pull: string;
   };
 }
 
@@ -139,90 +139,18 @@ export const CLARITY_BUNDLE = {
     filename: "CLARITY-Lyric-Book.pdf",
   },
   experiences: {
-    1: {
-      trackId: 1,
-      meaning: {
-        hook: "A moment of surrender.",
-        description: "Where it all begins. A prayer for clarity in the midst of chaos.",
-      },
-    },
-    2: {
-      trackId: 2,
-      meaning: {
-        hook: "Longing for what was lost.",
-        description: "A reflection on absence and the weight of missing someone.",
-      },
-    },
-    3: {
-      trackId: 3,
-      meaning: {
-        hook: "The grind never stops.",
-        description: "Dedication to the craft. The journey to mastery.",
-      },
-    },
-    4: {
-      trackId: 4,
-      meaning: {
-        hook: "When it's all said and done.",
-        description: "Acceptance of endings and the peace that follows.",
-      },
-    },
-    5: {
-      trackId: 5,
-      meaning: {
-        hook: "Watching dreams dissolve.",
-        description: "The struggle of letting go and moving forward.",
-      },
-    },
-    6: {
-      trackId: 6,
-      meaning: {
-        hook: "Crowned in struggle.",
-        description: "Finding royalty in the midst of hardship.",
-      },
-    },
-    7: {
-      trackId: 7,
-      meaning: {
-        hook: "A warrior's journey.",
-        description: "Standing firm in faith and conviction.",
-      },
-    },
-    8: {
-      trackId: 8,
-      meaning: {
-        hook: "Honoring the fallen.",
-        description: "A tribute to legacy and inspiration.",
-      },
-    },
-    9: {
-      trackId: 9,
-      meaning: {
-        hook: "Refined by fire.",
-        description: "Transformation through struggle and perseverance.",
-      },
-    },
-    10: {
-      trackId: 10,
-      meaning: {
-        hook: "Gratitude in abundance.",
-        description: "Recognizing blessings and celebrating progress.",
-      },
-    },
-    11: {
-      trackId: 11,
-      meaning: {
-        hook: "Building your platform.",
-        description: "The power of voice and the responsibility it carries.",
-      },
-    },
-    12: {
-      trackId: 12,
-      meaning: {
-        hook: "Rest in clarity.",
-        description: "The final destination. Peace after the journey.",
-      },
-    },
+    1: { trackId: 1, meaning: { hook: "A prayerful opening that invites surrender before the climb.", pull: "It feels like the first deep breath before a hard but holy road." } },
+    2: { trackId: 2, meaning: { hook: "A vulnerable look at loss, memory, and the ache of absence.", pull: "Every line leans toward someone who is gone but still near." } },
+    3: { trackId: 3, meaning: { hook: "A disciplined anthem about showing up when no one is watching.", pull: "You can hear the quiet hours turning into momentum." } },
+    4: { trackId: 4, meaning: { hook: "An honest checkpoint where endings force truth to the surface.", pull: "The weight drops in slowly, then all at once." } },
+    5: { trackId: 5, meaning: { hook: "A meditation on letting old versions of yourself fall away.", pull: "It sounds like dusk closing on what can no longer stay." } },
+    6: { trackId: 6, meaning: { hook: "A declaration of identity, purpose, and God-given authority.", pull: "Confidence rises here without losing humility." } },
+    7: { trackId: 7, meaning: { hook: "A faith-fueled battle cry for endurance through pressure.", pull: "The drums feel like footsteps that refuse to retreat." } },
+    8: { trackId: 8, meaning: { hook: "A tribute to legacy, focus, and the cost of greatness.", pull: "Grief and grit move together in the same breath." } },
+    9: { trackId: 9, meaning: { hook: "A testimony of being shaped by fire, not broken by it.", pull: "You can feel scars turning into strength in real time." } },
+    10: { trackId: 10, meaning: { hook: "A gratitude record that reframes success through blessings.", pull: "Joy settles in like light after a long storm." } },
+    11: { trackId: 11, meaning: { hook: "A reminder that influence is stewardship, not self-promotion.", pull: "It asks what your voice is building when nobody applauds." } },
+    12: { trackId: 12, meaning: { hook: "A soft landing into peace after the journey of becoming.", pull: "The ending opens like morning after a long night." } },
   } as Record<number, TrackExperience>,
 
   getTrack(trackId: number) {
