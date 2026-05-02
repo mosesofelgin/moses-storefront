@@ -1,7 +1,7 @@
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import { CLARITY_BUNDLE } from '@/data/clarity-bundle';
 import { useMemo, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight, Pause, Play, Repeat, Repeat1, Shuffle } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import TrackContext from '@/components/TrackContext';
 import PersistentCTA from '@/components/PersistentCTA';
 
@@ -17,14 +17,14 @@ export default function Listen() {
   const [playingTrackId, setPlayingTrackId] = useState<number | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [loopMode, setLoopMode] = useState<'off' | 'all' | 'one'>('off'); // off, all, one
-  const [isShuffled, setIsShuffled] = useState(false);
+  const [maxTrackReached, setMaxTrackReached] = useState<number>(0);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const [, navigate] = useLocation();
   const albumCover = CLARITY_BUNDLE.images.find((img) => img.title === 'CLARITY Album Cover');
-  const [shuffledTracks, setShuffledTracks] = useState<typeof tracks>([]);
 
   const activeTrackIndex = tracks.findIndex((track) => track.id === playingTrackId);
   const progressPercent = duration > 0 ? Math.min((currentTime / duration) * 100, 100) : 0;
+  const showSupportCta = maxTrackReached >= 4;
 
   const playTrack = (trackId: number) => {
     const audio = audioRef.current;
@@ -39,6 +39,7 @@ export default function Listen() {
 
     void audio.play();
     setPlayingTrackId(trackId);
+    setMaxTrackReached((prev) => Math.max(prev, trackId));
   };
 
   const handlePlayTrack = (trackId: number) => {
@@ -64,33 +65,18 @@ export default function Listen() {
   };
 
   const handlePrevious = () => {
-    const trackList = isShuffled ? shuffledTracks : tracks;
     if (activeTrackIndex <= 0) return;
-    playTrack(trackList[activeTrackIndex - 1].id);
+    playTrack(tracks[activeTrackIndex - 1].id);
   };
 
   const handleNext = () => {
-    const trackList = isShuffled ? shuffledTracks : tracks;
-    if (activeTrackIndex < 0 || activeTrackIndex >= trackList.length - 1) return;
-    playTrack(trackList[activeTrackIndex + 1].id);
+    if (activeTrackIndex < 0 || activeTrackIndex >= tracks.length - 1) return;
+    playTrack(tracks[activeTrackIndex + 1].id);
   };
 
   const handleTrackEnd = () => {
-    if (loopMode === 'one') {
-      // Repeat current track
-      playTrack(playingTrackId!);
-      return;
-    }
-
-    const trackList = isShuffled ? shuffledTracks : tracks;
-    if (activeTrackIndex >= 0 && activeTrackIndex < trackList.length - 1) {
-      playTrack(trackList[activeTrackIndex + 1].id);
-      return;
-    }
-
-    if (loopMode === 'all') {
-      // Loop back to first track
-      playTrack(trackList[0].id);
+    if (activeTrackIndex >= 0 && activeTrackIndex < tracks.length - 1) {
+      playTrack(tracks[activeTrackIndex + 1].id);
       return;
     }
 
@@ -98,166 +84,183 @@ export default function Listen() {
     setCurrentTime(0);
   };
 
-  const toggleShuffle = () => {
-    if (isShuffled) {
-      setIsShuffled(false);
-      setShuffledTracks([]);
-    } else {
-      const shuffled = [...tracks].sort(() => Math.random() - 0.5);
-      setShuffledTracks(shuffled);
-      setIsShuffled(true);
-    }
-  };
-
-  const toggleLoop = () => {
-    const modes: ('off' | 'all' | 'one')[] = ['off', 'all', 'one'];
-    const currentIndex = modes.indexOf(loopMode);
-    const nextMode = modes[(currentIndex + 1) % modes.length];
-    setLoopMode(nextMode);
-  };
-
   return (
     <div className="min-h-screen bg-zinc-950 px-4 py-8 text-zinc-100">
-      <div className="mx-auto max-w-2xl">
-        <header className="mb-8">
-          <p className="mb-3 text-xs uppercase tracking-[0.2em] text-zinc-400">Clarity Season 1 · April 2026</p>
-          <h1 className="text-4xl font-semibold">Listen</h1>
-          <p className="mt-2 text-sm text-zinc-300">A focused listening space for the full CLARITY journey.</p>
-        </header>
+      <div className="mx-auto max-w-6xl">
+        <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-6">
+          <main>
+            <header className="mb-8">
+              <p className="mb-3 text-xs uppercase tracking-[0.2em] text-zinc-400">
+                Clarity Season 1 · April 2026
+              </p>
+              <h1 className="text-4xl font-semibold">Listen</h1>
+              <p className="mt-2 text-sm text-zinc-300">
+                A focused listening space for the full CLARITY journey.
+              </p>
+            </header>
 
-        {albumCover && (
-          <div
-            className={`mb-6 overflow-hidden rounded-2xl border bg-zinc-900 transition ${
-              playingTrackId ? 'border-zinc-500 shadow-[0_0_40px_rgba(255,255,255,0.10)]' : 'border-zinc-800'
-            }`}
-          >
-            <img
-              src={albumCover.url}
-              alt="CLARITY album cover"
-              className={`h-auto w-full transition ${playingTrackId ? 'opacity-100' : 'opacity-95'}`}
-            />
-          </div>
-        )}
+            {albumCover && (
+              <div
+                className={`mb-6 overflow-hidden rounded-2xl border bg-zinc-900 transition ${
+                  playingTrackId
+                    ? 'border-zinc-500 shadow-[0_0_40px_rgba(255,255,255,0.10)]'
+                    : 'border-zinc-800'
+                }`}
+              >
+                <img
+                  src={albumCover.url}
+                  alt="CLARITY album cover"
+                  className={`h-auto w-full transition ${playingTrackId ? 'opacity-100' : 'opacity-95'}`}
+                />
+              </div>
+            )}
 
-        <TrackContext trackId={playingTrackId} />
+            <TrackContext trackId={playingTrackId} />
 
-        <section className="mb-6 rounded-xl border border-zinc-800 bg-zinc-900 p-4 sm:p-5">
-          <div className="mb-3 flex items-center justify-between text-xs text-zinc-400">
-            <span>{formatTime(currentTime)}</span>
-            <span>{formatTime(duration)}</span>
-          </div>
-          <input
-            type="range"
-            min={0}
-            max={100}
-            step={0.1}
-            value={progressPercent}
-            onChange={(event) => handleSeek(Number(event.target.value))}
-            className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-zinc-700 accent-white"
-            aria-label="Seek playback position"
-            disabled={!playingTrackId || duration <= 0}
-          />
-          <div className="mt-4 flex items-center justify-center gap-3">
-            <button
-              onClick={toggleShuffle}
-              className={`rounded-full border p-2 transition ${
-                isShuffled
-                  ? 'border-white/40 bg-zinc-800 text-white'
-                  : 'border-zinc-700 text-zinc-200 hover:text-white'
-              }`}
-              aria-label="Toggle shuffle"
-            >
-              <Shuffle className="h-4 w-4" />
-            </button>
-            <button
-              onClick={handlePrevious}
-              disabled={activeTrackIndex <= 0}
-              className="rounded-full border border-zinc-700 p-2 text-zinc-200 disabled:cursor-not-allowed disabled:opacity-40"
-              aria-label="Previous track"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-            <button
-              onClick={() => activeTrackIndex >= 0 && handlePlayTrack(tracks[activeTrackIndex].id)}
-              disabled={activeTrackIndex < 0}
-              className="rounded-full bg-white p-3 text-black disabled:cursor-not-allowed disabled:opacity-40"
-              aria-label={playingTrackId ? 'Pause current track' : 'Play current track'}
-            >
-              {playingTrackId ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
-            </button>
-            <button
-              onClick={handleNext}
-              disabled={activeTrackIndex < 0 || activeTrackIndex >= tracks.length - 1}
-              className="rounded-full border border-zinc-700 p-2 text-zinc-200 disabled:cursor-not-allowed disabled:opacity-40"
-              aria-label="Next track"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </button>
-            <button
-              onClick={toggleLoop}
-              className={`rounded-full border p-2 transition ${
-                loopMode === 'off'
-                  ? 'border-zinc-700 text-zinc-200 hover:text-white'
-                  : 'border-white/40 bg-zinc-800 text-white'
-              }`}
-              aria-label={`Loop mode: ${loopMode}`}
-              title={`Loop: ${loopMode}`}
-            >
-              {loopMode === 'one' ? <Repeat1 className="h-4 w-4" /> : <Repeat className="h-4 w-4" />}
-            </button>
-          </div>
-        </section>
-
-        <section className="mb-8 rounded-xl border border-zinc-800 bg-zinc-900 p-4 sm:p-5">
-          <h2 className="mb-4 text-lg font-medium">All Tracks</h2>
-          <div className="space-y-2">
-            {tracks.map((track) => {
-              const isPlaying = playingTrackId === track.id;
-              return (
-                <div
-                  key={track.id}
-                  className={`flex items-center gap-3 rounded-lg border p-3 ${
-                    isPlaying ? 'border-white/40 bg-zinc-800 text-white ring-1 ring-white/20' : 'border-zinc-800 bg-zinc-900 text-zinc-200'
-                  }`}
+            <section className="mb-6 rounded-xl border border-zinc-800 bg-zinc-900 p-4 sm:p-5">
+              <div className="mb-3 flex items-center justify-between text-xs text-zinc-400">
+                <span>{formatTime(currentTime)}</span>
+                <span>{formatTime(duration)}</span>
+              </div>
+              <input
+                type="range"
+                min={0}
+                max={100}
+                step={0.1}
+                value={progressPercent}
+                onChange={(event) => handleSeek(Number(event.target.value))}
+                className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-zinc-700 accent-white"
+                aria-label="Seek playback position"
+                disabled={!playingTrackId || duration <= 0}
+              />
+              <div className="mt-4 flex items-center justify-center gap-3">
+                <button
+                  onClick={handlePrevious}
+                  disabled={activeTrackIndex <= 0}
+                  className="rounded-full border border-zinc-700 p-2 text-zinc-200 disabled:cursor-not-allowed disabled:opacity-40"
+                  aria-label="Previous track"
                 >
-                  <button
-                    onClick={() => handlePlayTrack(track.id)}
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-black"
-                    aria-label={isPlaying ? `Pause ${track.title}` : `Play ${track.title}`}
-                  >
-                    {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-                  </button>
-                  <div className="min-w-0">
-                    <p className={`truncate text-sm font-medium ${isPlaying ? 'text-white' : 'text-zinc-200'}`}>
-                      {String(track.id).padStart(2, '0')}. {track.title}
-                    </p>
-                    <p className={`truncate text-xs ${isPlaying ? 'text-zinc-300' : 'text-zinc-400'}`}>
-                      {track.experience?.meaning.hook}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <audio
-            ref={audioRef}
-            onLoadedMetadata={() => setDuration(audioRef.current?.duration ?? 0)}
-            onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime ?? 0)}
-            onEnded={handleTrackEnd}
-            className="hidden"
-          />
-        </section>
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() =>
+                    activeTrackIndex >= 0 && handlePlayTrack(tracks[activeTrackIndex].id)
+                  }
+                  disabled={activeTrackIndex < 0}
+                  className="rounded-full bg-white p-3 text-black disabled:cursor-not-allowed disabled:opacity-40"
+                  aria-label={playingTrackId ? 'Pause current track' : 'Play current track'}
+                >
+                  {playingTrackId ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
+                </button>
+                <button
+                  onClick={handleNext}
+                  disabled={activeTrackIndex < 0 || activeTrackIndex >= tracks.length - 1}
+                  className="rounded-full border border-zinc-700 p-2 text-zinc-200 disabled:cursor-not-allowed disabled:opacity-40"
+                  aria-label="Next track"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+            </section>
 
-        <p className="mb-4 text-center text-sm text-zinc-300">If this album spoke to you, go deeper.</p>
-        <PersistentCTA />
+            <section className="mb-8 rounded-xl border border-zinc-800 bg-zinc-900 p-4 sm:p-5">
+              <h2 className="mb-4 text-lg font-medium">All Tracks</h2>
+              <div className="space-y-2">
+                {tracks.map((track) => {
+                  const isPlaying = playingTrackId === track.id;
+                  return (
+                    <div
+                      key={track.id}
+                      className={`flex items-center gap-3 rounded-lg border p-3 ${
+                        isPlaying
+                          ? 'border-white/40 bg-zinc-800 text-white ring-1 ring-white/20'
+                          : 'border-zinc-800 bg-zinc-900 text-zinc-200'
+                      }`}
+                    >
+                      <button
+                        onClick={() => handlePlayTrack(track.id)}
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-black"
+                        aria-label={isPlaying ? `Pause ${track.title}` : `Play ${track.title}`}
+                      >
+                        {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                      </button>
+                      <div className="min-w-0">
+                        <p
+                          className={`truncate text-sm font-medium ${
+                            isPlaying ? 'text-white' : 'text-zinc-200'
+                          }`}
+                        >
+                          {String(track.id).padStart(2, '0')}. {track.title}
+                        </p>
+                        <p
+                          className={`truncate text-xs ${
+                            isPlaying ? 'text-zinc-300' : 'text-zinc-400'
+                          }`}
+                        >
+                          {track.experience?.meaning.hook}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <audio
+                ref={audioRef}
+                onLoadedMetadata={() => setDuration(audioRef.current?.duration ?? 0)}
+                onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime ?? 0)}
+                onEnded={handleTrackEnd}
+                className="hidden"
+              />
+            </section>
 
-        <div className="flex items-center justify-between text-sm">
-          <Link href="/">
-            <a className="text-zinc-300 hover:text-white">← Back to Home</a>
-          </Link>
-          <Link href="/store">
-            <a className="text-zinc-300 hover:text-white">View Store →</a>
-          </Link>
+            {showSupportCta && (
+              <section className="mb-6 rounded-xl border border-zinc-700/80 bg-zinc-900/80 p-4 lg:hidden">
+                <h3 className="text-base font-semibold text-zinc-100">Support the artist</h3>
+                <p className="mt-2 text-sm text-zinc-300">
+                  If CLARITY is speaking to you, own the full project and help the mission keep
+                  moving.
+                </p>
+                <button
+                  onClick={() => navigate('/store')}
+                  className="mt-4 rounded-lg border border-zinc-600 bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-100 hover:bg-zinc-700"
+                >
+                  Own CLARITY
+                </button>
+              </section>
+            )}
+
+            <p className="mb-4 text-center text-sm text-zinc-300">
+              If this album spoke to you, go deeper.
+            </p>
+            <PersistentCTA />
+
+            <div className="flex items-center justify-between text-sm">
+              <Link href="/">
+                <a className="text-zinc-300 hover:text-white">← Back to Home</a>
+              </Link>
+              <Link href="/store">
+                <a className="text-zinc-300 hover:text-white">View Store →</a>
+              </Link>
+            </div>
+          </main>
+
+          <aside className="hidden lg:block">
+            {showSupportCta && (
+              <section className="sticky top-8 rounded-xl border border-zinc-700/80 bg-zinc-900/80 p-5">
+                <h3 className="text-lg font-semibold text-zinc-100">Support the artist</h3>
+                <p className="mt-2 text-sm text-zinc-300">
+                  If CLARITY is speaking to you, own the full project and help the mission keep
+                  moving.
+                </p>
+                <button
+                  onClick={() => navigate('/store')}
+                  className="mt-4 w-full rounded-lg border border-zinc-600 bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-100 hover:bg-zinc-700"
+                >
+                  Own CLARITY
+                </button>
+              </section>
+            )}
+          </aside>
         </div>
       </div>
     </div>
