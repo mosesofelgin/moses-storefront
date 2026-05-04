@@ -106,8 +106,8 @@ export function getClarityAlbumFiles(): FileToZip[] {
       filename: "03-Get to the Studio.mp3",
     },
     {
-      url: `${CDN}/04-Moses-Over_6f624126.wav`,
-      filename: "04-Over.wav",
+      url: `${CDN}/over_3b8e9f0f.mp3`,
+      filename: "04-Over.mp3",
     },
     {
       url: `${CDN}/05-Moses-FadeAway_5363cc88.mp3`,

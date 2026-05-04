@@ -102,3 +102,9 @@
 - [x] Ensure checkout flow is frictionless
 - [x] Test full purchase-to-delivery flow
 - [x] Verify all CTAs are functional
+
+## P0 — ZIP Download Fix
+- [x] Fix track 4 "Over" WAV → MP3 in zip-download.ts (was pointing to old WAV CDN URL)
+- [x] Upgrade Downloads page visual design to match brand (dark theme, green accents, album art)
+- [ ] Home page redesign
+- [ ] Connect page redesign

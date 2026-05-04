@@ -85,6 +85,9 @@ export function registerRoutes(app: Express) {
         "image-03": `${CDN}/TOP_04_edae7ba8.jpg`,
         "image-04": `${CDN}/TOP_05_b7f42eb5.jpg`,
 
+        // Image 05
+        "image-05": `${CDN}/ChatGPTImageMar19,2026,11_14_44AM_97e635c2.png`,
+
         // Lyric book
         "lyric-book": `${CDN}/FINAL_PRAYER_PROCESS_LOG_001_9e12e531.pdf`,
       };
