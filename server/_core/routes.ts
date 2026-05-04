@@ -39,74 +39,33 @@ async function streamFileFromUrl(url: string, res: Response): Promise<void> {
 
 /**
  * Register download and webhook routes
+ * IMPORTANT: More specific routes must be registered BEFORE parameterized routes.
+ * /api/download/zip and /api/download/all/:token must come before /api/download/:token/:fileId
+ * otherwise Express matches "all" as the :token param and the token as :fileId.
  */
 export function registerRoutes(app: Express) {
+
   /**
-   * GET /api/download/:token/:fileId
-   * Download a single file from the CLARITY bundle
+   * GET /api/download/zip
+   * Download CLARITY album as ZIP (no token required — for paid Stripe customers on /success page)
    */
-  app.get("/api/download/:token/:fileId", async (req: Request, res: Response) => {
+  app.get("/api/download/zip", async (req: Request, res: Response) => {
     try {
-      const { token, fileId } = req.params;
-
-      // Verify token
-      const tokenData = await verifyDownloadToken(token);
-      if (!tokenData) {
-        return res.status(401).json({ error: "Invalid or expired download token" });
-      }
-
-      // Get order to verify it exists
-      const order = await getOrderByToken(token);
-      if (!order) {
-        return res.status(401).json({ error: "Order not found" });
-      }
-
-      const CDN = "https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk";
-
-      // Map file IDs to URLs (new CDN, all MP3)
-      const fileMap: Record<string, string> = {
-        // Tracks
-        "track-01": `${CDN}/1-Moses-FinalPrayerByMoses_11c2ba3f.mp3`,
-        "track-02": `${CDN}/02-Moses-WishIhadyou_16091eff.mp3`,
-        "track-03": `${CDN}/03-Moses-GetToTheStu_fdbb7ebb.mp3`,
-        "track-04": `${CDN}/over_3b8e9f0f.mp3`,
-        "track-05": `${CDN}/05-Moses-FadeAway_5363cc88.mp3`,
-        "track-06": `${CDN}/06-Moses-King_e592ea70.mp3`,
-        "track-07": `${CDN}/07-Moses-Soulja_7ba0876c.mp3`,
-        "track-08": `${CDN}/08-Moses-DearKobe_bfa7dc5b.mp3`,
-        "track-09": `${CDN}/09-Moses-Refined_ba82d395.mp3`,
-        "track-10": `${CDN}/10-Moses-LookAtAllTheseBlessings_4b5725ec.mp3`,
-        "track-11": `${CDN}/11-Moses-Platform_cf321b03.mp3`,
-        "track-12": `${CDN}/12-Moses-SweetDreams_37d7f3ad.mp3`,
-
-        // Images
-        "image-01": `${CDN}/album-cover_2118610e.png`,
-        "image-02": `${CDN}/TOP_01_aaeff941.jpg`,
-        "image-03": `${CDN}/TOP_04_edae7ba8.jpg`,
-        "image-04": `${CDN}/TOP_05_b7f42eb5.jpg`,
-
-        // Image 05
-        "image-05": `${CDN}/ChatGPTImageMar19,2026,11_14_44AM_97e635c2.png`,
-
-        // Lyric book
-        "lyric-book": `${CDN}/FINAL_PRAYER_PROCESS_LOG_001_9e12e531.pdf`,
-      };
-
-      const fileUrl = fileMap[fileId];
-      if (!fileUrl) {
-        return res.status(404).json({ error: "File not found" });
-      }
-
-      await streamFileFromUrl(fileUrl, res);
+      console.log("[ZIP Download] Request received");
+      const files = getClarityAlbumFiles();
+      await streamZipDownload(files, res, "CLARITY-Album-Bundle.zip");
     } catch (error) {
-      console.error("[Download] Error:", error);
-      res.status(500).json({ error: "Failed to download file" });
+      console.error("[ZIP Download] Error:", error);
+      if (!res.headersSent) {
+        res.status(500).json({ error: "Failed to create ZIP file" });
+      }
     }
   });
 
   /**
    * GET /api/download/all/:token
-   * Download all files as a ZIP archive
+   * Download all files as a ZIP archive (token-protected — for free order customers)
+   * MUST be registered before /api/download/:token/:fileId to avoid route collision
    */
   app.get("/api/download/all/:token", async (req: Request, res: Response) => {
     try {
@@ -150,19 +109,64 @@ export function registerRoutes(app: Express) {
   });
 
   /**
-   * GET /api/download/zip
-   * Download CLARITY album as ZIP (no token required for testing)
+   * GET /api/download/:token/:fileId
+   * Download a single file from the CLARITY bundle
+   * MUST be registered AFTER the more specific routes above
    */
-  app.get("/api/download/zip", async (req: Request, res: Response) => {
+  app.get("/api/download/:token/:fileId", async (req: Request, res: Response) => {
     try {
-      console.log("[ZIP Download] Request received");
-      const files = getClarityAlbumFiles();
-      await streamZipDownload(files, res, "CLARITY-Album-Bundle.zip");
-    } catch (error) {
-      console.error("[ZIP Download] Error:", error);
-      if (!res.headersSent) {
-        res.status(500).json({ error: "Failed to create ZIP file" });
+      const { token, fileId } = req.params;
+
+      // Verify token
+      const tokenData = await verifyDownloadToken(token);
+      if (!tokenData) {
+        return res.status(401).json({ error: "Invalid or expired download token" });
       }
+
+      // Get order to verify it exists
+      const order = await getOrderByToken(token);
+      if (!order) {
+        return res.status(401).json({ error: "Order not found" });
+      }
+
+      const CDN = "https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk";
+
+      // Map file IDs to URLs (new CDN, all MP3)
+      const fileMap: Record<string, string> = {
+        // Tracks
+        "track-01": `${CDN}/1-Moses-FinalPrayerByMoses_11c2ba3f.mp3`,
+        "track-02": `${CDN}/02-Moses-WishIhadyou_16091eff.mp3`,
+        "track-03": `${CDN}/03-Moses-GetToTheStu_fdbb7ebb.mp3`,
+        "track-04": `${CDN}/over_3b8e9f0f.mp3`,
+        "track-05": `${CDN}/05-Moses-FadeAway_5363cc88.mp3`,
+        "track-06": `${CDN}/06-Moses-King_e592ea70.mp3`,
+        "track-07": `${CDN}/07-Moses-Soulja_7ba0876c.mp3`,
+        "track-08": `${CDN}/08-Moses-DearKobe_bfa7dc5b.mp3`,
+        "track-09": `${CDN}/09-Moses-Refined_ba82d395.mp3`,
+        "track-10": `${CDN}/10-Moses-LookAtAllTheseBlessings_4b5725ec.mp3`,
+        "track-11": `${CDN}/11-Moses-Platform_cf321b03.mp3`,
+        "track-12": `${CDN}/12-Moses-SweetDreams_37d7f3ad.mp3`,
+
+        // Images
+        "image-01": `${CDN}/album-cover_2118610e.png`,
+        "image-02": `${CDN}/TOP_01_aaeff941.jpg`,
+        "image-03": `${CDN}/TOP_04_edae7ba8.jpg`,
+        "image-04": `${CDN}/TOP_05_b7f42eb5.jpg`,
+        "image-05": `${CDN}/ChatGPTImageMar19,2026,11_14_44AM_97e635c2.png`,
+
+        // Lyric book
+        "lyric-book": `${CDN}/FINAL_PRAYER_PROCESS_LOG_001_9e12e531.pdf`,
+      };
+
+      const fileUrl = fileMap[fileId];
+      if (!fileUrl) {
+        return res.status(404).json({ error: "File not found" });
+      }
+
+      await streamFileFromUrl(fileUrl, res);
+    } catch (error) {
+      console.error("[Download] Error:", error);
+      res.status(500).json({ error: "Failed to download file" });
     }
   });
 
