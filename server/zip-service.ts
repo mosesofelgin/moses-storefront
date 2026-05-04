@@ -97,8 +97,8 @@ export async function createBrandImagesBundle(): Promise<{ stream: Readable; siz
 
     // Lyric book
     {
-      url: `${CDN}/FINAL_PRAYER_PROCESS_LOG_001_9e12e531.pdf`,
-      filename: "lyric-book.pdf",
+      url: `${CDN}/CLARITY-Lyric-Book_7b3f1a4c.pdf`,
+      filename: "CLARITY-Lyric-Book.pdf",
     },
   ];
 
@@ -185,7 +185,7 @@ export async function createClarityBundle(): Promise<{ stream: Readable; size: n
 
     // Lyric book
     {
-      url: `${CDN}/FINAL_PRAYER_PROCESS_LOG_001_9e12e531.pdf`,
+      url: `${CDN}/CLARITY-Lyric-Book_7b3f1a4c.pdf`,
       filename: "CLARITY-Lyric-Book.pdf",
     },
   ];

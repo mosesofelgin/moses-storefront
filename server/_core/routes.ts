@@ -155,7 +155,7 @@ export function registerRoutes(app: Express) {
         "image-05": `${CDN}/ChatGPTImageMar19,2026,11_14_44AM_97e635c2.png`,
 
         // Lyric book
-        "lyric-book": `${CDN}/FINAL_PRAYER_PROCESS_LOG_001_9e12e531.pdf`,
+        "lyric-book": `${CDN}/CLARITY-Lyric-Book_7b3f1a4c.pdf`,
       };
 
       const fileUrl = fileMap[fileId];

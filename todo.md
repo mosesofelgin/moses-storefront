@@ -108,3 +108,4 @@
 - [x] Upgrade Downloads page visual design to match brand (dark theme, green accents, album art)
 - [ ] Home page redesign
 - [ ] Connect page redesign
+- [x] Add lyric PDF (CLARITY-Lyric-Book.pdf) to createClarityBundle ZIP in zip-service.ts
