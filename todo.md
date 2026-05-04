@@ -106,8 +106,8 @@
 ## P0 — ZIP Download Fix
 - [x] Fix track 4 "Over" WAV → MP3 in zip-download.ts (was pointing to old WAV CDN URL)
 - [x] Upgrade Downloads page visual design to match brand (dark theme, green accents, album art)
-- [ ] Home page redesign
-- [ ] Connect page redesign
+- [x] Home page redesign
+- [x] Connect page redesign
 - [x] Add lyric PDF (CLARITY-Lyric-Book.pdf) to createClarityBundle ZIP in zip-service.ts
 - [x] Fix download URL domain in purchase emails (webhook + free order) — use https://mosessog.com as fallback
 - [x] Home page redesign — 6 sections: Hero, Featured Project, Value Props, Pathway Cards, Mission, Footer

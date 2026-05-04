@@ -48,7 +48,7 @@ const SOCIALS = [
   },
   {
     platform: 'X / Twitter',
-    handle: '@sogmoses',
+    handle: 'sogmoses',
     purpose: 'Thoughts, updates, and conversation.',
     href: 'https://x.com/sogmoses',
     icon: Twitter,
