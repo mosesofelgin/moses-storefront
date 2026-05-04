@@ -211,10 +211,10 @@ export default function Home() {
 
           {/* Email */}
           <a
-            href="mailto:mosessog@gmail.com"
+            href="mailto:wtgexodus@gmail.com"
             className="font-mono text-xs text-zinc-500 transition-colors hover:text-zinc-300"
           >
-            mosessog@gmail.com
+            wtgexodus@gmail.com
           </a>
 
           {/* Copyright */}

@@ -293,8 +293,8 @@ export default function Downloads() {
           <p>Thank you for supporting independent music.</p>
           <p className="mt-2">
             Questions?{' '}
-            <a href="mailto:mosessog@gmail.com" className="text-[#00ff00] hover:underline">
-              mosessog@gmail.com
+            <a href="mailto:wtgexodus@gmail.com" className="text-[#00ff00] hover:underline">
+              wtgexodus@gmail.com
             </a>
           </p>
           <button

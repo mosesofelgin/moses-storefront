@@ -56,9 +56,9 @@ const SOCIALS = [
   },
   {
     platform: 'Email',
-    handle: 'mosessog@gmail.com',
+    handle: 'wtgexodus@gmail.com',
     purpose: 'Direct contact and booking.',
-    href: 'mailto:mosessog@gmail.com',
+    href: 'mailto:wtgexodus@gmail.com',
     icon: Mail,
     hover: 'hover:border-green-500 hover:text-green-400',
   },
@@ -240,13 +240,13 @@ export default function Connect() {
             For booking, collaborations, church events, workshops, or media inquiries:
           </p>
           <a
-            href="mailto:mosessog@gmail.com"
+            href="mailto:wtgexodus@gmail.com"
             className="inline-flex items-center gap-2 rounded-lg bg-zinc-800 px-7 py-3.5 font-bebas text-lg tracking-wide text-zinc-100 transition-colors hover:bg-zinc-700"
           >
             <Mail className="h-4 w-4" />
             Send an Email
           </a>
-          <p className="mt-4 font-mono text-xs text-zinc-600">mosessog@gmail.com</p>
+          <p className="mt-4 font-mono text-xs text-zinc-600">wtgexodus@gmail.com</p>
         </div>
       </section>
 
