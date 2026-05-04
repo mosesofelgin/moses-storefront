@@ -111,3 +111,4 @@
 - [x] Add lyric PDF (CLARITY-Lyric-Book.pdf) to createClarityBundle ZIP in zip-service.ts
 - [x] Fix download URL domain in purchase emails (webhook + free order) — use https://mosessog.com as fallback
 - [x] Home page redesign — 6 sections: Hero, Featured Project, Value Props, Pathway Cards, Mission, Footer
+- [x] Connect page redesign — 6 sections: Hero, Email Signup, Social Links, Live/Events, Direct Contact, Footer

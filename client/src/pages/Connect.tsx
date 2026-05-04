@@ -1,11 +1,80 @@
 import { Link } from 'wouter';
-import { Mail, Youtube, Instagram, Twitter, Music } from 'lucide-react';
+import {
+  ArrowRight,
+  Mail,
+  Youtube,
+  Instagram,
+  Twitter,
+  Tv,
+  Music2,
+  Video,
+} from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { trpc } from '../lib/trpc';
 
+const SOCIALS = [
+  {
+    platform: 'YouTube',
+    handle: '@mosessog',
+    purpose: 'Music, visuals, and live sessions.',
+    href: 'https://youtube.com/@mosessog',
+    icon: Youtube,
+    hover: 'hover:border-red-500 hover:text-red-400',
+  },
+  {
+    platform: 'Instagram',
+    handle: '@moses_sog',
+    purpose: 'Daily updates, clips, and moments.',
+    href: 'https://instagram.com/moses_sog',
+    icon: Instagram,
+    hover: 'hover:border-pink-500 hover:text-pink-400',
+  },
+  {
+    platform: 'TikTok',
+    handle: '@mosessog',
+    purpose: 'Short-form music and message.',
+    href: 'https://tiktok.com/@mosessog',
+    icon: Music2,
+    hover: 'hover:border-zinc-300 hover:text-zinc-200',
+  },
+  {
+    platform: 'Twitch',
+    handle: 'mosessog',
+    purpose: 'Live performances and community.',
+    href: 'https://twitch.tv/mosessog',
+    icon: Tv,
+    hover: 'hover:border-purple-500 hover:text-purple-400',
+  },
+  {
+    platform: 'X / Twitter',
+    handle: '@sogmoses',
+    purpose: 'Thoughts, updates, and conversation.',
+    href: 'https://x.com/sogmoses',
+    icon: Twitter,
+    hover: 'hover:border-zinc-300 hover:text-zinc-200',
+  },
+  {
+    platform: 'Email',
+    handle: 'mosessog@gmail.com',
+    purpose: 'Direct contact and booking.',
+    href: 'mailto:mosessog@gmail.com',
+    icon: Mail,
+    hover: 'hover:border-green-500 hover:text-green-400',
+  },
+];
+
+const BENEFITS = [
+  'Early updates on new music and releases',
+  'Invites to live sessions and performances',
+  'Behind-the-scenes reflections and moments',
+  'Direct connection with MOSES SOG',
+  'No algorithms — straight to your inbox',
+];
+
 export default function Connect() {
   const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const subscribeMutation = trpc.subscribe.addEmail.useMutation();
 
@@ -20,7 +89,7 @@ export default function Connect() {
     try {
       const result = await subscribeMutation.mutateAsync({ email });
       if (result.success) {
-        toast.success('Thanks for signing up! Check your email for a welcome message.');
+        setSubmitted(true);
         setEmail('');
       } else {
         toast.error(result.message || 'Failed to sign up. Please try again.');
@@ -34,141 +103,171 @@ export default function Connect() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white px-4 py-8">
-      <div className="max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="mb-12">
-          <div className="text-sm opacity-70 mb-4 tracking-widest">
-            Clarity Season 1: April 2026
-          </div>
-          <h1 className="text-4xl font-light">Connect</h1>
-        </div>
+    <div className="min-h-screen bg-zinc-950 text-zinc-100">
 
-        {/* Livestream Section */}
-        <div className="bg-zinc-900 rounded-lg p-6 mb-8 border border-zinc-800">
-          <h2 className="text-2xl font-light mb-6 text-blue-400">Livestream Schedule</h2>
-          <div className="space-y-4">
-            <div className="flex justify-between items-start pb-4 border-b border-zinc-700">
-              <div>
-                <p className="text-sm opacity-70">Next Stream</p>
-                <p className="font-medium">Sunday, April 12 • 7:00 PM CDT</p>
-              </div>
-            </div>
-            <div className="flex justify-between items-start pb-4 border-b border-zinc-700">
-              <div>
-                <p className="text-sm opacity-70">Platform</p>
-                <p className="font-medium">YouTube Live</p>
-              </div>
-            </div>
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-sm opacity-70">Focus</p>
-                <p className="font-medium">Live performance + testimony</p>
-              </div>
-            </div>
-          </div>
-          <p className="text-sm opacity-70 mt-6">
-            Weekly livestreams are the primary engine for attention and connection. Each stream includes performance, teaching, and real-time interaction.
+      {/* ── 1. HERO ─────────────────────────────────────────────── */}
+      <section className="border-b border-zinc-800 px-4 py-20 text-center">
+        <div className="mx-auto max-w-2xl">
+          <p className="mb-4 font-mono text-xs uppercase tracking-[0.2em] text-zinc-500">
+            Clarity Season 1 · April 2026
+          </p>
+          <h1 className="mb-4 font-bebas text-[clamp(3rem,12vw,6rem)] leading-none tracking-wide">
+            Stay close to the journey.
+          </h1>
+          <p className="text-sm leading-relaxed text-zinc-400 md:text-base">
+            Join the CLARITY community for updates, releases, live sessions, and
+            behind-the-scenes moments from MOSES SOG.
           </p>
         </div>
+      </section>
 
-        {/* Email Signup Section */}
-        <div className="bg-zinc-900 rounded-lg p-6 mb-8 border border-zinc-800">
-          <h2 className="text-2xl font-light mb-4 text-green-500">Stay Connected</h2>
-          <p className="text-sm opacity-70 mb-6">
-            Get direct updates on new music, livestreams, and exclusive offers—no algorithms, no middlemen.
-          </p>
-          <form onSubmit={handleEmailSubmit} className="flex gap-2 mb-4">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="your@email.com"
-              className="flex-1 px-4 py-2 bg-zinc-800 rounded border border-zinc-700 text-white placeholder-gray-500 focus:outline-none focus:border-green-500"
-            />
-            <button
-              type="submit"
-              disabled={loading}
-              className="px-6 py-2 bg-green-500 text-black font-medium rounded hover:bg-green-600 transition disabled:opacity-50"
-            >
-              {loading ? 'Joining...' : 'Join'}
-            </button>
-          </form>
-          <p className="text-xs opacity-60">We respect your inbox. Unsubscribe anytime.</p>
+      {/* ── 2. EMAIL SIGNUP ─────────────────────────────────────── */}
+      <section className="px-4 py-20">
+        <div className="mx-auto max-w-xl">
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-8">
+            {submitted ? (
+              <div className="py-6 text-center">
+                <div className="mb-3 font-bebas text-3xl tracking-wide text-green-400">
+                  You're in.
+                </div>
+                <p className="text-zinc-400">Welcome to the CLARITY community.</p>
+              </div>
+            ) : (
+              <>
+                <h2 className="mb-2 font-bebas text-3xl tracking-wide text-green-400">
+                  Join the Community
+                </h2>
+                <p className="mb-6 text-sm text-zinc-400">
+                  Direct updates. No middlemen. Unsubscribe anytime.
+                </p>
+
+                {/* Benefits */}
+                <ul className="mb-8 space-y-2">
+                  {BENEFITS.map((b) => (
+                    <li key={b} className="flex items-start gap-2 text-sm text-zinc-400">
+                      <span className="mt-0.5 text-green-500">→</span>
+                      {b}
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Form */}
+                <form onSubmit={handleEmailSubmit} className="space-y-3">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    required
+                    className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-zinc-100 placeholder-zinc-500 outline-none transition focus:border-green-500"
+                  />
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-green-500 px-6 py-3 font-bebas text-lg tracking-wide text-black transition-colors hover:bg-green-400 disabled:opacity-50"
+                  >
+                    {loading ? 'Joining...' : <>Join the Community <ArrowRight className="h-4 w-4" /></>}
+                  </button>
+                </form>
+              </>
+            )}
+          </div>
         </div>
+      </section>
 
-        {/* Social Links */}
-        <div className="flex justify-center gap-6 mb-12">
-          <a
-            href="https://youtube.com/@mosessog"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-red-600 transition"
-            aria-label="YouTube"
-            title="YouTube: @mosessog"
-          >
-            <Youtube className="w-6 h-6" />
-          </a>
-          <a
-            href="https://instagram.com/moses_sog"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-pink-600 transition"
-            aria-label="Instagram"
-            title="Instagram: @moses_sog"
-          >
-            <Instagram className="w-6 h-6" />
-          </a>
-          <a
-            href="https://x.com/sogmoses"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-white hover:text-black transition"
-            aria-label="X (Twitter)"
-            title="X: @sogmoses"
-          >
-            <Twitter className="w-6 h-6" />
-          </a>
-          <a
-            href="https://twitch.tv/mosessog"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-purple-600 transition"
-            aria-label="Twitch"
-            title="Twitch: mosessog"
-          >
-            <Music className="w-6 h-6" />
-          </a>
-          <a
-            href="https://tiktok.com/@mosessog"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-black transition border border-white"
-            aria-label="TikTok"
-            title="TikTok: @mosessog"
-          >
-            <span className="text-sm font-bold">TK</span>
-          </a>
+      {/* ── 3. SOCIAL LINKS ─────────────────────────────────────── */}
+      <section className="border-t border-zinc-800 bg-zinc-900/40 px-4 py-20">
+        <div className="mx-auto max-w-4xl">
+          <p className="mb-3 text-center font-mono text-xs uppercase tracking-[0.2em] text-zinc-500">
+            Find MOSES SOG
+          </p>
+          <h2 className="mb-10 text-center font-bebas text-4xl tracking-wide">
+            Connect on Every Platform
+          </h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {SOCIALS.map(({ platform, handle, purpose, href, icon: Icon, hover }) => (
+              <a
+                key={platform}
+                href={href}
+                target={href.startsWith('mailto') ? undefined : '_blank'}
+                rel={href.startsWith('mailto') ? undefined : 'noopener noreferrer'}
+                className={`group flex items-start gap-4 rounded-xl border border-zinc-800 bg-zinc-900 p-5 transition-colors ${hover}`}
+              >
+                <Icon className="mt-0.5 h-5 w-5 shrink-0 text-zinc-500 transition-colors group-hover:text-inherit" />
+                <div>
+                  <div className="font-bebas text-lg tracking-wide">{platform}</div>
+                  <div className="mb-1 font-mono text-xs text-zinc-500">{handle}</div>
+                  <p className="text-xs leading-relaxed text-zinc-400">{purpose}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 4. LIVE / EVENTS ────────────────────────────────────── */}
+      <section className="border-t border-zinc-800 px-4 py-20">
+        <div className="mx-auto max-w-2xl">
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-8">
+            <div className="mb-2 flex items-center gap-3">
+              <Video className="h-5 w-5 text-zinc-500" />
+              <h2 className="font-bebas text-3xl tracking-wide">Live Sessions &amp; Updates</h2>
+            </div>
+            <p className="mb-6 text-sm leading-relaxed text-zinc-400">
+              Upcoming live sessions, performances, and community moments will be shared
+              here and through the email list.
+            </p>
+            <div className="rounded-lg border border-zinc-700 bg-zinc-800/50 px-5 py-4">
+              <p className="font-mono text-xs uppercase tracking-widest text-zinc-500">
+                Next date coming soon
+              </p>
+              <p className="mt-1 text-sm text-zinc-300">
+                Subscribe above to be the first to know when the next session is scheduled.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 5. DIRECT CONTACT ───────────────────────────────────── */}
+      <section className="border-t border-zinc-800 bg-zinc-900/40 px-4 py-20 text-center">
+        <div className="mx-auto max-w-xl">
+          <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-zinc-500">
+            Direct Contact
+          </p>
+          <h2 className="mb-4 font-bebas text-4xl tracking-wide">Get in Touch</h2>
+          <p className="mb-8 text-sm leading-relaxed text-zinc-400">
+            For booking, collaborations, church events, workshops, or media inquiries:
+          </p>
           <a
             href="mailto:mosessog@gmail.com"
-            className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-blue-600 transition"
-            aria-label="Email"
-            title="Email: mosessog@gmail.com"
+            className="inline-flex items-center gap-2 rounded-lg bg-zinc-800 px-7 py-3.5 font-bebas text-lg tracking-wide text-zinc-100 transition-colors hover:bg-zinc-700"
           >
-            <Mail className="w-6 h-6" />
+            <Mail className="h-4 w-4" />
+            Send an Email
           </a>
+          <p className="mt-4 font-mono text-xs text-zinc-600">mosessog@gmail.com</p>
         </div>
+      </section>
 
-        {/* Navigation */}
-        <div className="flex justify-between items-center text-sm">
-          <Link href="/">
-            <a className="text-blue-400 hover:underline">← Back to Home</a>
-          </Link>
-          <Link href="/listen">
-            <a className="text-blue-400 hover:underline">Listen →</a>
-          </Link>
+      {/* ── 6. FOOTER ───────────────────────────────────────────── */}
+      <footer className="border-t border-zinc-800 px-4 py-10">
+        <div className="mx-auto flex max-w-4xl flex-col items-center gap-6 text-center md:flex-row md:justify-between md:text-left">
+          <nav className="flex flex-wrap justify-center gap-6 font-mono text-xs uppercase tracking-widest text-zinc-500 md:justify-start">
+            {[
+              { label: 'Home', href: '/' },
+              { label: 'Listen', href: '/listen' },
+              { label: 'Store', href: '/store' },
+              { label: 'Connect', href: '/connect' },
+            ].map(({ label, href }) => (
+              <Link key={label} href={href} className="transition-colors hover:text-zinc-300">
+                {label}
+              </Link>
+            ))}
+          </nav>
+          <p className="font-mono text-xs text-zinc-600">© 2026 MOSES SOG</p>
         </div>
-      </div>
+      </footer>
     </div>
   );
 }
