@@ -2,6 +2,7 @@ import Stripe from "stripe";
 import { createOrder, updateOrderStatus, getOrderByStripePaymentIntentId } from "../orders";
 import { generateDownloadToken } from "../downloads";
 import { sendPurchaseConfirmationEmail } from "../email";
+import { ENV } from "./env";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
@@ -68,7 +69,7 @@ async function handlePaymentIntentSucceeded(
     }
 
     const downloadToken = await generateDownloadToken(orderId, customerEmail);
-    const downloadUrl = `${process.env.VITE_FRONTEND_URL || "https://moses-storefront.manus.space"}/downloads?token=${downloadToken}`;
+    const downloadUrl = `${ENV.publicSiteUrl}/downloads?token=${downloadToken}`;
 
     // Send confirmation email
     const emailSent = await sendPurchaseConfirmationEmail(

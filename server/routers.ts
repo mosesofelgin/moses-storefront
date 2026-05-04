@@ -2,6 +2,7 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
+import { ENV } from "./_core/env";
 import { z } from "zod";
 import Stripe from "stripe";
 import { createOrder, getOrdersByEmail } from "./orders";
@@ -35,7 +36,7 @@ export const appRouter = router({
       )
       .mutation(async ({ input, ctx }) => {
         const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
-        const origin = ctx.req.headers.origin || "https://moses-storefront.manus.space";
+        const origin = ctx.req.headers.origin || "https://mosessog.com";
 
         // Determine product details based on productId
         let productName = "CLARITY by Moses";
@@ -118,8 +119,7 @@ export const appRouter = router({
 
           // Generate download token
           const token = await generateDownloadToken(orderId, input.customerEmail);
-          const origin = ctx.req.headers.origin || "https://moses-storefront.manus.space";
-          const downloadUrl = `${origin}/downloads?token=${token}`;
+          const downloadUrl = `${ENV.publicSiteUrl}/downloads?token=${token}`;
 
           // Send confirmation email
           await sendPurchaseConfirmationEmail(
