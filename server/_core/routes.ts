@@ -50,7 +50,7 @@ export function registerRoutes(app: Express) {
       const { token, fileId } = req.params;
 
       // Verify token
-      const tokenData = verifyDownloadToken(token);
+      const tokenData = await verifyDownloadToken(token);
       if (!tokenData) {
         return res.status(401).json({ error: "Invalid or expired download token" });
       }
@@ -61,30 +61,32 @@ export function registerRoutes(app: Express) {
         return res.status(401).json({ error: "Order not found" });
       }
 
-      // Map file IDs to URLs
+      const CDN = "https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk";
+
+      // Map file IDs to URLs (new CDN, all MP3)
       const fileMap: Record<string, string> = {
         // Tracks
-        "track-01": "https://d1o3xwbqmqkzlb.cloudfront.net/1-Moses-FinalPrayerByMoses.mp3",
-        "track-02": "https://d1o3xwbqmqkzlb.cloudfront.net/02-Moses-WishIhadyou.mp3",
-        "track-03": "https://d1o3xwbqmqkzlb.cloudfront.net/03-Moses-GetToTheStu.mp3",
-        "track-04": "https://d1o3xwbqmqkzlb.cloudfront.net/04-Moses-Over.mp3",
-        "track-05": "https://d1o3xwbqmqkzlb.cloudfront.net/05-Moses-Clarity.mp3",
-        "track-06": "https://d1o3xwbqmqkzlb.cloudfront.net/06-Moses-Pressure.mp3",
-        "track-07": "https://d1o3xwbqmqkzlb.cloudfront.net/07-Moses-Amen.mp3",
-        "track-08": "https://d1o3xwbqmqkzlb.cloudfront.net/08-Moses-Blessed.mp3",
-        "track-09": "https://d1o3xwbqmqkzlb.cloudfront.net/09-Moses-Testimony.mp3",
-        "track-10": "https://d1o3xwbqmqkzlb.cloudfront.net/10-Moses-Intro.mp3",
-        "track-11": "https://d1o3xwbqmqkzlb.cloudfront.net/11-Moses-Bridge.mp3",
-        "track-12": "https://d1o3xwbqmqkzlb.cloudfront.net/12-Moses-Outro.mp3",
+        "track-01": `${CDN}/1-Moses-FinalPrayerByMoses_11c2ba3f.mp3`,
+        "track-02": `${CDN}/02-Moses-WishIhadyou_16091eff.mp3`,
+        "track-03": `${CDN}/03-Moses-GetToTheStu_fdbb7ebb.mp3`,
+        "track-04": `${CDN}/over_3b8e9f0f.mp3`,
+        "track-05": `${CDN}/05-Moses-FadeAway_5363cc88.mp3`,
+        "track-06": `${CDN}/06-Moses-King_e592ea70.mp3`,
+        "track-07": `${CDN}/07-Moses-Soulja_7ba0876c.mp3`,
+        "track-08": `${CDN}/08-Moses-DearKobe_bfa7dc5b.mp3`,
+        "track-09": `${CDN}/09-Moses-Refined_ba82d395.mp3`,
+        "track-10": `${CDN}/10-Moses-LookAtAllTheseBlessings_4b5725ec.mp3`,
+        "track-11": `${CDN}/11-Moses-Platform_cf321b03.mp3`,
+        "track-12": `${CDN}/12-Moses-SweetDreams_37d7f3ad.mp3`,
 
         // Images
-        "image-01": "https://d1o3xwbqmqkzlb.cloudfront.net/ChatGPTImageMar31,2026,09_21_37PM.png",
-        "image-02": "https://d1o3xwbqmqkzlb.cloudfront.net/TOP_01.jpg",
-        "image-03": "https://d1o3xwbqmqkzlb.cloudfront.net/TOP_04.jpg",
-        "image-04": "https://d1o3xwbqmqkzlb.cloudfront.net/TOP_05.jpg",
+        "image-01": `${CDN}/album-cover_2118610e.png`,
+        "image-02": `${CDN}/TOP_01_aaeff941.jpg`,
+        "image-03": `${CDN}/TOP_04_edae7ba8.jpg`,
+        "image-04": `${CDN}/TOP_05_b7f42eb5.jpg`,
 
         // Lyric book
-        "lyric-book": "https://d1o3xwbqmqkzlb.cloudfront.net/FINAL_PRAYER_PROCESS_LOG_001_9e12e531.pdf",
+        "lyric-book": `${CDN}/FINAL_PRAYER_PROCESS_LOG_001_9e12e531.pdf`,
       };
 
       const fileUrl = fileMap[fileId];
@@ -108,7 +110,7 @@ export function registerRoutes(app: Express) {
       const { token } = req.params;
 
       // Verify token
-      const tokenData = verifyDownloadToken(token);
+      const tokenData = await verifyDownloadToken(token);
       if (!tokenData) {
         return res.status(401).json({ error: "Invalid or expired download token" });
       }

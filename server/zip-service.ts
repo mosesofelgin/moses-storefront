@@ -3,6 +3,8 @@ import { Readable } from "stream";
 import https from "https";
 import http from "http";
 
+const CDN = "https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk";
+
 export interface AssetFile {
   url: string;
   filename: string;
@@ -75,27 +77,27 @@ export async function createZipArchive(
  */
 export async function createBrandImagesBundle(): Promise<{ stream: Readable; size: number }> {
   const files: AssetFile[] = [
-    // Brand Images
+    // Brand Images (new CDN)
     {
-      url: "https://d1o3xwbqmqkzlb.cloudfront.net/ChatGPTImageMar31,2026,09_21_37PM.png",
+      url: `${CDN}/album-cover_2118610e.png`,
       filename: "album-cover.png",
     },
     {
-      url: "https://d1o3xwbqmqkzlb.cloudfront.net/TOP_01.jpg",
+      url: `${CDN}/TOP_01_aaeff941.jpg`,
       filename: "brand-image-01.jpg",
     },
     {
-      url: "https://d1o3xwbqmqkzlb.cloudfront.net/TOP_04.jpg",
+      url: `${CDN}/TOP_04_edae7ba8.jpg`,
       filename: "brand-image-02.jpg",
     },
     {
-      url: "https://d1o3xwbqmqkzlb.cloudfront.net/TOP_05.jpg",
+      url: `${CDN}/TOP_05_b7f42eb5.jpg`,
       filename: "brand-image-03.jpg",
     },
 
     // Lyric book
     {
-      url: "https://d1o3xwbqmqkzlb.cloudfront.net/FINAL_PRAYER_PROCESS_LOG_001_9e12e531.pdf",
+      url: `${CDN}/FINAL_PRAYER_PROCESS_LOG_001_9e12e531.pdf`,
       filename: "lyric-book.pdf",
     },
   ];
@@ -105,81 +107,86 @@ export async function createBrandImagesBundle(): Promise<{ stream: Readable; siz
 
 /**
  * Create a ZIP archive for the CLARITY album bundle
+ * URLs sourced from clarity-bundle.ts (new CDN, verified working)
  */
 export async function createClarityBundle(): Promise<{ stream: Readable; size: number }> {
   const files: AssetFile[] = [
-    // Tracks
+    // Tracks (all MP3, new CDN)
     {
-      url: "https://d1o3xwbqmqkzlb.cloudfront.net/1-Moses-FinalPrayerByMoses.mp3",
+      url: `${CDN}/1-Moses-FinalPrayerByMoses_11c2ba3f.mp3`,
       filename: "01-Final Prayer by Moses.mp3",
     },
     {
-      url: "https://d1o3xwbqmqkzlb.cloudfront.net/02-Moses-WishIhadyou.mp3",
-      filename: "02-Wish I had you.mp3",
+      url: `${CDN}/02-Moses-WishIhadyou_16091eff.mp3`,
+      filename: "02-Wish I Had You.mp3",
     },
     {
-      url: "https://d1o3xwbqmqkzlb.cloudfront.net/03-Moses-GetToTheStu.mp3",
-      filename: "03-Get To The Stu.mp3",
+      url: `${CDN}/03-Moses-GetToTheStu_fdbb7ebb.mp3`,
+      filename: "03-Get to the Studio.mp3",
     },
     {
-      url: "https://d1o3xwbqmqkzlb.cloudfront.net/04-Moses-Over.mp3",
+      url: `${CDN}/over_3b8e9f0f.mp3`,
       filename: "04-Over.mp3",
     },
     {
-      url: "https://d1o3xwbqmqkzlb.cloudfront.net/05-Moses-Clarity.mp3",
-      filename: "05-Clarity.mp3",
+      url: `${CDN}/05-Moses-FadeAway_5363cc88.mp3`,
+      filename: "05-Fade Away.mp3",
     },
     {
-      url: "https://d1o3xwbqmqkzlb.cloudfront.net/06-Moses-Pressure.mp3",
-      filename: "06-Pressure.mp3",
+      url: `${CDN}/06-Moses-King_e592ea70.mp3`,
+      filename: "06-King.mp3",
     },
     {
-      url: "https://d1o3xwbqmqkzlb.cloudfront.net/07-Moses-Amen.mp3",
-      filename: "07-Amen.mp3",
+      url: `${CDN}/07-Moses-Soulja_7ba0876c.mp3`,
+      filename: "07-Soulja.mp3",
     },
     {
-      url: "https://d1o3xwbqmqkzlb.cloudfront.net/08-Moses-Blessed.mp3",
-      filename: "08-Blessed.mp3",
+      url: `${CDN}/08-Moses-DearKobe_bfa7dc5b.mp3`,
+      filename: "08-Dear Kobe.mp3",
     },
     {
-      url: "https://d1o3xwbqmqkzlb.cloudfront.net/09-Moses-Testimony.mp3",
-      filename: "09-Testimony.mp3",
+      url: `${CDN}/09-Moses-Refined_ba82d395.mp3`,
+      filename: "09-Refined.mp3",
     },
     {
-      url: "https://d1o3xwbqmqkzlb.cloudfront.net/10-Moses-Intro.mp3",
-      filename: "10-Intro.mp3",
+      url: `${CDN}/10-Moses-LookAtAllTheseBlessings_4b5725ec.mp3`,
+      filename: "10-Look at All These Blessings.mp3",
     },
     {
-      url: "https://d1o3xwbqmqkzlb.cloudfront.net/11-Moses-Bridge.mp3",
-      filename: "11-Bridge.mp3",
+      url: `${CDN}/11-Moses-Platform_cf321b03.mp3`,
+      filename: "11-Platform.mp3",
     },
     {
-      url: "https://d1o3xwbqmqkzlb.cloudfront.net/12-Moses-Outro.mp3",
-      filename: "12-Outro.mp3",
+      url: `${CDN}/12-Moses-SweetDreams_37d7f3ad.mp3`,
+      filename: "12-Sweet Dreams.mp3",
     },
 
-    // Images
+    // Images (new CDN)
     {
-      url: "https://d1o3xwbqmqkzlb.cloudfront.net/ChatGPTImageMar31,2026,09_21_37PM.png",
+      url: `${CDN}/album-cover_2118610e.png`,
       filename: "album-cover.png",
     },
     {
-      url: "https://d1o3xwbqmqkzlb.cloudfront.net/TOP_01.jpg",
+      url: `${CDN}/TOP_01_aaeff941.jpg`,
       filename: "brand-image-01.jpg",
     },
     {
-      url: "https://d1o3xwbqmqkzlb.cloudfront.net/TOP_04.jpg",
+      url: `${CDN}/TOP_04_edae7ba8.jpg`,
       filename: "brand-image-02.jpg",
     },
     {
-      url: "https://d1o3xwbqmqkzlb.cloudfront.net/TOP_05.jpg",
+      url: `${CDN}/TOP_05_b7f42eb5.jpg`,
       filename: "brand-image-03.jpg",
+    },
+    {
+      url: `${CDN}/ChatGPTImageMar19,2026,11_14_44AM_97e635c2.png`,
+      filename: "brand-image-04.png",
     },
 
     // Lyric book
     {
-      url: "https://d1o3xwbqmqkzlb.cloudfront.net/FINAL_PRAYER_PROCESS_LOG_001_9e12e531.pdf",
-      filename: "lyric-book.pdf",
+      url: `${CDN}/FINAL_PRAYER_PROCESS_LOG_001_9e12e531.pdf`,
+      filename: "CLARITY-Lyric-Book.pdf",
     },
   ];
 
