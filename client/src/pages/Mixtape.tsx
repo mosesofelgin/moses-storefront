@@ -1,16 +1,86 @@
-import { useState } from 'react';
-import { Music, Download, ArrowRight } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Music, Download, ArrowRight, Play, Pause, SkipBack, SkipForward, Volume2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { dedicationBundle } from '@/data/dedication-bundle';
 import { Link } from 'wouter';
 
 export default function Mixtape() {
   const [isDownloading, setIsDownloading] = useState(false);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(1);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  const currentTrack = dedicationBundle.tracks[currentTrackIndex];
+
+  // Handle play/pause
+  const togglePlayPause = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  // Handle next track
+  const playNext = () => {
+    if (currentTrackIndex < dedicationBundle.tracks.length - 1) {
+      setCurrentTrackIndex(currentTrackIndex + 1);
+      setCurrentTime(0);
+      setIsPlaying(true);
+    }
+  };
+
+  // Handle previous track
+  const playPrevious = () => {
+    if (currentTrackIndex > 0) {
+      setCurrentTrackIndex(currentTrackIndex - 1);
+      setCurrentTime(0);
+      setIsPlaying(true);
+    }
+  };
+
+  // Handle track selection
+  const selectTrack = (index: number) => {
+    setCurrentTrackIndex(index);
+    setCurrentTime(0);
+    setIsPlaying(true);
+  };
+
+  // Update time as audio plays
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const updateTime = () => setCurrentTime(audio.currentTime);
+    const updateDuration = () => setDuration(audio.duration);
+
+    audio.addEventListener('timeupdate', updateTime);
+    audio.addEventListener('loadedmetadata', updateDuration);
+    audio.addEventListener('ended', playNext);
+
+    return () => {
+      audio.removeEventListener('timeupdate', updateTime);
+      audio.removeEventListener('loadedmetadata', updateDuration);
+      audio.removeEventListener('ended', playNext);
+    };
+  }, [currentTrackIndex]);
+
+  // Auto-play when track changes
+  useEffect(() => {
+    if (audioRef.current && isPlaying) {
+      audioRef.current.play();
+    }
+  }, [currentTrackIndex]);
 
   const handleDownload = async () => {
     setIsDownloading(true);
     try {
-      // Trigger download of the ZIP file
       const link = document.createElement('a');
       link.href = '/api/download/dedication';
       link.download = 'DEDICATION-Mixtape.zip';
@@ -24,89 +94,220 @@ export default function Mixtape() {
     }
   };
 
+  const formatTime = (time: number) => {
+    if (!time || isNaN(time)) return '0:00';
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
+      {/* Hidden audio element */}
+      <audio
+        ref={audioRef}
+        src={currentTrack?.url}
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+      />
+
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center px-4 py-20">
         <div className="absolute inset-0 opacity-5">
           <div className="absolute inset-0 bg-gradient-to-br from-[#00ff00] to-transparent"></div>
         </div>
 
-        <div className="relative z-10 max-w-2xl text-center">
-          <div className="mb-8 flex justify-center">
-            <div className="w-64 h-64 rounded-lg overflow-hidden shadow-2xl border-2 border-[#00ff00]">
-              <img
-                src={dedicationBundle.albumCover}
-                alt="Dedication Mixtape"
-                className="w-full h-full object-cover"
-              />
+        <div className="relative z-10 max-w-4xl w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            {/* Album Art */}
+            <div className="flex justify-center">
+              <div className="relative w-64 h-64 rounded-2xl overflow-hidden shadow-2xl border-2 border-[#00ff00]">
+                <img
+                  src={dedicationBundle.albumCover}
+                  alt="Dedication Mixtape"
+                  className="w-full h-full object-cover"
+                />
+                {isPlaying && (
+                  <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                    <div className="animate-pulse">
+                      <Music className="w-16 h-16 text-[#00ff00]" />
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
 
-          <div className="mb-4 text-sm font-mono text-[#00ff00] uppercase tracking-widest">
-            Free Mixtape
-          </div>
+            {/* Info & Player */}
+            <div className="text-center md:text-left">
+              <div className="mb-4 text-sm font-mono text-[#00ff00] uppercase tracking-widest">
+                Free Mixtape
+              </div>
 
-          <h1 className="font-bebas text-6xl md:text-7xl mb-4 tracking-wider">
-            {dedicationBundle.title}
-          </h1>
+              <h1 className="font-bebas text-6xl md:text-7xl mb-4 tracking-wider">
+                DEDICATION
+              </h1>
 
-          <p className="font-cormorant text-2xl italic text-zinc-300 mb-6">
-            {dedicationBundle.subtitle}
-          </p>
+              <p className="font-cormorant text-2xl italic text-zinc-300 mb-6">
+                A 14-track homage to Lil Wayne
+              </p>
 
-          <p className="text-lg text-zinc-400 mb-12 max-w-xl mx-auto leading-relaxed">
-            {dedicationBundle.description}
-          </p>
+              <p className="text-lg text-zinc-400 mb-8 leading-relaxed">
+                Listen now. Download free. No email required. Direct from MOSES SOG.
+              </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button
-              onClick={handleDownload}
-              disabled={isDownloading}
-              className="bg-[#00ff00] text-black hover:bg-[#00dd00] text-lg px-8 py-6 font-bold"
-            >
-              <Download className="mr-2 w-5 h-5" />
-              {isDownloading ? 'Downloading...' : 'Download Free'}
-            </Button>
-          </div>
+              {/* Player Controls */}
+              <div className="bg-zinc-900/50 rounded-xl p-6 border border-zinc-800 mb-8">
+                {/* Current Track Info */}
+                <div className="mb-6">
+                  <div className="text-sm text-zinc-400 mb-2">Now Playing</div>
+                  <div className="font-bebas text-xl text-[#00ff00] truncate">
+                    {currentTrack?.title}
+                  </div>
+                  <div className="text-sm text-zinc-500">{currentTrack?.artist}</div>
+                </div>
 
-          <div className="grid grid-cols-3 gap-4 text-center text-sm">
-            <div>
-              <div className="text-2xl font-bold text-[#00ff00]">{dedicationBundle.trackCount}</div>
-              <div className="text-zinc-500">Tracks</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-[#00ff00]">Free</div>
-              <div className="text-zinc-500">Download</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-[#00ff00]">100%</div>
-              <div className="text-zinc-500">Direct</div>
+                {/* Progress Bar */}
+                <div className="mb-4">
+                  <input
+                    type="range"
+                    min="0"
+                    max={duration || 0}
+                    value={currentTime}
+                    onChange={(e) => {
+                      if (audioRef.current) {
+                        audioRef.current.currentTime = parseFloat(e.target.value);
+                        setCurrentTime(parseFloat(e.target.value));
+                      }
+                    }}
+                    className="w-full h-1 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-[#00ff00]"
+                  />
+                  <div className="flex justify-between text-xs text-zinc-500 mt-2">
+                    <span>{formatTime(currentTime)}</span>
+                    <span>{formatTime(duration)}</span>
+                  </div>
+                </div>
+
+                {/* Control Buttons */}
+                <div className="flex items-center justify-center gap-4 mb-6">
+                  <button
+                    onClick={playPrevious}
+                    disabled={currentTrackIndex === 0}
+                    className="p-2 rounded-full hover:bg-zinc-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <SkipBack className="w-5 h-5" />
+                  </button>
+
+                  <button
+                    onClick={togglePlayPause}
+                    className="p-3 rounded-full bg-[#00ff00] text-black hover:bg-[#00dd00] transition"
+                  >
+                    {isPlaying ? (
+                      <Pause className="w-6 h-6" />
+                    ) : (
+                      <Play className="w-6 h-6 ml-0.5" />
+                    )}
+                  </button>
+
+                  <button
+                    onClick={playNext}
+                    disabled={currentTrackIndex === dedicationBundle.tracks.length - 1}
+                    className="p-2 rounded-full hover:bg-zinc-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <SkipForward className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Volume Control */}
+                <div className="flex items-center gap-3">
+                  <Volume2 className="w-4 h-4 text-zinc-500" />
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.1"
+                    value={volume}
+                    onChange={(e) => {
+                      const newVolume = parseFloat(e.target.value);
+                      setVolume(newVolume);
+                      if (audioRef.current) {
+                        audioRef.current.volume = newVolume;
+                      }
+                    }}
+                    className="flex-1 h-1 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-[#00ff00]"
+                  />
+                </div>
+              </div>
+
+              {/* Download Button */}
+              <Button
+                onClick={handleDownload}
+                disabled={isDownloading}
+                className="w-full bg-[#00ff00] text-black hover:bg-[#00dd00] text-lg px-8 py-6 font-bold"
+              >
+                <Download className="mr-2 w-5 h-5" />
+                {isDownloading ? 'Downloading...' : 'Download Free'}
+              </Button>
             </div>
           </div>
         </div>
       </section>
 
       {/* Tracklist Section */}
-      <section className="px-4 py-20 max-w-4xl mx-auto">
-        <h2 className="font-bebas text-4xl mb-12 tracking-wider uppercase">Tracklist</h2>
+      <section className="px-4 py-20 bg-zinc-900/30 border-t border-zinc-800">
+        <div className="mx-auto max-w-4xl">
+          <h2 className="font-bebas text-4xl mb-12 tracking-wider uppercase">Tracklist</h2>
 
-        <div className="space-y-3">
-          {dedicationBundle.tracks.map((track) => (
-            <div
-              key={track.id}
-              className="flex items-center justify-between p-4 rounded-lg border border-zinc-800 hover:border-[#00ff00] hover:bg-zinc-900/50 transition-all group"
-            >
-              <div className="flex items-center gap-4 flex-1">
-                <Music className="w-5 h-5 text-[#00ff00] flex-shrink-0" />
-                <div className="flex-1">
-                  <div className="font-mono font-semibold">{track.title}</div>
-                  <div className="text-sm text-zinc-500">{track.artist}</div>
-                </div>
+          <div className="space-y-2">
+            {dedicationBundle.tracks.map((track, index) => (
+              <div
+                key={track.id}
+                className={`flex items-center justify-between p-4 rounded-lg border transition-all ${
+                  currentTrackIndex === index
+                    ? 'border-[#00ff00] bg-zinc-800/50'
+                    : 'border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900/50'
+                }`}
+              >
+                <button
+                  onClick={() => selectTrack(index)}
+                  className="flex items-center gap-4 flex-1 text-left hover:opacity-80 transition"
+                >
+                  {currentTrackIndex === index ? (
+                    isPlaying ? (
+                      <div className="w-5 h-5 flex items-center justify-center">
+                        <Pause className="w-4 h-4 text-[#00ff00]" />
+                      </div>
+                    ) : (
+                      <div className="w-5 h-5 flex items-center justify-center">
+                        <Play className="w-4 h-4 text-[#00ff00] ml-0.5" />
+                      </div>
+                    )
+                  ) : (
+                    <Music className="w-5 h-5 text-zinc-600" />
+                  )}
+                  <div className="flex-1">
+                    <div
+                      className={`font-mono font-semibold ${
+                        currentTrackIndex === index ? 'text-[#00ff00]' : 'text-white'
+                      }`}
+                    >
+                      {track.title}
+                    </div>
+                    <div className="text-sm text-zinc-500">{track.artist}</div>
+                  </div>
+                  <div className="text-sm text-zinc-400 ml-4">{track.duration}</div>
+                </button>
+                <a
+                  href={track.url}
+                  download={`${track.title}.mp3`}
+                  className="ml-4 p-2 rounded hover:bg-zinc-700 transition text-zinc-400 hover:text-[#00ff00]"
+                  title="Download MP3"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Download className="w-4 h-4" />
+                </a>
               </div>
-              <div className="text-sm text-zinc-400 ml-4">{track.duration}</div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
