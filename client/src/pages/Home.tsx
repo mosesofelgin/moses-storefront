@@ -98,6 +98,40 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── 2.5 FREE MIXTAPE ──────────────────────────────────────── */}
+      <section className="border-t border-zinc-800 bg-gradient-to-b from-zinc-900/60 to-zinc-950 px-4 py-20">
+        <div className="mx-auto grid max-w-4xl gap-10 md:grid-cols-2 md:items-center">
+          {/* Copy */}
+          <div>
+            <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-zinc-500">
+              Free Mixtape
+            </p>
+            <h2 className="mb-4 font-bebas text-5xl leading-none tracking-wide md:text-6xl">
+              DEDICATION
+            </h2>
+            <p className="mb-8 leading-relaxed text-zinc-400">
+              A 14-track homage to Lil Wayne. Free to download, no email required. One click, direct from MOSES SOG.
+            </p>
+            <Link
+              href="/mixtape"
+              className="inline-flex items-center gap-2 rounded-lg border border-green-500 bg-green-500/10 px-6 py-3 font-bebas text-lg tracking-wide text-green-400 transition-colors hover:bg-green-500/20"
+            >
+              Get Free Mixtape <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          {/* Album art */}
+          <div className="overflow-hidden rounded-2xl border border-zinc-800 shadow-2xl shadow-black/60">
+            <img
+              src={ALBUM_COVER}
+              alt="Dedication mixtape cover"
+              className="h-auto w-full object-cover transition-opacity hover:opacity-95"
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </section>
+
       {/* ── 3. VALUE PROPS ──────────────────────────────────────── */}
       <section className="border-t border-zinc-800 bg-zinc-900/40 px-4 py-20">
         <div className="mx-auto max-w-4xl">

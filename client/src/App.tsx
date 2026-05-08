@@ -12,6 +12,7 @@ import Downloads from "./pages/Downloads";
 import Listen from "./pages/Listen";
 import Store from "./pages/Store";
 import Connect from "./pages/Connect";
+import Mixtape from "./pages/Mixtape";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -24,6 +25,7 @@ function Router() {
       <Route path={"/listen"} component={Listen} />
       <Route path={"/store"} component={Store} />
       <Route path={"/connect"} component={Connect} />
+      <Route path={"/mixtape"} component={Mixtape} />
       <Route path={"/"} component={Home} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}

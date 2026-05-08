@@ -16,6 +16,21 @@ interface Product {
 
 const PRODUCTS: Product[] = [
   {
+    id: 'dedication',
+    name: 'Dedication',
+    description: '14-track mixtape - homage to Lil Wayne',
+    minPrice: 0,
+    badge: 'FREE',
+    isPayWhatYouWant: true,
+    details: [
+      'All 14 Dedication tracks',
+      'Direct download',
+      'No email required',
+      'Lifetime access',
+      'Support the artist',
+    ],
+  },
+  {
     id: 'clarity',
     name: 'Clarity',
     description: '12-track digital album - truth-driven music rooted in alignment',
@@ -77,7 +92,7 @@ export default function Store() {
         await createFreeOrder.mutateAsync({
           customerEmail: email,
           customerName: name,
-          productId: 'clarity',
+          productId: selectedProduct.id,
         });
         toast.success('Thank you! Check your email for download link.');
         setShowCheckoutModal(false);
@@ -100,7 +115,7 @@ export default function Store() {
         customerEmail: email,
         customerName: name,
         amountInCents,
-        productId: 'clarity',
+        productId: selectedProduct.id,
       });
 
       if (session?.url) {

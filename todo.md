@@ -112,3 +112,9 @@
 - [x] Fix download URL domain in purchase emails (webhook + free order) — use https://mosessog.com as fallback
 - [x] Home page redesign — 6 sections: Hero, Featured Project, Value Props, Pathway Cards, Mission, Footer
 - [x] Connect page redesign — 6 sections: Hero, Email Signup, Social Links, Live/Events, Direct Contact, Footer
+
+## P1 — Dedication Mixtape Release
+- [x] Upload 14 Dedication tracks to CDN and create mixtape data structure
+- [x] Create /mixtape landing page with one-click free download and upsell to CLARITY
+- [x] Update Home page with Dedication link/CTA
+- [x] Update Store page to include both Dedication (free) and CLARITY (paid)
