@@ -1,5 +1,6 @@
 import { Link } from 'wouter';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Download } from 'lucide-react';
+import { useState } from 'react';
 
 const DEDICATION_COVER =
   'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/dedication-cover_20e0add5.jpg';
@@ -8,6 +9,24 @@ const CLARITY_COVER =
   'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/album-cover_2118610e.png';
 
 export default function Home() {
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const handleDownloadDedication = async () => {
+    setIsDownloading(true);
+    try {
+      const link = document.createElement('a');
+      link.href = '/api/download/dedication';
+      link.download = 'DEDICATION-Mixtape.zip';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Download failed:', error);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
 
@@ -51,12 +70,14 @@ export default function Home() {
             >
               Listen Now <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link
-              href="/store"
-              className="flex items-center justify-center gap-2 rounded-lg border border-zinc-600 px-8 py-4 font-bebas text-lg tracking-wide text-zinc-100 transition-colors hover:border-zinc-400 hover:text-white"
+            <button
+              onClick={handleDownloadDedication}
+              disabled={isDownloading}
+              className="flex items-center justify-center gap-2 rounded-lg border border-zinc-600 px-8 py-4 font-bebas text-lg tracking-wide text-zinc-100 transition-colors hover:border-zinc-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Download Free <ArrowRight className="h-4 w-4" />
-            </Link>
+              <Download className="h-4 w-4" />
+              {isDownloading ? 'Downloading...' : 'Download Free'}
+            </button>
           </div>
         </div>
       </section>
