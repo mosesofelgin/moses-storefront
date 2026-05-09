@@ -2,6 +2,7 @@ import { Express, Request, Response } from "express";
 import { verifyDownloadToken, getOrderByToken } from "../downloads";
 import { createClarityBundle } from "../zip-service";
 import { createDedicationBundle, getDedicationAlbumFiles } from "../zip-dedication";
+import { createBathshebaBundle } from "../zip-bathsheba";
 import { verifyWebhookSignature, processWebhookEvent } from "./stripe-webhook";
 import { streamZipDownload, getClarityAlbumFiles } from "./zip-download";
 import https from "https";
@@ -45,6 +46,38 @@ async function streamFileFromUrl(url: string, res: Response): Promise<void> {
  * otherwise Express matches "all" as the :token param and the token as :fileId.
  */
 export function registerRoutes(app: Express) {
+
+  /**
+   * GET /api/download/bathsheba
+   * Download Bathsheba project as ZIP (no token required — free download)
+   * MUST be registered before /api/download/all/:token to avoid route collision
+   */
+  app.get("/api/download/bathsheba", async (req: Request, res: Response) => {
+    try {
+      console.log("[Bathsheba Download] Request received");
+      const stream = await createBathshebaBundle();
+
+      // Set response headers
+      res.setHeader("Content-Type", "application/zip");
+      res.setHeader('Content-Disposition', 'attachment; filename="BATHSHEBA-Project.zip"');
+      res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+
+      // Stream ZIP to client
+      stream.pipe(res);
+
+      stream.on("error", (error) => {
+        console.error("[Bathsheba Download] Error:", error);
+        if (!res.headersSent) {
+          res.status(500).json({ error: "Failed to create ZIP archive" });
+        }
+      });
+    } catch (error) {
+      console.error("[Bathsheba Download] Error:", error);
+      if (!res.headersSent) {
+        res.status(500).json({ error: "Failed to download ZIP" });
+      }
+    }
+  });
 
   /**
    * GET /api/download/dedication

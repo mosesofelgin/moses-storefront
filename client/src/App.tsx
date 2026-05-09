@@ -13,6 +13,8 @@ import Listen from "./pages/Listen";
 import Store from "./pages/Store";
 import Connect from "./pages/Connect";
 import Mixtape from "./pages/Mixtape";
+import Bathsheba from "./pages/Bathsheba";
+import BathshebaListen from "./pages/BathshebaListen";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -26,6 +28,8 @@ function Router() {
       <Route path={"/store"} component={Store} />
       <Route path={"/connect"} component={Connect} />
       <Route path={"/mixtape"} component={Mixtape} />
+      <Route path={"/bathsheba/listen"} component={BathshebaListen} />
+      <Route path={"/bathsheba"} component={Bathsheba} />
       <Route path={"/"} component={Home} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}

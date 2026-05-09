@@ -16,6 +16,21 @@ interface Product {
 
 const PRODUCTS: Product[] = [
   {
+    id: 'bathsheba',
+    name: 'Bathsheba',
+    description: '10-track project - a royal journey',
+    minPrice: 0,
+    badge: 'FREE',
+    isPayWhatYouWant: true,
+    details: [
+      'All 10 Bathsheba tracks',
+      'Direct download',
+      'No email required',
+      'Lifetime access',
+      'Support the artist',
+    ],
+  },
+  {
     id: 'dedication',
     name: 'Dedication',
     description: '14-track mixtape - homage to Lil Wayne',
