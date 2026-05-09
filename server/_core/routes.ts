@@ -4,6 +4,8 @@ import { createClarityBundle } from "../zip-service";
 import { createDedicationBundle, getDedicationAlbumFiles } from "../zip-dedication";
 import { createBathshebaBundle } from "../zip-bathsheba";
 import { streamAbcsZip } from "../zip-abcs";
+import { streamNewGenesisZip } from "../zip-new-genesis";
+import { streamMixtapeZip } from "../zip-mixtape";
 import { verifyWebhookSignature, processWebhookEvent } from "./stripe-webhook";
 import { streamZipDownload, getClarityAlbumFiles } from "./zip-download";
 import https from "https";
@@ -123,6 +125,38 @@ export function registerRoutes(app: Express) {
       await streamAbcsZip(res);
     } catch (error) {
       console.error("[ABCs Download] Error:", error);
+      if (!res.headersSent) {
+        res.status(500).json({ error: "Failed to download ZIP" });
+      }
+    }
+  });
+
+  /**
+   * GET /api/download/new-genesis
+   * Download New Genesis project as ZIP (no token required — free download)
+   */
+  app.get("/api/download/new-genesis", async (req: Request, res: Response) => {
+    try {
+      console.log("[New Genesis Download] Request received");
+      await streamNewGenesisZip(res);
+    } catch (error) {
+      console.error("[New Genesis Download] Error:", error);
+      if (!res.headersSent) {
+        res.status(500).json({ error: "Failed to download ZIP" });
+      }
+    }
+  });
+
+  /**
+   * GET /api/download/mixtape
+   * Download If I Wrote A Mixtape as ZIP (no token required — free download)
+   */
+  app.get("/api/download/mixtape", async (req: Request, res: Response) => {
+    try {
+      console.log("[Mixtape Download] Request received");
+      await streamMixtapeZip(res);
+    } catch (error) {
+      console.error("[Mixtape Download] Error:", error);
       if (!res.headersSent) {
         res.status(500).json({ error: "Failed to download ZIP" });
       }
