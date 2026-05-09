@@ -3,6 +3,7 @@ import { verifyDownloadToken, getOrderByToken } from "../downloads";
 import { createClarityBundle } from "../zip-service";
 import { createDedicationBundle, getDedicationAlbumFiles } from "../zip-dedication";
 import { createBathshebaBundle } from "../zip-bathsheba";
+import { streamAbcsZip } from "../zip-abcs";
 import { verifyWebhookSignature, processWebhookEvent } from "./stripe-webhook";
 import { streamZipDownload, getClarityAlbumFiles } from "./zip-download";
 import https from "https";
@@ -105,6 +106,23 @@ export function registerRoutes(app: Express) {
       });
     } catch (error) {
       console.error("[Dedication Download] Error:", error);
+      if (!res.headersSent) {
+        res.status(500).json({ error: "Failed to download ZIP" });
+      }
+    }
+  });
+
+  /**
+   * GET /api/download/abcs
+   * Download Back to Basics: ABCs project as ZIP (no token required — free download)
+   * MUST be registered before /api/download/all/:token to avoid route collision
+   */
+  app.get("/api/download/abcs", async (req: Request, res: Response) => {
+    try {
+      console.log("[ABCs Download] Request received");
+      await streamAbcsZip(res);
+    } catch (error) {
+      console.error("[ABCs Download] Error:", error);
       if (!res.headersSent) {
         res.status(500).json({ error: "Failed to download ZIP" });
       }

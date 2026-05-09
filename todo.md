@@ -137,3 +137,18 @@
 - [x] Fix BATHSHEBA cover art URL on Home page (was 403, updated to correct .webp CDN URL)
 - [x] Fix misleading "Minimum $12" hint text in Store checkout modal for free products
 - [x] Apply same fetch/blob download fix to Dedication (Mixtape.tsx, Home.tsx)
+
+## P1 — Back to Basics: ABCs Release
+- [x] Upload 11 ABCs tracks to CDN
+- [x] Upload ABCs cover art to CDN
+- [x] Create client/src/data/abcs-bundle.ts with all CDN URLs and track metadata
+- [x] Create server/zip-abcs.ts ZIP builder
+- [x] Add /api/download/abcs route to server/_core/routes.ts
+- [ ] Build /abcs landing page (Abcs.tsx) — warm/gritty studio aesthetic, dark amber/brown tones
+- [ ] Build /abcs/listen page (AbcsListen.tsx) — full player matching BATHSHEBA listen experience
+- [ ] Add ABCs to Home.tsx as featured/secondary project section
+- [ ] Add ABCs to Store.tsx as FREE product
+- [ ] Register /abcs and /abcs/listen routes in App.tsx
+- [ ] Test /api/download/abcs ZIP endpoint
+- [ ] Test individual track downloads on listen page
+- [ ] Run pnpm check / pnpm test / pnpm build
