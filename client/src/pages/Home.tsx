@@ -11,9 +11,17 @@ const CLARITY_COVER =
 const BATHSHEBA_COVER =
   'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/bathsheba-cover-a7iGpxp22xB7WCpL6jtdHa.webp';
 
+const MIXTAPE_COVER =
+  'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/if-i-wrote-a-mixtape-cover_6a183be2.jpg';
+
+const NEW_GENESIS_COVER =
+  'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/new-genesis-cover_23ac8f82.png';
+
 export default function Home() {
   const [isDownloading, setIsDownloading] = useState(false);
   const [isBathshebaDownloading, setIsBathshebaDownloading] = useState(false);
+  const [isMixtapeDownloading, setIsMixtapeDownloading] = useState(false);
+  const [isNewGenesisDownloading, setIsNewGenesisDownloading] = useState(false);
 
   const handleDownloadBathsheba = async () => {
     setIsBathshebaDownloading(true);
@@ -33,6 +41,48 @@ export default function Home() {
       console.error('Download failed:', error);
     } finally {
       setIsBathshebaDownloading(false);
+    }
+  };
+
+  const handleDownloadMixtape = async () => {
+    setIsMixtapeDownloading(true);
+    try {
+      const response = await fetch('/api/download/mixtape');
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'If-I-Wrote-A-Mixtape.zip';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+    } catch (error) {
+      console.error('Download failed:', error);
+    } finally {
+      setIsMixtapeDownloading(false);
+    }
+  };
+
+  const handleDownloadNewGenesis = async () => {
+    setIsNewGenesisDownloading(true);
+    try {
+      const response = await fetch('/api/download/new-genesis');
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'New-Genesis.zip';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+    } catch (error) {
+      console.error('Download failed:', error);
+    } finally {
+      setIsNewGenesisDownloading(false);
     }
   };
 
@@ -110,7 +160,7 @@ export default function Home() {
           {/* Dedication CTAs */}
           <div className="flex flex-col gap-2 sm:gap-3 sm:flex-row sm:justify-center">
             <Link
-              href="/mixtape"
+              href="/dedication"
               className="flex items-center justify-center gap-2 rounded-lg bg-red-600 px-6 sm:px-8 py-3 sm:py-4 font-bebas text-base sm:text-lg tracking-wide text-white transition-colors hover:bg-red-500 active:bg-red-700"
             >
               Listen Now <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
@@ -181,7 +231,113 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── 3. CLARITY FEATURED PROJECT ─────────────────────────── */}
+      {/* ── 3. IF I WROTE A MIXTAPE ─────────────────────────────── */}
+      <section className="border-t border-zinc-800 px-4 py-20 bg-gradient-to-b from-amber-950/10 to-zinc-900/20">
+        <div className="mx-auto grid max-w-4xl gap-10 md:grid-cols-2 md:items-center">
+          {/* Album art */}
+          <div className="overflow-hidden rounded-2xl border border-amber-900/40 shadow-2xl shadow-amber-900/20">
+            <img
+              src={MIXTAPE_COVER}
+              alt="If I Wrote A Mixtape cover"
+              className="h-auto w-full object-cover transition-opacity hover:opacity-95"
+              loading="lazy"
+            />
+          </div>
+
+          {/* Copy */}
+          <div>
+            <div className="mb-4 inline-block">
+              <span className="rounded-full border border-amber-800 px-3 py-1 font-mono text-xs uppercase tracking-[0.15em] text-amber-500">
+                Free Mixtape · 30 Tracks
+              </span>
+            </div>
+
+            <h2 className="mb-4 font-bebas text-5xl leading-tight tracking-wider text-zinc-100">
+              If I Wrote A Mixtape
+            </h2>
+
+            <p className="mb-6 font-cormorant text-2xl italic text-zinc-300">
+              Before the silence
+            </p>
+
+            <p className="mb-8 leading-relaxed text-zinc-400">
+              30 tracks recorded right before the lockdown season. Raw, uncut, and completely free.
+            </p>
+
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Link
+                href="/mixtape/listen"
+                className="flex items-center justify-center gap-2 rounded-lg bg-amber-700 px-6 py-3 font-bebas text-base tracking-wide text-white transition-colors hover:bg-amber-600"
+              >
+                Listen Now <ArrowRight className="h-4 w-4" />
+              </Link>
+              <button
+                onClick={handleDownloadMixtape}
+                disabled={isMixtapeDownloading}
+                className="flex items-center justify-center gap-2 rounded-lg border border-amber-700 px-6 py-3 font-bebas text-base tracking-wide text-amber-400 transition-colors hover:bg-amber-700/10 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Download className="h-4 w-4" />
+                {isMixtapeDownloading ? 'Downloading...' : 'Download Free'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 4. NEW GENESIS ──────────────────────────────────────── */}
+      <section className="border-t border-zinc-800 px-4 py-20" style={{ background: 'linear-gradient(to bottom, rgba(15,12,41,0.4), rgba(26,16,64,0.2), transparent)' }}>
+        <div className="mx-auto grid max-w-4xl gap-10 md:grid-cols-2 md:items-center">
+          {/* Album art */}
+          <div className="order-2 md:order-1 overflow-hidden rounded-2xl border border-indigo-900/40 shadow-2xl shadow-indigo-900/20">
+            <img
+              src={NEW_GENESIS_COVER}
+              alt="New Genesis cover"
+              className="h-auto w-full object-cover transition-opacity hover:opacity-95"
+              loading="lazy"
+            />
+          </div>
+
+          {/* Copy */}
+          <div className="order-1 md:order-2">
+            <div className="mb-4 inline-block">
+              <span className="rounded-full border border-indigo-800 px-3 py-1 font-mono text-xs uppercase tracking-[0.15em] text-indigo-400">
+                Project · 15 Tracks · Free Download
+              </span>
+            </div>
+
+            <h2 className="mb-4 font-bebas text-5xl leading-tight tracking-wider text-zinc-100">
+              New Genesis
+            </h2>
+
+            <p className="mb-6 font-cormorant text-2xl italic text-zinc-300">
+              A return to the source
+            </p>
+
+            <p className="mb-8 leading-relaxed text-zinc-400">
+              15 tracks. A new beginning after the silence. Free to download — or support it in the store for $12.
+            </p>
+
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Link
+                href="/new-genesis/listen"
+                className="flex items-center justify-center gap-2 rounded-lg bg-indigo-700 px-6 py-3 font-bebas text-base tracking-wide text-white transition-colors hover:bg-indigo-600"
+              >
+                Listen Now <ArrowRight className="h-4 w-4" />
+              </Link>
+              <button
+                onClick={handleDownloadNewGenesis}
+                disabled={isNewGenesisDownloading}
+                className="flex items-center justify-center gap-2 rounded-lg border border-indigo-700 px-6 py-3 font-bebas text-base tracking-wide text-indigo-300 transition-colors hover:bg-indigo-700/10 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Download className="h-4 w-4" />
+                {isNewGenesisDownloading ? 'Downloading...' : 'Download Free'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 5. CLARITY FEATURED PROJECT ─────────────────────────── */}
       <section className="border-t border-zinc-800 px-4 py-20 bg-zinc-900/30">
         <div className="mx-auto grid max-w-4xl gap-10 md:grid-cols-2 md:items-center">
           {/* Album art */}

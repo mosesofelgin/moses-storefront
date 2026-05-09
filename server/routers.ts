@@ -47,6 +47,10 @@ export const appRouter = router({
           productName = "Brand Images + Lyric PDF";
           productDescription = "4 high-res brand images + CLARITY lyric book PDF";
           unitAmount = input.amountInCents || 0;
+        } else if (input.productId === "new-genesis") {
+          productName = "New Genesis by Moses";
+          productDescription = "Full project — 15 tracks (instant download)";
+          unitAmount = input.amountInCents || 1200;
         } else if (input.amountInCents) {
           unitAmount = input.amountInCents;
         }

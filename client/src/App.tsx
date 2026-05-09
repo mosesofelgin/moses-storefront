@@ -12,9 +12,13 @@ import Downloads from "./pages/Downloads";
 import Listen from "./pages/Listen";
 import Store from "./pages/Store";
 import Connect from "./pages/Connect";
-import Mixtape from "./pages/Mixtape";
 import Bathsheba from "./pages/Bathsheba";
 import BathshebaListen from "./pages/BathshebaListen";
+import Dedication from "./pages/Mixtape";
+import IfIWroteAMixtape from "./pages/IfIWroteAMixtape";
+import MixtapeListen from "./pages/MixtapeListen";
+import NewGenesis from "./pages/NewGenesis";
+import NewGenesisListen from "./pages/NewGenesisListen";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -27,9 +31,13 @@ function Router() {
       <Route path={"/listen"} component={Listen} />
       <Route path={"/store"} component={Store} />
       <Route path={"/connect"} component={Connect} />
-      <Route path={"/mixtape"} component={Mixtape} />
       <Route path={"/bathsheba/listen"} component={BathshebaListen} />
       <Route path={"/bathsheba"} component={Bathsheba} />
+      <Route path={"/dedication"} component={Dedication} />
+      <Route path={"/mixtape/listen"} component={MixtapeListen} />
+      <Route path={"/mixtape"} component={IfIWroteAMixtape} />
+      <Route path={"/new-genesis/listen"} component={NewGenesisListen} />
+      <Route path={"/new-genesis"} component={NewGenesis} />
       <Route path={"/"} component={Home} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}

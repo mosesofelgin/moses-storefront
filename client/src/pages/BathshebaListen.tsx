@@ -553,7 +553,7 @@ export default function BathshebaListen() {
           {/* Nav footer */}
           <div className="mt-12 pt-8 border-t border-zinc-900 flex flex-wrap justify-center gap-6 font-mono text-xs uppercase tracking-widest text-zinc-600">
             <Link href="/" className="hover:text-zinc-300 transition-colors">Home</Link>
-            <Link href="/mixtape" className="hover:text-zinc-300 transition-colors">Dedication</Link>
+            <Link href="/dedication" className="hover:text-zinc-300 transition-colors">Dedication</Link>
             <Link href="/listen" className="hover:text-zinc-300 transition-colors">CLARITY</Link>
             <Link href="/store" className="hover:text-zinc-300 transition-colors">Store</Link>
             <Link href="/connect" className="hover:text-zinc-300 transition-colors">Connect</Link>

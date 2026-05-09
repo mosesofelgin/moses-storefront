@@ -159,11 +159,12 @@
 - [x] Create client/src/data/new-genesis-bundle.ts with all CDN URLs
 - [x] Create server/zip-new-genesis.ts ZIP builder
 - [x] Add /api/download/new-genesis route to server/_core/routes.ts
-- [ ] Build /new-genesis landing page (NewGenesis.tsx) — deep blue/indigo, biblical/cosmic aesthetic
-- [ ] Build /new-genesis/listen page (NewGenesisListen.tsx) — full player
-- [ ] Add New Genesis to Home.tsx
-- [ ] Add New Genesis to Store.tsx as FREE product
-- [ ] Register /new-genesis and /new-genesis/listen routes in App.tsx
+- [x] Build /new-genesis landing page (NewGenesis.tsx) — deep blue/indigo, biblical/cosmic aesthetic
+- [x] Build /new-genesis/listen page (NewGenesisListen.tsx) — full player
+- [x] Add New Genesis to Home.tsx
+- [x] Add New Genesis to Store.tsx ($12 pay-what-you-want)
+- [x] Register /new-genesis and /new-genesis/listen routes in App.tsx
+- [x] server/routers.ts — New Genesis Stripe product label added
 
 ## P1 — If I Wrote A Mixtape Release
 - [x] Download 30 Mixtape tracks from moses-music GitHub repo
@@ -171,8 +172,8 @@
 - [x] Create client/src/data/mixtape-bundle.ts with all CDN URLs
 - [x] Create server/zip-mixtape.ts ZIP builder
 - [x] Add /api/download/mixtape route to server/_core/routes.ts
-- [ ] Build /mixtape landing page (IfIWroteAMixtape.tsx) — raw/street energy, pre-lockdown 2020 feel
-- [ ] Build /mixtape/listen page (MixtapeListen.tsx) — full player, handles 30 tracks
-- [ ] Add Mixtape to Home.tsx
-- [ ] Add Mixtape to Store.tsx as FREE product
-- [ ] Register /mixtape and /mixtape/listen routes in App.tsx
+- [x] Build /mixtape landing page (IfIWroteAMixtape.tsx) — raw/street energy, pre-lockdown 2020 feel
+- [x] Build /mixtape/listen page (MixtapeListen.tsx) — full player, handles 30 tracks
+- [x] Add Mixtape to Home.tsx
+- [x] Add Mixtape to Store.tsx as FREE product
+- [x] Register /mixtape and /mixtape/listen routes in App.tsx
