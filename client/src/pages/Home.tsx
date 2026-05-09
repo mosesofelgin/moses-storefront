@@ -31,10 +31,10 @@ export default function Home() {
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
 
       {/* ── 1. DEDICATION HERO ──────────────────────────────────── */}
-      <section className="relative flex min-h-screen flex-col items-center justify-center px-4 py-24 text-center">
+      <section className="relative flex min-h-screen flex-col items-center justify-center px-4 py-16 sm:py-24 text-center">
         {/* Subtle red/black ambient glow for Dedication */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute left-1/2 top-1/3 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-500/5 blur-3xl" />
+          <div className="absolute left-1/2 top-1/3 h-[300px] w-[300px] sm:h-[500px] sm:w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-500/5 blur-3xl" />
         </div>
 
         <div className="relative z-10 mx-auto max-w-3xl">
@@ -46,36 +46,36 @@ export default function Home() {
           </div>
 
           {/* Dedication headline */}
-          <h1 className="mb-4 font-bebas text-[clamp(6rem,20vw,11rem)] leading-none tracking-widest text-red-500">
+          <h1 className="mb-3 sm:mb-4 font-bebas text-[clamp(3.5rem,15vw,11rem)] leading-none tracking-widest text-red-500">
             DEDICATION
           </h1>
 
           {/* Dedication subheadline */}
-          <p className="mb-4 font-cormorant text-3xl italic text-zinc-200 md:text-4xl">
+          <p className="mb-3 sm:mb-4 font-cormorant text-xl sm:text-3xl md:text-4xl italic text-zinc-200">
             A homage to Lil Wayne
           </p>
 
           {/* Dedication description */}
-          <p className="mb-12 text-base leading-relaxed text-zinc-300 md:text-lg">
+          <p className="mb-8 sm:mb-12 text-sm sm:text-base leading-relaxed text-zinc-300 md:text-lg">
             14 tracks of pure artistry. Listen now. Download free. No email required.
             <br />
             Direct from MOSES SOG.
           </p>
 
           {/* Dedication CTAs */}
-          <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+          <div className="flex flex-col gap-2 sm:gap-3 sm:flex-row sm:justify-center">
             <Link
               href="/mixtape"
-              className="flex items-center justify-center gap-2 rounded-lg bg-red-600 px-8 py-4 font-bebas text-lg tracking-wide text-white transition-colors hover:bg-red-500"
+              className="flex items-center justify-center gap-2 rounded-lg bg-red-600 px-6 sm:px-8 py-3 sm:py-4 font-bebas text-base sm:text-lg tracking-wide text-white transition-colors hover:bg-red-500 active:bg-red-700"
             >
-              Listen Now <ArrowRight className="h-4 w-4" />
+              Listen Now <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </Link>
             <button
               onClick={handleDownloadDedication}
               disabled={isDownloading}
-              className="flex items-center justify-center gap-2 rounded-lg border border-zinc-600 px-8 py-4 font-bebas text-lg tracking-wide text-zinc-100 transition-colors hover:border-zinc-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center justify-center gap-2 rounded-lg border border-zinc-600 px-6 sm:px-8 py-3 sm:py-4 font-bebas text-base sm:text-lg tracking-wide text-zinc-100 transition-colors hover:border-zinc-400 hover:text-white active:border-zinc-400 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Download className="h-4 w-4" />
+              <Download className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               {isDownloading ? 'Downloading...' : 'Download Free'}
             </button>
           </div>
