@@ -46,6 +46,21 @@ const PRODUCTS: Product[] = [
     ],
   },
   {
+    id: 'abcs',
+    name: 'Back to Basics: ABCs',
+    description: '11-track self-made project — produced, mixed, written, photographed & edited by one person',
+    minPrice: 0,
+    badge: 'FREE',
+    isPayWhatYouWant: true,
+    details: [
+      'All 11 ABCs tracks',
+      'Direct download',
+      'No email required',
+      'Lifetime access',
+      'Support the artist',
+    ],
+  },
+  {
     id: 'mixtape',
     name: 'If I Wrote A Mixtape',
     description: '30-track free mixtape - before the lockdown season',

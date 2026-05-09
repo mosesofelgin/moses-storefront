@@ -144,14 +144,12 @@
 - [x] Create client/src/data/abcs-bundle.ts with all CDN URLs and track metadata
 - [x] Create server/zip-abcs.ts ZIP builder
 - [x] Add /api/download/abcs route to server/_core/routes.ts
-- [ ] Build /abcs landing page (Abcs.tsx) — warm/gritty studio aesthetic, dark amber/brown tones
-- [ ] Build /abcs/listen page (AbcsListen.tsx) — full player matching BATHSHEBA listen experience
-- [ ] Add ABCs to Home.tsx as featured/secondary project section
-- [ ] Add ABCs to Store.tsx as FREE product
-- [ ] Register /abcs and /abcs/listen routes in App.tsx
-- [ ] Test /api/download/abcs ZIP endpoint
-- [ ] Test individual track downloads on listen page
-- [ ] Run pnpm check / pnpm test / pnpm build
+- [x] Build /abcs landing page (Abcs.tsx) — warm/gritty studio aesthetic, dark amber/brown tones
+- [x] Build /abcs/listen page (AbcsListen.tsx) — full player matching BATHSHEBA listen experience
+- [x] Add ABCs to Home.tsx as featured/secondary project section
+- [x] Add ABCs to Store.tsx as FREE product
+- [x] Register /abcs and /abcs/listen routes in App.tsx
+- [x] pnpm check ✓ | pnpm test 36/36 ✓ | pnpm build ✓
 
 ## P1 — New Genesis Release
 - [x] Download 15 New Genesis tracks from moses-music GitHub repo

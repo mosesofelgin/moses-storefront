@@ -15,6 +15,8 @@ import Connect from "./pages/Connect";
 import Bathsheba from "./pages/Bathsheba";
 import BathshebaListen from "./pages/BathshebaListen";
 import Dedication from "./pages/Mixtape";
+import Abcs from "./pages/Abcs";
+import AbcsListen from "./pages/AbcsListen";
 import IfIWroteAMixtape from "./pages/IfIWroteAMixtape";
 import MixtapeListen from "./pages/MixtapeListen";
 import NewGenesis from "./pages/NewGenesis";
@@ -34,6 +36,8 @@ function Router() {
       <Route path={"/bathsheba/listen"} component={BathshebaListen} />
       <Route path={"/bathsheba"} component={Bathsheba} />
       <Route path={"/dedication"} component={Dedication} />
+      <Route path={"/abcs/listen"} component={AbcsListen} />
+      <Route path={"/abcs"} component={Abcs} />
       <Route path={"/mixtape/listen"} component={MixtapeListen} />
       <Route path={"/mixtape"} component={IfIWroteAMixtape} />
       <Route path={"/new-genesis/listen"} component={NewGenesisListen} />

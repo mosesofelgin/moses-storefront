@@ -17,11 +17,15 @@ const MIXTAPE_COVER =
 const NEW_GENESIS_COVER =
   'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/new-genesis-cover_23ac8f82.png';
 
+const ABCS_COVER =
+  'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/abcs-cover_be82498d.png';
+
 export default function Home() {
   const [isDownloading, setIsDownloading] = useState(false);
   const [isBathshebaDownloading, setIsBathshebaDownloading] = useState(false);
   const [isMixtapeDownloading, setIsMixtapeDownloading] = useState(false);
   const [isNewGenesisDownloading, setIsNewGenesisDownloading] = useState(false);
+  const [isAbcsDownloading, setIsAbcsDownloading] = useState(false);
 
   const handleDownloadBathsheba = async () => {
     setIsBathshebaDownloading(true);
@@ -83,6 +87,27 @@ export default function Home() {
       console.error('Download failed:', error);
     } finally {
       setIsNewGenesisDownloading(false);
+    }
+  };
+
+  const handleDownloadAbcs = async () => {
+    setIsAbcsDownloading(true);
+    try {
+      const response = await fetch('/api/download/abcs');
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'Back-to-Basics-ABCs.zip';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+    } catch (error) {
+      console.error('Download failed:', error);
+    } finally {
+      setIsAbcsDownloading(false);
     }
   };
 
@@ -337,7 +362,63 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── 5. CLARITY FEATURED PROJECT ─────────────────────────── */}
+      {/* ── 5. BACK TO BASICS: ABCs ───────────────────────────── */}
+      <section className="border-t border-zinc-800 px-4 py-20" style={{ background: 'linear-gradient(to bottom, rgba(120,60,10,0.08), transparent)' }}>
+        <div className="mx-auto grid max-w-4xl gap-10 md:grid-cols-2 md:items-center">
+          {/* Album art */}
+          <div className="overflow-hidden rounded-2xl border border-amber-900/30 shadow-2xl shadow-amber-950/20">
+            <img
+              src={ABCS_COVER}
+              alt="Back to Basics: ABCs cover"
+              className="h-auto w-full object-cover transition-opacity hover:opacity-95"
+              loading="lazy"
+            />
+          </div>
+
+          {/* Copy */}
+          <div>
+            <div className="mb-4 inline-block">
+              <span className="rounded-full border border-amber-900/60 px-3 py-1 font-mono text-xs uppercase tracking-[0.15em] text-amber-700">
+                Self-Made Project · 11 Tracks · Free
+              </span>
+            </div>
+
+            <h2 className="mb-1 font-bebas text-4xl leading-tight tracking-wider text-zinc-100">
+              Back to Basics
+            </h2>
+            <h3 className="mb-4 font-bebas text-3xl leading-tight tracking-wider text-amber-600">
+              ;ABCs
+            </h3>
+
+            <p className="mb-6 font-cormorant text-xl italic text-zinc-400">
+              Going back to the days when we were using FL Studio and pure focus.
+            </p>
+
+            <p className="mb-8 leading-relaxed text-zinc-500 text-sm">
+              Produced, mixed, written, photographed, and edited by one person. Not perfect — but complete.
+            </p>
+
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Link
+                href="/abcs/listen"
+                className="flex items-center justify-center gap-2 rounded-lg bg-amber-700 px-6 py-3 font-bebas text-base tracking-wide text-white transition-colors hover:bg-amber-600"
+              >
+                Listen Now <ArrowRight className="h-4 w-4" />
+              </Link>
+              <button
+                onClick={handleDownloadAbcs}
+                disabled={isAbcsDownloading}
+                className="flex items-center justify-center gap-2 rounded-lg border border-amber-800/60 px-6 py-3 font-bebas text-base tracking-wide text-amber-600 transition-colors hover:bg-amber-900/10 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Download className="h-4 w-4" />
+                {isAbcsDownloading ? 'Downloading...' : 'Download Free'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 6. CLARITY FEATURED PROJECT ─────────────────────────── */}
       <section className="border-t border-zinc-800 px-4 py-20 bg-zinc-900/30">
         <div className="mx-auto grid max-w-4xl gap-10 md:grid-cols-2 md:items-center">
           {/* Album art */}
