@@ -51,13 +51,28 @@ export default function Home() {
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
 
       {/* ── 1. DEDICATION HERO ──────────────────────────────────── */}
-      <section className="relative flex min-h-screen flex-col items-center justify-center px-4 py-16 sm:py-24 text-center">
-        {/* Subtle red/black ambient glow for Dedication */}
+      <section className="relative min-h-screen px-4 py-16 sm:py-24">
+        {/* Ambient glow */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute left-1/2 top-1/3 h-[300px] w-[300px] sm:h-[500px] sm:w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-500/5 blur-3xl" />
+          <div className="absolute left-1/4 top-1/3 h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-500/8 blur-3xl" />
+          <div className="absolute right-1/4 bottom-1/3 h-[300px] w-[300px] rounded-full bg-red-900/10 blur-3xl" />
         </div>
 
-        <div className="relative z-10 mx-auto max-w-3xl">
+        <div className="relative z-10 mx-auto max-w-5xl grid gap-10 lg:grid-cols-2 lg:items-center">          
+          {/* Cover Art */}
+          <div className="order-2 lg:order-1 flex justify-center">
+            <div className="relative w-full max-w-sm">
+              <div className="absolute inset-0 bg-red-500/20 blur-3xl rounded-2xl" />
+              <img
+                src={DEDICATION_COVER}
+                alt="DEDICATION cover"
+                className="relative w-full rounded-2xl object-cover shadow-2xl border border-red-900/50"
+              />
+            </div>
+          </div>
+
+          {/* Text + CTAs */}
+          <div className="order-1 lg:order-2 text-center lg:text-left">
           {/* Dedication badge */}
           <div className="mb-8 inline-block">
             <span className="rounded-full border border-red-700 px-4 py-1.5 font-mono text-xs uppercase tracking-[0.2em] text-red-400">
@@ -98,6 +113,7 @@ export default function Home() {
               <Download className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               {isDownloading ? 'Downloading...' : 'Download Free'}
             </button>
+          </div>
           </div>
         </div>
       </section>

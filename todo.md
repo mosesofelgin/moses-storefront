@@ -125,3 +125,8 @@
 - [x] Fix individual track downloads (ensure all tracks download correctly)
 - [x] Optimize performance for slow connections (preload optimization, lazy loading)
 - [x] Create immersive high-fidelity listening experience with fluent UI
+
+## P1 — Bathsheba Listening Experience Refinement
+- [x] Add Dedication cover art to Home page hero section (two-column layout with art + text)
+- [x] Refine Bathsheba landing page for cohesive visual flow
+- [x] Refine BathshebaListen.tsx for immersive flow-through listening experience
