@@ -6,15 +6,20 @@ import { bathshebaProject } from '../data/bathsheba-bundle';
 export default function Bathsheba() {
   const [isDownloading, setIsDownloading] = useState(false);
 
-  const handleDownloadBathsheba = () => {
+  const handleDownloadBathsheba = async () => {
     setIsDownloading(true);
     try {
+      const response = await fetch('/api/download/bathsheba');
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.href = '/api/download/bathsheba';
+      link.href = url;
       link.download = 'BATHSHEBA-Project.zip';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
     } catch (error) {
       console.error('Download failed:', error);
     } finally {

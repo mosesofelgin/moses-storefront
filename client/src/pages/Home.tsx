@@ -9,7 +9,7 @@ const CLARITY_COVER =
   'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/album-cover_2118610e.png';
 
 const BATHSHEBA_COVER =
-  'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/bathsheba-cover_a8f2c1d3.png';
+  'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/bathsheba-cover-a7iGpxp22xB7WCpL6jtdHa.webp';
 
 export default function Home() {
   const [isDownloading, setIsDownloading] = useState(false);
@@ -18,12 +18,17 @@ export default function Home() {
   const handleDownloadBathsheba = async () => {
     setIsBathshebaDownloading(true);
     try {
+      const response = await fetch('/api/download/bathsheba');
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.href = '/api/download/bathsheba';
+      link.href = url;
       link.download = 'BATHSHEBA-Project.zip';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
     } catch (error) {
       console.error('Download failed:', error);
     } finally {
@@ -34,12 +39,17 @@ export default function Home() {
   const handleDownloadDedication = async () => {
     setIsDownloading(true);
     try {
+      const response = await fetch('/api/download/dedication');
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.href = '/api/download/dedication';
+      link.href = url;
       link.download = 'DEDICATION-Mixtape.zip';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
     } catch (error) {
       console.error('Download failed:', error);
     } finally {

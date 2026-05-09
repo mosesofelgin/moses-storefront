@@ -81,12 +81,17 @@ export default function Mixtape() {
   const handleDownload = async () => {
     setIsDownloading(true);
     try {
+      const response = await fetch('/api/download/dedication');
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.href = '/api/download/dedication';
+      link.href = url;
       link.download = 'DEDICATION-Mixtape.zip';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
     } catch (error) {
       console.error('Download failed:', error);
     } finally {
@@ -296,15 +301,30 @@ export default function Mixtape() {
                   </div>
                   <div className="text-sm text-zinc-400 ml-4">{track.duration}</div>
                 </button>
-                <a
-                  href={track.url}
-                  download={`${track.title}.mp3`}
+                <button
                   className="ml-4 p-2 rounded hover:bg-zinc-700 transition text-zinc-400 hover:text-[#00ff00]"
                   title="Download MP3"
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={async (e) => {
+                    e.stopPropagation();
+                    try {
+                      const response = await fetch(track.url);
+                      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                      const blob = await response.blob();
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = `${track.title}.mp3`;
+                      document.body.appendChild(a);
+                      a.click();
+                      document.body.removeChild(a);
+                      setTimeout(() => URL.revokeObjectURL(url), 10000);
+                    } catch (err) {
+                      console.error('Track download failed:', err);
+                    }
+                  }}
                 >
                   <Download className="w-4 h-4" />
-                </a>
+                </button>
               </div>
             ))}
           </div>

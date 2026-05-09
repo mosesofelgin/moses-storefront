@@ -147,12 +147,17 @@ export default function BathshebaListen() {
   const handleDownloadFull = async () => {
     setIsDownloadingFull(true);
     try {
+      const response = await fetch('/api/download/bathsheba');
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.href = '/api/download/bathsheba';
+      link.href = url;
       link.download = 'BATHSHEBA-Project.zip';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
     } catch (err) {
       console.error('Download failed:', err);
     } finally {
@@ -164,12 +169,17 @@ export default function BathshebaListen() {
     e.stopPropagation();
     setDownloadingTrackId(track.id);
     try {
+      const response = await fetch(track.url);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.href = track.url;
+      link.href = url;
       link.download = `${track.number.toString().padStart(2, '0')}-${track.title}.mp3`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
     } catch (err) {
       console.error('Download failed:', err);
     } finally {

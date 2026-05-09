@@ -130,3 +130,10 @@
 - [x] Add Dedication cover art to Home page hero section (two-column layout with art + text)
 - [x] Refine Bathsheba landing page for cohesive visual flow
 - [x] Refine BathshebaListen.tsx for immersive flow-through listening experience
+
+## P0 — Bathsheba Download Fix
+- [x] Fix Bathsheba full project ZIP download on listen page (fetch/blob/createObjectURL pattern)
+- [x] Fix Bathsheba individual track downloads on listen page (fetch/blob/createObjectURL pattern)
+- [x] Fix BATHSHEBA cover art URL on Home page (was 403, updated to correct .webp CDN URL)
+- [x] Fix misleading "Minimum $12" hint text in Store checkout modal for free products
+- [x] Apply same fetch/blob download fix to Dedication (Mixtape.tsx, Home.tsx)

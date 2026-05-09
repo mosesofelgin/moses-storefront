@@ -304,7 +304,11 @@ export default function Store() {
                     required
                   />
                 </div>
-                <p className="text-xs text-gray-400 mt-1">Minimum $12. Pay more to support the mission.</p>
+                <p className="text-xs text-gray-400 mt-1">
+                  {selectedProduct.minPrice > 0
+                    ? `Minimum $${selectedProduct.minPrice}. Pay more to support the mission.`
+                    : 'Enter $0 for free, or pay what you want to support the mission.'}
+                </p>
               </div>
 
               <button
