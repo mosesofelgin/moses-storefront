@@ -1,6 +1,6 @@
+import { ArrowRight } from 'lucide-react';
 import { Link } from 'wouter';
-import { ArrowRight, Download } from 'lucide-react';
-import { useState } from 'react';
+import DownloadButton from '@/components/DownloadButton';
 
 const DEDICATION_COVER =
   'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/dedication-cover_20e0add5.jpg';
@@ -21,117 +21,6 @@ const ABCS_COVER =
   'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/abcs-cover_be82498d.png';
 
 export default function Home() {
-  const [isDownloading, setIsDownloading] = useState(false);
-  const [isBathshebaDownloading, setIsBathshebaDownloading] = useState(false);
-  const [isMixtapeDownloading, setIsMixtapeDownloading] = useState(false);
-  const [isNewGenesisDownloading, setIsNewGenesisDownloading] = useState(false);
-  const [isAbcsDownloading, setIsAbcsDownloading] = useState(false);
-
-  const handleDownloadBathsheba = async () => {
-    setIsBathshebaDownloading(true);
-    try {
-      const response = await fetch('/api/download/bathsheba');
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'BATHSHEBA-Project.zip';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
-    } catch (error) {
-      console.error('Download failed:', error);
-    } finally {
-      setIsBathshebaDownloading(false);
-    }
-  };
-
-  const handleDownloadMixtape = async () => {
-    setIsMixtapeDownloading(true);
-    try {
-      const response = await fetch('/api/download/mixtape');
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'If-I-Wrote-A-Mixtape.zip';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
-    } catch (error) {
-      console.error('Download failed:', error);
-    } finally {
-      setIsMixtapeDownloading(false);
-    }
-  };
-
-  const handleDownloadNewGenesis = async () => {
-    setIsNewGenesisDownloading(true);
-    try {
-      const response = await fetch('/api/download/new-genesis');
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'New-Genesis.zip';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
-    } catch (error) {
-      console.error('Download failed:', error);
-    } finally {
-      setIsNewGenesisDownloading(false);
-    }
-  };
-
-  const handleDownloadAbcs = async () => {
-    setIsAbcsDownloading(true);
-    try {
-      const response = await fetch('/api/download/abcs');
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'Back-to-Basics-ABCs.zip';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
-    } catch (error) {
-      console.error('Download failed:', error);
-    } finally {
-      setIsAbcsDownloading(false);
-    }
-  };
-
-  const handleDownloadDedication = async () => {
-    setIsDownloading(true);
-    try {
-      const response = await fetch('/api/download/dedication');
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'DEDICATION-Mixtape.zip';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
-    } catch (error) {
-      console.error('Download failed:', error);
-    } finally {
-      setIsDownloading(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
 
@@ -235,14 +124,13 @@ export default function Home() {
               >
                 Listen Now <ArrowRight className="h-4 w-4" />
               </Link>
-              <button
-                onClick={handleDownloadBathsheba}
-                disabled={isBathshebaDownloading}
-                className="flex items-center justify-center gap-2 rounded-lg border border-purple-600 px-6 py-3 font-bebas text-base tracking-wide text-purple-400 transition-colors hover:bg-purple-600/10 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Download className="h-4 w-4" />
-                {isBathshebaDownloading ? 'Downloading...' : 'Download Free'}
-              </button>
+              <DownloadButton
+                endpoint="/api/download/bathsheba"
+                filename="BATHSHEBA-Project.zip"
+                label="Download Free"
+                variant="outline"
+                className="border-purple-600 text-purple-400 hover:bg-purple-600/10"
+              />
             </div>
           </div>
         </div>
@@ -288,14 +176,13 @@ export default function Home() {
               >
                 Listen Now <ArrowRight className="h-4 w-4" />
               </Link>
-              <button
-                onClick={handleDownloadMixtape}
-                disabled={isMixtapeDownloading}
-                className="flex items-center justify-center gap-2 rounded-lg border border-amber-700 px-6 py-3 font-bebas text-base tracking-wide text-amber-400 transition-colors hover:bg-amber-700/10 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Download className="h-4 w-4" />
-                {isMixtapeDownloading ? 'Downloading...' : 'Download Free'}
-              </button>
+              <DownloadButton
+                endpoint="/api/download/mixtape"
+                filename="If-I-Wrote-A-Mixtape.zip"
+                label="Download Free"
+                variant="outline"
+                className="border-amber-700 text-amber-400 hover:bg-amber-700/10"
+              />
             </div>
           </div>
         </div>
@@ -341,14 +228,13 @@ export default function Home() {
               >
                 Listen Now <ArrowRight className="h-4 w-4" />
               </Link>
-              <button
-                onClick={handleDownloadNewGenesis}
-                disabled={isNewGenesisDownloading}
-                className="flex items-center justify-center gap-2 rounded-lg border border-indigo-700 px-6 py-3 font-bebas text-base tracking-wide text-indigo-300 transition-colors hover:bg-indigo-700/10 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Download className="h-4 w-4" />
-                {isNewGenesisDownloading ? 'Downloading...' : 'Download Free'}
-              </button>
+              <DownloadButton
+                endpoint="/api/download/new-genesis"
+                filename="New-Genesis.zip"
+                label="Download Free"
+                variant="outline"
+                className="border-indigo-700 text-indigo-300 hover:bg-indigo-700/10"
+              />
             </div>
           </div>
         </div>
@@ -397,14 +283,13 @@ export default function Home() {
               >
                 Listen Now <ArrowRight className="h-4 w-4" />
               </Link>
-              <button
-                onClick={handleDownloadAbcs}
-                disabled={isAbcsDownloading}
-                className="flex items-center justify-center gap-2 rounded-lg border border-amber-800/60 px-6 py-3 font-bebas text-base tracking-wide text-amber-600 transition-colors hover:bg-amber-900/10 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Download className="h-4 w-4" />
-                {isAbcsDownloading ? 'Downloading...' : 'Download Free'}
-              </button>
+              <DownloadButton
+                endpoint="/api/download/abcs"
+                filename="Back-to-Basics-ABCs.zip"
+                label="Download Free"
+                variant="outline"
+                className="border-amber-800/60 text-amber-600 hover:bg-amber-900/10"
+              />
             </div>
           </div>
         </div>
@@ -451,14 +336,13 @@ export default function Home() {
               >
                 Listen Now <ArrowRight className="h-4 w-4" />
               </Link>
-              <button
-                onClick={handleDownloadDedication}
-                disabled={isDownloading}
-                className="flex items-center justify-center gap-2 rounded-lg border border-zinc-600 px-6 py-3 font-bebas text-base tracking-wide text-zinc-100 transition-colors hover:border-zinc-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Download className="h-4 w-4" />
-                {isDownloading ? 'Downloading...' : 'Download Free'}
-              </button>
+              <DownloadButton
+                endpoint="/api/download/dedication"
+                filename="DEDICATION-Mixtape.zip"
+                label="Download Free"
+                variant="outline"
+                className="border-zinc-600 text-zinc-100 hover:border-zinc-400 hover:text-white"
+              />
             </div>
           </div>
         </div>
@@ -498,68 +382,46 @@ export default function Home() {
       <section className="border-t border-zinc-800 px-4 py-20 bg-zinc-900/30">
         <div className="mx-auto max-w-4xl">
           <h2 className="mb-12 text-center font-bebas text-4xl tracking-wider uppercase">
-            Your Journey
+            Next Steps
           </h2>
 
           <div className="grid gap-6 md:grid-cols-3">
             <Link
-              href="/listen"
-              className="group rounded-lg border border-zinc-800 p-8 text-center transition-all hover:border-green-600 hover:bg-green-600/5"
-            >
-              <h3 className="mb-3 font-bebas text-2xl tracking-wider text-zinc-100 group-hover:text-green-400">LISTEN</h3>
-              <p className="mb-6 text-sm text-zinc-400">Enter the CLARITY listening experience.</p>
-              <span className="inline-flex items-center gap-2 font-bebas text-sm tracking-wide text-green-500 group-hover:text-green-400">
-                Listen <ArrowRight className="h-3 w-3" />
-              </span>
-            </Link>
-
-            <Link
               href="/store"
-              className="group rounded-lg border border-zinc-800 p-8 text-center transition-all hover:border-green-600 hover:bg-green-600/5"
+              className="rounded-lg border border-zinc-700 p-8 text-center hover:border-green-600 hover:bg-green-600/5 transition-all"
             >
-              <h3 className="mb-3 font-bebas text-2xl tracking-wider text-zinc-100 group-hover:text-green-400">STORE</h3>
-              <p className="mb-6 text-sm text-zinc-400">Own the full album and support the mission.</p>
-              <span className="inline-flex items-center gap-2 font-bebas text-sm tracking-wide text-green-500 group-hover:text-green-400">
-                Store <ArrowRight className="h-3 w-3" />
-              </span>
+              <h3 className="mb-2 font-bebas text-2xl tracking-wider text-zinc-100">Store</h3>
+              <p className="text-sm text-zinc-400">Own albums. Support directly.</p>
             </Link>
 
             <Link
               href="/connect"
-              className="group rounded-lg border border-zinc-800 p-8 text-center transition-all hover:border-green-600 hover:bg-green-600/5"
+              className="rounded-lg border border-zinc-700 p-8 text-center hover:border-green-600 hover:bg-green-600/5 transition-all"
             >
-              <h3 className="mb-3 font-bebas text-2xl tracking-wider text-zinc-100 group-hover:text-green-400">CONNECT</h3>
-              <p className="mb-6 text-sm text-zinc-400">Join the community and stay close to the journey.</p>
-              <span className="inline-flex items-center gap-2 font-bebas text-sm tracking-wide text-green-500 group-hover:text-green-400">
-                Connect <ArrowRight className="h-3 w-3" />
-              </span>
+              <h3 className="mb-2 font-bebas text-2xl tracking-wider text-zinc-100">Connect</h3>
+              <p className="text-sm text-zinc-400">Email. Social. Direct contact.</p>
+            </Link>
+
+            <Link
+              href="/links"
+              className="rounded-lg border border-zinc-700 p-8 text-center hover:border-green-600 hover:bg-green-600/5 transition-all"
+            >
+              <h3 className="mb-2 font-bebas text-2xl tracking-wider text-zinc-100">Links</h3>
+              <p className="text-sm text-zinc-400">All platforms. One place.</p>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ── 9. MISSION ──────────────────────────────────────────── */}
-      <section className="border-t border-zinc-800 px-4 py-20">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="font-cormorant text-3xl italic leading-relaxed text-zinc-300">
-            MOSES SOG is building a direct-to-consumer music and media ecosystem
-            rooted in faith, ownership, and creative discipline.
+      {/* ── 9. FOOTER ───────────────────────────────────────────── */}
+      <footer className="border-t border-zinc-800 px-4 py-12 bg-zinc-900/50">
+        <div className="mx-auto max-w-4xl text-center">
+          <p className="mb-2 font-bebas text-lg tracking-wider text-zinc-100">
+            MOSES SOG
           </p>
-        </div>
-      </section>
-
-      {/* ── 10. FOOTER ──────────────────────────────────────────── */}
-      <footer className="border-t border-zinc-800 px-4 py-12">
-        <div className="mx-auto max-w-4xl">
-          <div className="mb-8 grid grid-cols-2 gap-8 md:grid-cols-4">
-            <Link href="/" className="text-zinc-400 hover:text-green-500 transition-colors font-bebas tracking-wide">HOME</Link>
-            <Link href="/listen" className="text-zinc-400 hover:text-green-500 transition-colors font-bebas tracking-wide">LISTEN</Link>
-            <Link href="/store" className="text-zinc-400 hover:text-green-500 transition-colors font-bebas tracking-wide">STORE</Link>
-            <Link href="/connect" className="text-zinc-400 hover:text-green-500 transition-colors font-bebas tracking-wide">CONNECT</Link>
-          </div>
-          <div className="border-t border-zinc-800 pt-8 text-center text-sm text-zinc-600">
-            <p>© 2026 MOSES SOG</p>
-          </div>
+          <p className="text-sm text-zinc-500">
+            Owned music. Direct access. © 2026
+          </p>
         </div>
       </footer>
     </div>

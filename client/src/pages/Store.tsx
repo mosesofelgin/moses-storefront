@@ -4,6 +4,8 @@ import { toast } from 'sonner';
 import { useState } from 'react';
 import { Check, X } from 'lucide-react';
 
+
+
 interface Product {
   id: string;
   name: string;
@@ -12,97 +14,100 @@ interface Product {
   badge?: string;
   details?: string[];
   isPayWhatYouWant?: boolean;
+  coverUrl?: string;
 }
 
 const PRODUCTS: Product[] = [
   {
-    id: 'bathsheba',
-    name: 'Bathsheba',
-    description: '10-track project - a royal journey',
-    minPrice: 0,
-    badge: 'FREE',
-    isPayWhatYouWant: true,
-    details: [
-      'All 10 Bathsheba tracks',
-      'Direct download',
-      'No email required',
-      'Lifetime access',
-      'Support the artist',
-    ],
-  },
-  {
-    id: 'dedication',
-    name: 'Dedication',
-    description: '14-track mixtape - homage to Lil Wayne',
-    minPrice: 0,
-    badge: 'FREE',
-    isPayWhatYouWant: true,
-    details: [
-      'All 14 Dedication tracks',
-      'Direct download',
-      'No email required',
-      'Lifetime access',
-      'Support the artist',
-    ],
-  },
-  {
-    id: 'abcs',
-    name: 'Back to Basics: ABCs',
-    description: '11-track self-made project — produced, mixed, written, photographed & edited by one person',
-    minPrice: 0,
-    badge: 'FREE',
-    isPayWhatYouWant: true,
-    details: [
-      'All 11 ABCs tracks',
-      'Direct download',
-      'No email required',
-      'Lifetime access',
-      'Support the artist',
-    ],
-  },
-  {
-    id: 'mixtape',
-    name: 'If I Wrote A Mixtape',
-    description: '30-track free mixtape - before the lockdown season',
-    minPrice: 0,
-    badge: 'FREE',
-    isPayWhatYouWant: true,
-    details: [
-      'All 30 tracks',
-      'Direct download',
-      'No email required',
-      'Lifetime access',
-      'Support the artist',
-    ],
-  },
-  {
-    id: 'new-genesis',
-    name: 'New Genesis',
-    description: '15-track project - a return to the source',
-    minPrice: 12,
-    badge: 'PAY WHAT YOU WANT',
-    isPayWhatYouWant: true,
-    details: [
-      'All 15 New Genesis tracks',
-      'Direct download',
-      'Lifetime access',
-      '$12 = support the mission',
-      'Free download always available',
-    ],
-  },
-  {
     id: 'clarity',
-    name: 'Clarity',
-    description: '12-track digital album - truth-driven music rooted in alignment',
+    name: 'CLARITY',
+    description: '12-track digital album — truth-driven music rooted in alignment',
     minPrice: 12,
-    badge: 'PAY WHAT YOU WANT',
+    badge: '$12 · PAY WHAT YOU WANT',
     isPayWhatYouWant: true,
+    coverUrl: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/album-cover_2118610e.png',
     details: [
       'All 12 CLARITY tracks',
       '4 brand images (high-res)',
       'Lyric book PDF',
       'Lifetime access',
       '$12 = 3,000 streams worth',
+    ],
+  },
+  {
+    id: 'new-genesis',
+    name: 'New Genesis',
+    description: '15-track project — a return to the source',
+    minPrice: 12,
+    badge: '$12 · PAY WHAT YOU WANT',
+    isPayWhatYouWant: true,
+    coverUrl: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/new-genesis-cover_23ac8f82.png',
+    details: [
+      'All 15 New Genesis tracks',
+      'Direct download',
+      'Lifetime access',
+      'Free download always available',
+      'Support the mission',
+    ],
+  },
+  {
+    id: 'bathsheba',
+    name: 'BATHSHEBA',
+    description: '10-track project — a royal journey through grace and sovereignty',
+    minPrice: 0,
+    badge: 'FREE',
+    isPayWhatYouWant: true,
+    coverUrl: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/bathsheba-cover-a7iGpxp22xB7WCpL6jtdHa.webp',
+    details: [
+      'All 10 BATHSHEBA tracks',
+      'Direct download',
+      'No email required',
+      'Lifetime access',
+    ],
+  },
+  {
+    id: 'mixtape',
+    name: 'If I Wrote A Mixtape',
+    description: '30-track mixtape — before the lockdown season',
+    minPrice: 0,
+    badge: 'FREE',
+    isPayWhatYouWant: true,
+    coverUrl: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/if-i-wrote-a-mixtape-cover_6a183be2.jpg',
+    details: [
+      'All 30 tracks',
+      'Direct download',
+      'No email required',
+      'Lifetime access',
+    ],
+  },
+  {
+    id: 'abcs',
+    name: 'Back to Basics: ABCs',
+    description: '11-track self-made project — produced, mixed, written, photographed & edited',
+    minPrice: 0,
+    badge: 'FREE',
+    isPayWhatYouWant: true,
+    coverUrl: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/abcs-cover_be82498d.png',
+    details: [
+      'All 11 ABCs tracks',
+      'Direct download',
+      'No email required',
+      'Lifetime access',
+    ],
+  },
+  {
+    id: 'dedication',
+    name: 'DEDICATION',
+    description: '14-track mixtape — a homage to Lil Wayne',
+    minPrice: 0,
+    badge: 'FREE',
+    isPayWhatYouWant: true,
+    coverUrl: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/dedication-cover_20e0add5.jpg',
+    details: [
+      'All 14 DEDICATION tracks',
+      'Direct download',
+      'No email required',
+      'Lifetime access',
     ],
   },
 ];
