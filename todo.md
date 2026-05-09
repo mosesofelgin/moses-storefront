@@ -175,3 +175,89 @@
 - [x] Add Mixtape to Home.tsx
 - [x] Add Mixtape to Store.tsx as FREE product
 - [x] Register /mixtape and /mixtape/listen routes in App.tsx
+
+## P0 — Critical Path (2-Week Sprint) — NEXT FOCUS
+
+### P0.1 — Global Navigation
+- [ ] Create client/src/components/GlobalNav.tsx with MOSES logo, project links, Store, Connect
+- [ ] Add mobile hamburger menu with large tap targets
+- [ ] Implement active route highlighting
+- [ ] Wrap all routes in App.tsx with GlobalNav
+- [ ] Remove duplicate navigation from individual pages
+
+### P0.2 — Reusable Download Component
+- [ ] Create client/src/components/DownloadButton.tsx (fetch → blob → createObjectURL)
+- [ ] Add loading state + error handling
+- [ ] Replace download logic in Home.tsx (5 handlers)
+- [ ] Replace download logic in BathshebaListen.tsx
+- [ ] Replace download logic in MixtapeListen.tsx
+- [ ] Replace download logic in NewGenesisListen.tsx
+- [ ] Replace download logic in AbcsListen.tsx
+- [ ] Replace download logic in Mixtape.tsx (DEDICATION)
+
+### P0.3 — Consistent Audio Player
+- [ ] Audit all 6 listen pages for player inconsistencies
+- [ ] Standardize on one player shell (ProjectListenPage.tsx or new AudioPlayer.tsx)
+- [ ] Same layout: album art (left), controls (right/bottom)
+- [ ] Same controls: play/pause, prev/next, progress, volume, tracklist
+- [ ] Test mobile behavior on all 6 players
+
+### P0.4 — Mobile Download Experience
+- [ ] Test all downloads on iOS Safari
+- [ ] Test all downloads on Android Chrome
+- [ ] Add toast notification when download starts
+- [ ] Ensure modals don't block downloads on mobile
+
+### P0.5 — Store Page Clarity
+- [ ] Reorder products: CLARITY first (hero), New Genesis, then free projects
+- [ ] Add cover art to all product cards
+- [ ] Clear labeling: "FREE" vs. "$12 — Pay What You Want"
+- [ ] For New Genesis: "Free to download. Support this project — $12"
+- [ ] Show cover art in checkout modal
+
+## P1 — Important (Next 4 Weeks)
+
+### P1.1 — Homepage Redesign
+- [ ] Replace 5 repetitive sections with 6-card catalog grid
+- [ ] Keep CLARITY as full-screen hero
+- [ ] Each card: cover art, title, track count, price badge, CTA
+- [ ] Test on mobile
+
+### P1.2 — Accessibility Foundations
+- [ ] Add ARIA labels to all interactive elements
+- [ ] Fix heading hierarchy (H1 → H2 → H3)
+- [ ] Add skip-to-content links
+- [ ] Ensure WCAG AA color contrast (4.5:1)
+- [ ] Test keyboard-only navigation
+
+### P1.3 — Audio Player Error Handling
+- [ ] Add error boundaries to all players
+- [ ] Show error message if track fails to load
+- [ ] Add retry button for failed tracks
+- [ ] Show error message if download fails
+
+### P1.4 — Mobile Optimization
+- [ ] Ensure all buttons are 44px × 44px minimum
+- [ ] Test on iPhone SE, iPhone 14 Pro, Android
+- [ ] Full-screen modals on mobile
+- [ ] Ensure tracklist scrolls without breaking layout
+
+### P1.5 — Visual Design System
+- [ ] Establish consistent spacing scale (4, 8, 12, 16, 24, 32, 48, 64px)
+- [ ] Standardize typography (Bebas, Cormorant, mono)
+- [ ] Standardize hover/focus states
+- [ ] Consistent color usage (semantic naming)
+
+## P2 — Nice-to-Have (Backlog)
+- [ ] Persistent mini-player (bottom bar)
+- [ ] Download analytics dashboard
+- [ ] Email capture on free download
+- [ ] /projects archive page
+- [ ] Enhanced Connect page with testimonials
+
+## P3 — Future Exploration
+- [ ] User accounts & wishlists
+- [ ] Social sharing
+- [ ] Podcast/video integration
+- [ ] Merch integration
+- [ ] Analytics dashboard
