@@ -118,3 +118,10 @@
 - [x] Create /mixtape landing page with one-click free download and upsell to CLARITY
 - [x] Update Home page with Dedication link/CTA
 - [x] Update Store page to include both Dedication (free) and CLARITY (paid)
+
+## P1 — Bathsheba Listen Page Refinement
+- [x] Optimize BathshebaListen.tsx for mobile (responsive player, touch-friendly controls)
+- [x] Add full project download button to Bathsheba listen page
+- [x] Fix individual track downloads (ensure all tracks download correctly)
+- [x] Optimize performance for slow connections (preload optimization, lazy loading)
+- [x] Create immersive high-fidelity listening experience with fluent UI
