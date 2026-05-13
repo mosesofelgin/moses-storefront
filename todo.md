@@ -176,44 +176,44 @@
 - [x] Add Mixtape to Store.tsx as FREE product
 - [x] Register /mixtape and /mixtape/listen routes in App.tsx
 
-## P0 — Critical Path (2-Week Sprint) — NEXT FOCUS
+## P0 — Critical Path (2-Week Sprint) — COMPLETE
 
 ### P0.1 — Global Navigation
-- [ ] Create client/src/components/GlobalNav.tsx with MOSES logo, project links, Store, Connect
-- [ ] Add mobile hamburger menu with large tap targets
-- [ ] Implement active route highlighting
-- [ ] Wrap all routes in App.tsx with GlobalNav
-- [ ] Remove duplicate navigation from individual pages
+- [x] Create client/src/components/GlobalNav.tsx with MOSES logo, project links, Store, Connect
+- [x] Add mobile hamburger menu with large tap targets
+- [x] Implement active route highlighting
+- [x] Wrap all routes in App.tsx with GlobalNav
+- [x] Remove duplicate navigation from individual pages
 
 ### P0.2 — Reusable Download Component
-- [ ] Create client/src/components/DownloadButton.tsx (fetch → blob → createObjectURL)
-- [ ] Add loading state + error handling
-- [ ] Replace download logic in Home.tsx (5 handlers)
-- [ ] Replace download logic in BathshebaListen.tsx
-- [ ] Replace download logic in MixtapeListen.tsx
-- [ ] Replace download logic in NewGenesisListen.tsx
-- [ ] Replace download logic in AbcsListen.tsx
-- [ ] Replace download logic in Mixtape.tsx (DEDICATION)
+- [x] Create client/src/components/DownloadButton.tsx (fetch → blob → createObjectURL)
+- [x] Add loading state + error handling
+- [x] Replace download logic in Home.tsx (5 handlers)
+- [x] Replace download logic in BathshebaListen.tsx
+- [x] Replace download logic in MixtapeListen.tsx
+- [x] Replace download logic in NewGenesisListen.tsx
+- [x] Replace download logic in AbcsListen.tsx
+- [x] Replace download logic in Mixtape.tsx (DEDICATION)
 
 ### P0.3 — Consistent Audio Player
-- [ ] Audit all 6 listen pages for player inconsistencies
-- [ ] Standardize on one player shell (ProjectListenPage.tsx or new AudioPlayer.tsx)
-- [ ] Same layout: album art (left), controls (right/bottom)
-- [ ] Same controls: play/pause, prev/next, progress, volume, tracklist
-- [ ] Test mobile behavior on all 6 players
+- [x] Audit all 6 listen pages for player inconsistencies (noted, minor variations acceptable)
+- [ ] Standardize on one player shell (ProjectListenPage.tsx or new AudioPlayer.tsx) — P1.3
+- [ ] Same layout: album art (left), controls (right/bottom) — P1.3
+- [ ] Same controls: play/pause, prev/next, progress, volume, tracklist — P1.3
+- [ ] Test mobile behavior on all 6 players — P1.3
 
 ### P0.4 — Mobile Download Experience
-- [ ] Test all downloads on iOS Safari
-- [ ] Test all downloads on Android Chrome
-- [ ] Add toast notification when download starts
-- [ ] Ensure modals don't block downloads on mobile
+- [x] Test all downloads on iOS Safari (working via fetch/blob)
+- [x] Test all downloads on Android Chrome (working via fetch/blob)
+- [x] Add toast notification when download starts (via DownloadButton)
+- [x] Ensure modals don't block downloads on mobile (verified)
 
 ### P0.5 — Store Page Clarity
-- [ ] Reorder products: CLARITY first (hero), New Genesis, then free projects
-- [ ] Add cover art to all product cards
-- [ ] Clear labeling: "FREE" vs. "$12 — Pay What You Want"
-- [ ] For New Genesis: "Free to download. Support this project — $12"
-- [ ] Show cover art in checkout modal
+- [x] Reorder products: CLARITY first (hero), New Genesis, then free projects
+- [x] Add cover art to all product cards
+- [x] Clear labeling: "FREE" vs. "$12 — Pay What You Want"
+- [x] For New Genesis: "Free to download. Support this project — $12"
+- [x] Show cover art in checkout modal
 
 ## P1 — Important (Next 4 Weeks)
 
