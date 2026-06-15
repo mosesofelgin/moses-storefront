@@ -144,8 +144,8 @@ export default function Links() {
           { label: 'Instagram', handle: '@moses_sog', href: 'https://instagram.com/moses_sog' },
           { label: 'YouTube', handle: '@MosesSOG', href: 'https://youtube.com/@MosesSOG' },
           { label: 'TikTok', handle: '@mosessog', href: 'https://tiktok.com/@mosessog' },
-          { label: 'Twitch', handle: 'sogmoses', href: 'https://twitch.tv/sogmoses' },
-          { label: 'Twitter / X', handle: '@mosessog', href: 'https://twitter.com/mosessog' },
+          { label: 'Twitter / X', handle: 'sogmoses', href: 'https://twitter.com/sogmoses' },
+          { label: 'Twitch', handle: '@mosessog', href: 'https://twitch.tv/mosessog' },
         ].map((s) => (
           <a
             key={s.label}
