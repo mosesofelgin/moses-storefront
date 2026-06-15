@@ -211,12 +211,8 @@ export default function Listen() {
         <PersistentCTA />
 
         <div className="flex items-center justify-between text-sm">
-          <Link href="/">
-            <a className="text-zinc-300 hover:text-white">← Back to Home</a>
-          </Link>
-          <Link href="/store">
-            <a className="text-zinc-300 hover:text-white">View Store →</a>
-          </Link>
+          <Link href="/" className="text-zinc-300 hover:text-white">← Back to Home</Link>
+          <Link href="/store" className="text-zinc-300 hover:text-white">View Store →</Link>
         </div>
       </div>
 

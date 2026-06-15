@@ -355,18 +355,10 @@ export default function Mixtape() {
       <footer className="border-t border-zinc-800 px-4 py-12">
         <div className="max-w-4xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
-            <Link href="/">
-              <a className="text-zinc-400 hover:text-[#00ff00] transition-colors">HOME</a>
-            </Link>
-            <Link href="/listen">
-              <a className="text-zinc-400 hover:text-[#00ff00] transition-colors">LISTEN</a>
-            </Link>
-            <Link href="/store">
-              <a className="text-zinc-400 hover:text-[#00ff00] transition-colors">STORE</a>
-            </Link>
-            <Link href="/connect">
-              <a className="text-zinc-400 hover:text-[#00ff00] transition-colors">CONNECT</a>
-            </Link>
+            <Link href="/" className="text-zinc-400 hover:text-[#00ff00] transition-colors">HOME</Link>
+            <Link href="/listen" className="text-zinc-400 hover:text-[#00ff00] transition-colors">LISTEN</Link>
+            <Link href="/store" className="text-zinc-400 hover:text-[#00ff00] transition-colors">STORE</Link>
+            <Link href="/connect" className="text-zinc-400 hover:text-[#00ff00] transition-colors">CONNECT</Link>
           </div>
 
           <div className="border-t border-zinc-800 pt-8 text-center text-sm text-zinc-600">

@@ -274,12 +274,8 @@ export default function Store() {
 
         {/* Navigation */}
         <div className="flex justify-between items-center text-sm">
-          <Link href="/">
-            <a className="text-blue-400 hover:underline">← Back to Home</a>
-          </Link>
-          <Link href="/connect">
-            <a className="text-blue-400 hover:underline">Connect →</a>
-          </Link>
+          <Link href="/" className="text-blue-400 hover:underline">← Back to Home</Link>
+          <Link href="/connect" className="text-blue-400 hover:underline">Connect →</Link>
         </div>
       </div>
 

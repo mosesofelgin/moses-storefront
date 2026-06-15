@@ -275,3 +275,16 @@
 - [ ] Podcast/video integration
 - [ ] Merch integration
 - [ ] Analytics dashboard
+
+## Critical Fixes (Jun 15) — COMPLETE
+- [x] Fix video IDs: Church = CC3lHW_usho, Final Prayer = xn0KdOotyTI (were swapped)
+- [x] Fix image loading: storage proxy /manus-storage/* registered in server/_core/index.ts
+- [x] Fix GlobalNav nested <a> inside <Link> (wouter DOM nesting error)
+- [x] Build EPK One-Sheet PDF (WeasyPrint, with photos)
+- [x] Build EPK Short Bio PDF (WeasyPrint, with photos)
+- [x] Build EPK Long Bio PDF (2-page, WeasyPrint, with photos)
+- [x] Build EPK Full Press Kit ZIP (3 PDFs + 4 hi-res photos)
+- [x] Upload all EPK files to CDN via manus-upload-file --webdev
+- [x] Rewrite Artist.tsx with Manus 1.6 polish (Sacred Noir design system)
+- [x] EPK download panel with 4 items + photo preview strip
+- [x] pnpm check ✓ | pnpm test 36/36 ✓
