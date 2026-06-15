@@ -176,14 +176,28 @@
 - [x] Add Mixtape to Store.tsx as FREE product
 - [x] Register /mixtape and /mixtape/listen routes in App.tsx
 
+## Artist Page & EPK Build (COMPLETE)
+- [x] Upload 3 professional artist photos to CDN
+- [x] Create Sacred Noir Bronzeville Edition design system document
+- [x] Build Artist.tsx page with hero, proof strip, featured performance
+- [x] Build video narrative gallery (3 films: The Stage, The Message, The Beginning)
+- [x] Build artist statement section with portrait
+- [x] Build mission/covenant section with email signup
+- [x] Build booking & media contact section
+- [x] Build social links footer (@mosessog)
+- [x] Register /artist route in App.tsx
+- [x] Add Artist link to GlobalNav
+- [x] Verify EPK PDF download handler
+- [x] pnpm check ✓ | pnpm test 36/36 ✓ | pnpm build ✓
+
 ## P0 — Critical Path (2-Week Sprint) — NEXT FOCUS
 
 ### P0.1 — Global Navigation
-- [ ] Create client/src/components/GlobalNav.tsx with MOSES logo, project links, Store, Connect
-- [ ] Add mobile hamburger menu with large tap targets
-- [ ] Implement active route highlighting
-- [ ] Wrap all routes in App.tsx with GlobalNav
-- [ ] Remove duplicate navigation from individual pages
+- [x] Create client/src/components/GlobalNav.tsx with MOSES logo, project links, Store, Connect
+- [x] Add mobile hamburger menu with large tap targets (44px × 44px hamburger, 48px menu items)
+- [x] Implement active route highlighting
+- [x] Wrap all routes in App.tsx with GlobalNav
+- [x] Remove duplicate navigation from individual pages
 
 ### P0.2 — Reusable Download Component
 - [ ] Create client/src/components/DownloadButton.tsx (fetch → blob → createObjectURL)

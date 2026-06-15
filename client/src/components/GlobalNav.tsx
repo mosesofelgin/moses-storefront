@@ -67,7 +67,7 @@ export default function GlobalNav() {
           {/* Hamburger Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-zinc-400 hover:text-zinc-100 transition-colors"
+            className="w-12 h-12 flex items-center justify-center text-zinc-400 hover:text-zinc-100 transition-colors"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -82,7 +82,7 @@ export default function GlobalNav() {
                 <Link key={link.path} href={link.path}>
                   <a
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`block text-base font-medium transition-colors ${
+                    className={`block py-3 px-4 text-base font-medium transition-colors min-h-12 flex items-center ${
                       isActive(link.path)
                         ? "text-green-500"
                         : "text-zinc-400 hover:text-zinc-100"
