@@ -13,6 +13,7 @@ export default function GlobalNav() {
 
   const navLinks = [
     { label: "Home", path: "/" },
+    { label: "Artist", path: "/artist" },
     { label: "BATHSHEBA", path: "/bathsheba" },
     { label: "Mixtape", path: "/mixtape" },
     { label: "New Genesis", path: "/new-genesis" },
