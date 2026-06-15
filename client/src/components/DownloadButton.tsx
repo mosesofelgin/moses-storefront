@@ -3,7 +3,8 @@ import { Download, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 interface DownloadButtonProps {
-  endpoint: string;
+  endpoint?: string;
+  href?: string;
   filename: string;
   label?: string;
   variant?: "primary" | "secondary" | "outline";
@@ -13,6 +14,7 @@ interface DownloadButtonProps {
 
 export default function DownloadButton({
   endpoint,
+  href,
   filename,
   label = "Download",
   variant = "primary",
@@ -38,7 +40,12 @@ export default function DownloadButton({
     try {
       toast.loading("Preparing download...");
 
-      const response = await fetch(endpoint);
+      const downloadUrl = href || endpoint;
+      if (!downloadUrl) {
+        throw new Error("No download URL provided");
+      }
+
+      const response = await fetch(downloadUrl);
 
       if (!response.ok) {
         throw new Error(`Download failed: ${response.statusText}`);
@@ -56,7 +63,7 @@ export default function DownloadButton({
       document.body.removeChild(a);
 
       // Clean up the object URL after a delay
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
+      setTimeout(() => URL.revokeObjectURL(url), 100);
 
       toast.dismiss();
       toast.success(`${filename} downloaded successfully!`);
@@ -84,7 +91,7 @@ export default function DownloadButton({
         ${sizeClasses[size]}
         ${className}
       `}
-      aria-label={label}
+      aria-label={`Download ${filename}`}
     >
       {isLoading ? (
         <>

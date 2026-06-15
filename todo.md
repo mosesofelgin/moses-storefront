@@ -200,8 +200,8 @@
 - [x] Remove duplicate navigation from individual pages
 
 ### P0.2 — Reusable Download Component
-- [ ] Create client/src/components/DownloadButton.tsx (fetch → blob → createObjectURL)
-- [ ] Add loading state + error handling
+- [x] Create client/src/components/DownloadButton.tsx (fetch → blob → createObjectURL)
+- [x] Add loading state + error handling (toast notifications, disabled state, spinner)
 - [ ] Replace download logic in Home.tsx (5 handlers)
 - [ ] Replace download logic in BathshebaListen.tsx
 - [ ] Replace download logic in MixtapeListen.tsx
