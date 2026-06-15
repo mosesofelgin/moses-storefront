@@ -141,9 +141,10 @@ export default function Links() {
 
         {/* ── Social links ── */}
         {[
-          { label: 'Instagram', handle: '@mosessog', href: 'https://instagram.com/mosessog' },
-          { label: 'YouTube', handle: '@mosessog', href: 'https://youtube.com/@mosessog' },
+          { label: 'Instagram', handle: '@moses_sog', href: 'https://instagram.com/moses_sog' },
+          { label: 'YouTube', handle: '@MosesSOG', href: 'https://youtube.com/@MosesSOG' },
           { label: 'TikTok', handle: '@mosessog', href: 'https://tiktok.com/@mosessog' },
+          { label: 'Twitch', handle: 'sogmoses', href: 'https://twitch.tv/sogmoses' },
           { label: 'Twitter / X', handle: '@mosessog', href: 'https://twitter.com/mosessog' },
         ].map((s) => (
           <a
