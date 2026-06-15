@@ -64,10 +64,10 @@ export function registerRoutes(app: Express) {
    */
   app.get("/api/download/epk/:docId", async (req: Request, res: Response) => {
     const EPK_FILES: Record<string, { key: string; filename: string; contentType: string }> = {
-      "one-sheet":  { key: "MOSES_One-Sheet_e1a3ef3f.pdf",   filename: "MOSES_One-Sheet.pdf",   contentType: "application/pdf" },
-      "short-bio":  { key: "MOSES_Short-Bio_32574b0d.pdf",   filename: "MOSES_Short-Bio.pdf",   contentType: "application/pdf" },
-      "long-bio":   { key: "MOSES_Long-Bio_5f05e4ad.pdf",    filename: "MOSES_Long-Bio.pdf",    contentType: "application/pdf" },
-      "press-kit":  { key: "MOSES_Press-Kit_bcce9997.zip",   filename: "MOSES_Press-Kit.zip",   contentType: "application/zip" },
+      "one-sheet":  { key: "MOSES_One-Sheet_eb7bec22.pdf",   filename: "MOSES_One-Sheet.pdf",   contentType: "application/pdf" },
+      "short-bio":  { key: "MOSES_Short-Bio_a5340dba.pdf",   filename: "MOSES_Short-Bio.pdf",   contentType: "application/pdf" },
+      "long-bio":   { key: "MOSES_Long-Bio_4c1e5a7e.pdf",    filename: "MOSES_Long-Bio.pdf",    contentType: "application/pdf" },
+      "press-kit":  { key: "MOSES_Press-Kit_eb9a0b81.zip",   filename: "MOSES_Press-Kit.zip",   contentType: "application/zip" },
     };
 
     const doc = EPK_FILES[req.params.docId];
