@@ -13,8 +13,13 @@ import http from "http";
 
 /**
  * Download a file from URL and stream it to response
+ * @param overrideHeaders - if provided, use these instead of deriving from URL
  */
-async function streamFileFromUrl(url: string, res: Response): Promise<void> {
+async function streamFileFromUrl(
+  url: string,
+  res: Response,
+  overrideHeaders?: { contentType?: string; filename?: string }
+): Promise<void> {
   return new Promise((resolve, reject) => {
     const protocol = url.startsWith("https") ? https : http;
 
@@ -26,9 +31,11 @@ async function streamFileFromUrl(url: string, res: Response): Promise<void> {
           return;
         }
 
-        // Set content type and disposition headers
-        const contentType = response.headers["content-type"] || "application/octet-stream";
-        const filename = url.split("/").pop() || "download";
+        // Use override headers if provided, otherwise derive from URL
+        const contentType = overrideHeaders?.contentType ||
+          response.headers["content-type"] || "application/octet-stream";
+        const filename = overrideHeaders?.filename ||
+          (url.split("/").pop() || "download").split("?")[0]; // strip query string
 
         res.setHeader("Content-Type", contentType);
         res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
@@ -49,6 +56,58 @@ async function streamFileFromUrl(url: string, res: Response): Promise<void> {
  * otherwise Express matches "all" as the :token param and the token as :fileId.
  */
 export function registerRoutes(app: Express) {
+
+  /**
+   * GET /api/download/epk/:docId
+   * Proxy EPK documents directly from storage (no redirect — avoids CORS blob issue)
+   * docId: one-sheet | short-bio | long-bio | press-kit
+   */
+  app.get("/api/download/epk/:docId", async (req: Request, res: Response) => {
+    const EPK_FILES: Record<string, { key: string; filename: string; contentType: string }> = {
+      "one-sheet":  { key: "MOSES_One-Sheet_e1a3ef3f.pdf",   filename: "MOSES_One-Sheet.pdf",   contentType: "application/pdf" },
+      "short-bio":  { key: "MOSES_Short-Bio_32574b0d.pdf",   filename: "MOSES_Short-Bio.pdf",   contentType: "application/pdf" },
+      "long-bio":   { key: "MOSES_Long-Bio_5f05e4ad.pdf",    filename: "MOSES_Long-Bio.pdf",    contentType: "application/pdf" },
+      "press-kit":  { key: "MOSES_Press-Kit_bcce9997.zip",   filename: "MOSES_Press-Kit.zip",   contentType: "application/zip" },
+    };
+
+    const doc = EPK_FILES[req.params.docId];
+    if (!doc) {
+      return res.status(404).json({ error: "EPK document not found" });
+    }
+
+    try {
+      // Get signed URL from forge
+      const forgeUrl = new URL(
+        "v1/storage/presign/get",
+        (process.env.BUILT_IN_FORGE_API_URL || "").replace(/\/+$/, "") + "/",
+      );
+      forgeUrl.searchParams.set("path", doc.key);
+      const forgeResp = await fetch(forgeUrl.toString(), {
+        headers: { Authorization: `Bearer ${process.env.BUILT_IN_FORGE_API_KEY}` },
+      });
+      if (!forgeResp.ok) {
+        console.error(`[EPK Download] Forge error: ${forgeResp.status}`);
+        return res.status(502).json({ error: "Storage backend error" });
+      }
+      const { url: signedUrl } = (await forgeResp.json()) as { url: string };
+      if (!signedUrl) {
+        return res.status(502).json({ error: "Empty signed URL" });
+      }
+
+      // Stream the file bytes directly to the client (no redirect)
+      // Pass override headers so streamFileFromUrl uses our clean filename, not the signed URL path
+      await streamFileFromUrl(signedUrl, res, {
+        contentType: doc.contentType,
+        filename: doc.filename,
+      });
+      console.log(`[EPK Download] Served ${doc.filename}`);
+    } catch (err) {
+      console.error("[EPK Download] Error:", err);
+      if (!res.headersSent) {
+        res.status(500).json({ error: "Failed to download EPK document" });
+      }
+    }
+  });
 
   /**
    * GET /api/download/bathsheba

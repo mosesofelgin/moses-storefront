@@ -54,7 +54,7 @@ const EPK_DOCS = [
     title: 'One-Sheet',
     description: 'Quick overview for booking agents and promoters',
     icon: 'file',
-    path: '/manus-storage/MOSES_One-Sheet_e1a3ef3f.pdf',
+    path: '/api/download/epk/one-sheet',
     filename: 'MOSES_One-Sheet.pdf',
   },
   {
@@ -62,7 +62,7 @@ const EPK_DOCS = [
     title: 'Short Bio',
     description: '300-word biography for press and programs',
     icon: 'file',
-    path: '/manus-storage/MOSES_Short-Bio_32574b0d.pdf',
+    path: '/api/download/epk/short-bio',
     filename: 'MOSES_Short-Bio.pdf',
   },
   {
@@ -70,7 +70,7 @@ const EPK_DOCS = [
     title: 'Long Bio',
     description: 'Comprehensive press narrative for features and profiles',
     icon: 'file',
-    path: '/manus-storage/MOSES_Long-Bio_5f05e4ad.pdf',
+    path: '/api/download/epk/long-bio',
     filename: 'MOSES_Long-Bio.pdf',
   },
   {
@@ -78,7 +78,7 @@ const EPK_DOCS = [
     title: 'Full Press Kit',
     description: 'All 3 PDFs + 4 hi-res photos in one ZIP',
     icon: 'archive',
-    path: '/manus-storage/MOSES_Press-Kit_bcce9997.zip',
+    path: '/api/download/epk/press-kit',
     filename: 'MOSES_Press-Kit.zip',
     featured: true,
   },
