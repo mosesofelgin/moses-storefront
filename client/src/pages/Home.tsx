@@ -74,7 +74,7 @@ export default function Home() {
                 Listen Now <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </Link>
               <Link
-                href="/store"
+                href="/clarity"
                 className="flex items-center justify-center gap-2 rounded-lg border border-green-600 px-6 sm:px-8 py-3 sm:py-4 font-bebas text-base sm:text-lg tracking-wide text-green-400 transition-colors hover:bg-green-600/10"
               >
                 Own the Album <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
