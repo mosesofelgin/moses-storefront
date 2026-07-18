@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
@@ -24,6 +25,7 @@ import NewGenesis from "./pages/NewGenesis";
 import NewGenesisListen from "./pages/NewGenesisListen";
 import Artist from "./pages/Artist";
 import Checkout from "./pages/Checkout";
+import VaultGate, { isVaultUnlocked } from "./components/VaultGate";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -61,13 +63,23 @@ function Router() {
 // - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
 
 function App() {
+  const [vaultOpen, setVaultOpen] = useState(() => isVaultUnlocked());
+
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
           <Toaster />
-          <GlobalNav />
-          <Router />
+          {!vaultOpen && (
+            <VaultGate onUnlock={() => setVaultOpen(true)} />
+          )}
+          <div
+            className={!vaultOpen ? 'pointer-events-none select-none opacity-0' : ''}
+            aria-hidden={!vaultOpen}
+          >
+            <GlobalNav />
+            <Router />
+          </div>
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
