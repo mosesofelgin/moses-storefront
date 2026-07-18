@@ -1,6 +1,102 @@
-import { ArrowRight } from 'lucide-react';
+import { useState } from 'react';
 import { Link } from 'wouter';
+import { ArrowRight, Mail, Loader2, CheckCircle } from 'lucide-react';
+import { trpc } from '@/lib/trpc';
+import { toast } from 'sonner';
 import DownloadButton from '@/components/DownloadButton';
+
+/* ─── Email Capture Component ─────────────────────────────────────────── */
+function EmailCapture() {
+  const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const subscribeMutation = trpc.subscribe.addEmail.useMutation();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+
+    setIsLoading(true);
+    try {
+      await subscribeMutation.mutateAsync({ email });
+      setSubmitted(true);
+      toast.success('Welcome to the covenant.');
+    } catch {
+      toast.error('Something went wrong. Try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <section className="relative border-t border-zinc-800 overflow-hidden">
+      {/* Background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-zinc-950 via-green-950/20 to-zinc-950" />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-green-500/5 rounded-full blur-3xl" />
+      </div>
+
+      <div className="relative z-10 px-4 py-24 sm:py-32">
+        <div className="mx-auto max-w-2xl text-center">
+          {/* Icon */}
+          <div className="mb-6 inline-flex items-center justify-center w-14 h-14 rounded-full border border-green-700/50 bg-green-900/20">
+            <Mail className="w-6 h-6 text-green-400" />
+          </div>
+
+          {/* Heading */}
+          <h2 className="mb-3 font-bebas text-4xl sm:text-5xl tracking-widest text-zinc-100">
+            JOIN THE COVENANT
+          </h2>
+
+          {/* Subtext */}
+          <p className="mb-8 text-zinc-400 text-base sm:text-lg max-w-md mx-auto leading-relaxed">
+            First access to new music, unreleased content, and direct updates. No spam. Just the mission.
+          </p>
+
+          {/* Form or Success */}
+          {submitted ? (
+            <div className="flex flex-col items-center gap-3 animate-in fade-in duration-500">
+              <CheckCircle className="w-10 h-10 text-green-400" />
+              <p className="text-green-400 font-bebas text-xl tracking-wider">YOU'RE IN.</p>
+              <p className="text-zinc-500 text-sm">Check your inbox for confirmation.</p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="your@email.com"
+                required
+                disabled={isLoading}
+                className="flex-1 px-5 py-3.5 bg-zinc-900/80 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500/30 transition-all disabled:opacity-50"
+              />
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="px-6 py-3.5 bg-green-500 hover:bg-green-400 disabled:bg-green-600 disabled:cursor-not-allowed text-black font-bebas text-base tracking-wider rounded-lg transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
+              >
+                {isLoading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <>
+                    Subscribe <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+            </form>
+          )}
+
+          {/* Trust signal */}
+          <p className="mt-6 text-zinc-600 text-xs tracking-wide">
+            Direct from MOSES. Unsubscribe anytime.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 const DEDICATION_COVER =
   'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/dedication-cover_20e0add5.jpg';
@@ -74,7 +170,7 @@ export default function Home() {
                 Listen Now <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </Link>
               <Link
-                href="/clarity"
+                href="/checkout"
                 className="flex items-center justify-center gap-2 rounded-lg border border-green-600 px-6 sm:px-8 py-3 sm:py-4 font-bebas text-base sm:text-lg tracking-wide text-green-400 transition-colors hover:bg-green-600/10"
               >
                 Own the Album <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
@@ -413,7 +509,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── 9. FOOTER ───────────────────────────────────────────── */}
+      {/* ── 9. EMAIL CAPTURE ──────────────────────────────────────── */}
+      <EmailCapture />
+
+      {/* ── 10. FOOTER ───────────────────────────────────────────── */}
       <footer className="border-t border-zinc-800 px-4 py-12 bg-zinc-900/50">
         <div className="mx-auto max-w-4xl text-center">
           <p className="mb-2 font-bebas text-lg tracking-wider text-zinc-100">

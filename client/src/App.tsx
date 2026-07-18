@@ -23,6 +23,7 @@ import MixtapeListen from "./pages/MixtapeListen";
 import NewGenesis from "./pages/NewGenesis";
 import NewGenesisListen from "./pages/NewGenesisListen";
 import Artist from "./pages/Artist";
+import Checkout from "./pages/Checkout";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -45,6 +46,7 @@ function Router() {
       <Route path={"/new-genesis/listen"} component={NewGenesisListen} />
       <Route path={"/new-genesis"} component={NewGenesis} />
       <Route path={"/artist"} component={Artist} />
+      <Route path={"/checkout"} component={Checkout} />
       <Route path={"/"} component={Home} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
