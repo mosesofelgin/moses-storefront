@@ -24,6 +24,7 @@ export default function Listen() {
   const [emailCapture, setEmailCapture] = useState('');
   const [isEmailSubmitting, setIsEmailSubmitting] = useState(false);
   const [emailSubmitted, setEmailSubmitted] = useState(false);
+  const [emailUnlocked, setEmailUnlocked] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [, navigate] = useLocation();
   const subscribeEmailMutation = trpc.subscribe.addEmail.useMutation();
@@ -90,8 +91,9 @@ export default function Listen() {
     setIsEmailSubmitting(true);
     try {
       await subscribeEmailMutation.mutateAsync({ email: emailCapture });
+      setEmailUnlocked(true);
       setEmailSubmitted(true);
-      toast.success('You\'re in! Check your email.');
+      toast.success('You\'re in! Enjoy CLARITY.');
       setTimeout(() => {
         setEmailCapture('');
         setEmailSubmitted(false);
@@ -120,6 +122,43 @@ export default function Listen() {
     setPlayingTrackId(null);
     setCurrentTime(0);
   };
+
+
+  // Email gate
+  if (!emailUnlocked) {
+    return (
+      <div className="min-h-screen bg-zinc-950 px-4 py-8 text-zinc-100 flex items-center justify-center">
+        <div className="mx-auto max-w-md text-center">
+          <Mail className="w-16 h-16 text-amber-500 mx-auto mb-6" />
+          <h1 className="text-3xl font-semibold mb-3">Listen to CLARITY</h1>
+          <p className="text-zinc-300 mb-6">Enter your email to unlock the full album and get exclusive updates.</p>
+          
+          <form onSubmit={handleEmailSubmit} className="space-y-4">
+            <input
+              type="email"
+              placeholder="your@email.com"
+              value={emailCapture}
+              onChange={(e) => setEmailCapture(e.target.value)}
+              disabled={isEmailSubmitting}
+              className="w-full px-4 py-3 rounded-lg bg-zinc-800 border border-zinc-700 text-white placeholder-zinc-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/30 disabled:opacity-50"
+            />
+            <button
+              type="submit"
+              disabled={isEmailSubmitting}
+              className="w-full px-4 py-3 bg-amber-500 hover:bg-amber-600 disabled:bg-amber-700 disabled:cursor-not-allowed text-black font-semibold rounded-lg flex items-center justify-center gap-2 transition-all"
+            >
+              {isEmailSubmitting ? (
+                <><Loader2 className="w-4 h-4 animate-spin" /> Unlocking...</>
+              ) : (
+                <><ArrowRight className="w-4 h-4" /> Unlock Album</>
+              )}
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
 
   return (
     <div className="min-h-screen bg-zinc-950 px-4 py-8 text-zinc-100">
@@ -238,40 +277,6 @@ export default function Listen() {
           />
         </section>
 
-
-        {/* Email Capture Section */}
-        <section className="mb-8 rounded-lg border border-zinc-700 bg-gradient-to-br from-zinc-800 to-zinc-900 p-6">
-          <div className="flex items-start gap-3 mb-4">
-            <Mail className="w-5 h-5 text-amber-500 flex-shrink-0 mt-1" />
-            <div>
-              <h3 className="font-semibold text-white mb-1">Stay Connected</h3>
-              <p className="text-sm text-zinc-300">Get exclusive content, early releases, and updates direct from MOSES.</p>
-            </div>
-          </div>
-          <form onSubmit={handleEmailSubmit} className="flex gap-2">
-            <input
-              type="email"
-              placeholder="your@email.com"
-              value={emailCapture}
-              onChange={(e) => setEmailCapture(e.target.value)}
-              disabled={isEmailSubmitting || emailSubmitted}
-              className="flex-1 px-4 py-2 rounded-lg bg-zinc-700 border border-zinc-600 text-white placeholder-zinc-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/30 disabled:opacity-50"
-            />
-            <button
-              type="submit"
-              disabled={isEmailSubmitting || emailSubmitted}
-              className="px-4 py-2 bg-amber-500 hover:bg-amber-600 disabled:bg-amber-700 disabled:cursor-not-allowed text-black font-medium rounded-lg flex items-center gap-2 transition-all"
-            >
-              {emailSubmitted ? (
-                <><Check className="w-4 h-4" /> Done</>
-              ) : isEmailSubmitting ? (
-                <><Loader2 className="w-4 h-4 animate-spin" /> Sending</>
-              ) : (
-                <><ArrowRight className="w-4 h-4" /> Subscribe</>
-              )}
-            </button>
-          </form>
-        </section>
 
                 <p className="mb-4 text-center text-sm text-zinc-300">If this album spoke to you, go deeper.</p>
         <PersistentCTA />
