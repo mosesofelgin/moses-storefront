@@ -1,9 +1,11 @@
 import { Link, useLocation } from 'wouter';
 import { CLARITY_BUNDLE } from '@/data/clarity-bundle';
 import { useMemo, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pause, Play, Mail, ArrowRight, Loader2, Check } from 'lucide-react';
 import TrackContext from '@/components/TrackContext';
 import PersistentCTA from '@/components/PersistentCTA';
+import { trpc } from '@/lib/trpc';
+import { toast } from 'sonner';
 
 function formatTime(seconds: number) {
   if (!Number.isFinite(seconds) || seconds < 0) return '0:00';
@@ -19,8 +21,12 @@ export default function Listen() {
   const [duration, setDuration] = useState(0);
   const [hasSeenTrackSevenModal, setHasSeenTrackSevenModal] = useState(false);
   const [isTrackSevenModalOpen, setIsTrackSevenModalOpen] = useState(false);
+  const [emailCapture, setEmailCapture] = useState('');
+  const [isEmailSubmitting, setIsEmailSubmitting] = useState(false);
+  const [emailSubmitted, setEmailSubmitted] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [, navigate] = useLocation();
+  const subscribeEmailMutation = trpc.subscribe.addEmail.useMutation();
   const albumCover = CLARITY_BUNDLE.images.find((img) => img.title === 'CLARITY Album Cover');
 
   const activeTrackIndex = tracks.findIndex((track) => track.id === playingTrackId);
@@ -71,6 +77,31 @@ export default function Listen() {
   const handleNext = () => {
     if (activeTrackIndex < 0 || activeTrackIndex >= tracks.length - 1) return;
     playTrack(tracks[activeTrackIndex + 1].id);
+  };
+
+
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!emailCapture) {
+      toast.error('Please enter your email');
+      return;
+    }
+
+    setIsEmailSubmitting(true);
+    try {
+      await subscribeEmailMutation.mutateAsync({ email: emailCapture });
+      setEmailSubmitted(true);
+      toast.success('You\'re in! Check your email.');
+      setTimeout(() => {
+        setEmailCapture('');
+        setEmailSubmitted(false);
+      }, 2000);
+    } catch (error) {
+      toast.error('Failed to subscribe');
+      console.error(error);
+    } finally {
+      setIsEmailSubmitting(false);
+    }
   };
 
   const handleTrackEnd = () => {
@@ -207,7 +238,42 @@ export default function Listen() {
           />
         </section>
 
-        <p className="mb-4 text-center text-sm text-zinc-300">If this album spoke to you, go deeper.</p>
+
+        {/* Email Capture Section */}
+        <section className="mb-8 rounded-lg border border-zinc-700 bg-gradient-to-br from-zinc-800 to-zinc-900 p-6">
+          <div className="flex items-start gap-3 mb-4">
+            <Mail className="w-5 h-5 text-amber-500 flex-shrink-0 mt-1" />
+            <div>
+              <h3 className="font-semibold text-white mb-1">Stay Connected</h3>
+              <p className="text-sm text-zinc-300">Get exclusive content, early releases, and updates direct from MOSES.</p>
+            </div>
+          </div>
+          <form onSubmit={handleEmailSubmit} className="flex gap-2">
+            <input
+              type="email"
+              placeholder="your@email.com"
+              value={emailCapture}
+              onChange={(e) => setEmailCapture(e.target.value)}
+              disabled={isEmailSubmitting || emailSubmitted}
+              className="flex-1 px-4 py-2 rounded-lg bg-zinc-700 border border-zinc-600 text-white placeholder-zinc-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/30 disabled:opacity-50"
+            />
+            <button
+              type="submit"
+              disabled={isEmailSubmitting || emailSubmitted}
+              className="px-4 py-2 bg-amber-500 hover:bg-amber-600 disabled:bg-amber-700 disabled:cursor-not-allowed text-black font-medium rounded-lg flex items-center gap-2 transition-all"
+            >
+              {emailSubmitted ? (
+                <><Check className="w-4 h-4" /> Done</>
+              ) : isEmailSubmitting ? (
+                <><Loader2 className="w-4 h-4 animate-spin" /> Sending</>
+              ) : (
+                <><ArrowRight className="w-4 h-4" /> Subscribe</>
+              )}
+            </button>
+          </form>
+        </section>
+
+                <p className="mb-4 text-center text-sm text-zinc-300">If this album spoke to you, go deeper.</p>
         <PersistentCTA />
 
         <div className="flex items-center justify-between text-sm">

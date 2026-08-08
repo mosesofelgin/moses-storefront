@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Music, Play, ArrowRight, Loader2, Check } from 'lucide-react';
+import { Music, ArrowRight, Loader2, Check } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { toast } from 'sonner';
 
@@ -16,20 +16,7 @@ export default function ClaritySales() {
 
   const createCheckoutMutation = trpc.checkout.createSession.useMutation();
 
-  const tracks = [
-    { title: 'Final Prayer by Moses', duration: '3:42' },
-    { title: 'Wish I had you', duration: '3:15' },
-    { title: 'Get To The Studio', duration: '2:58' },
-    { title: 'Over', duration: '3:22' },
-    { title: 'Fade Away', duration: '3:45' },
-    { title: 'King', duration: '3:33' },
-    { title: 'Soulja', duration: '3:28' },
-    { title: 'Dear Kobe', duration: '3:12' },
-    { title: 'Refined', duration: '3:50' },
-    { title: 'Look At All These Blessings', duration: '3:41' },
-    { title: 'Platform', duration: '3:35' },
-    { title: 'Sweet Dreams', duration: '3:26' },
-  ];
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -156,34 +143,7 @@ export default function ClaritySales() {
         </div>
       </section>
 
-      {/* ── TRACKLIST ── */}
-      <section className="px-4 py-8 border-b border-[#3a3020]">
-        <div className="max-w-2xl mx-auto">
-          <h2 className="font-bebas text-2xl tracking-wider text-[#f0e8d7] mb-6">
-            TRACKLIST
-          </h2>
-          <div className="space-y-2">
-            {tracks.map((track, idx) => (
-              <div
-                key={idx}
-                className="flex items-center justify-between p-3 rounded-sm border border-[#3a3020] bg-[#0f0c0a] hover:border-[#b8860b] hover:bg-[#b8860b]/5 transition-all group cursor-pointer"
-              >
-                <div className="flex items-center gap-3 flex-1 min-w-0">
-                  <Play className="w-4 h-4 text-[#b8860b] flex-shrink-0 group-hover:scale-110 transition-transform" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[#f0e8d7] text-sm font-medium truncate">
-                      {idx + 1}. {track.title}
-                    </p>
-                  </div>
-                </div>
-                <p className="text-[#7a7060] text-xs flex-shrink-0 ml-2">
-                  {track.duration}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+
 
       {/* ── CHECKOUT MODAL ── */}
       {showCheckout && (
