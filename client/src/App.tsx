@@ -27,6 +27,7 @@ import Artist from "./pages/Artist";
 import Checkout from "./pages/Checkout";
 import VaultGate, { isVaultUnlocked } from "./components/VaultGate";
 import Event from "./pages/Event";
+import ClaritySales from "./pages/ClaritySales";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -51,6 +52,7 @@ function Router() {
       <Route path={"/artist"} component={Artist} />
       <Route path={"/checkout"} component={Checkout} />
       <Route path={"/event"} component={Event} />
+      <Route path={"/clarity-sales"} component={ClaritySales} />
       <Route path={"/"} component={Home} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
