@@ -68,18 +68,23 @@ function Router() {
 
 function App() {
   const [vaultOpen, setVaultOpen] = useState(() => isVaultUnlocked());
+  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+
+  // Gate only shows on homepage; sales/event/links pages bypass it
+  const bypassPaths = ['/clarity-sales', '/event', '/links', '/checkout', '/artist'];
+  const shouldShowGate = !vaultOpen && !bypassPaths.some(path => currentPath.startsWith(path));
 
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
           <Toaster />
-          {!vaultOpen && (
+          {shouldShowGate && (
             <VaultGate onUnlock={() => setVaultOpen(true)} />
           )}
           <div
-            className={!vaultOpen ? 'pointer-events-none select-none opacity-0' : ''}
-            aria-hidden={!vaultOpen}
+            className={shouldShowGate ? 'pointer-events-none select-none opacity-0' : ''}
+            aria-hidden={shouldShowGate}
           >
             <GlobalNav />
             <Router />
