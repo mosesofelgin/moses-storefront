@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=70"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "offline-statement-redactor"
+version = "1.0.0"
+description = "Fully offline review-first bank statement redactor"
+requires-python = ">=3.11"
+dependencies = [
+  "PySide6>=6.7,<7",
+  "PyMuPDF>=1.24,<2",
+  "pytesseract>=0.3.13,<1",
+  "Pillow>=10,<13",
+  "opencv-python-headless>=4.10,<5",
+]
+
+[project.scripts]
+statement-redactor = "statement_redactor.gui:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
