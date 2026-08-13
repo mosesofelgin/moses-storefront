@@ -2,9 +2,12 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link } from 'wouter';
 import {
   Play, Pause, SkipBack, SkipForward,
-  Volume2, VolumeX, Download, ArrowRight, ChevronDown
+  Volume2, VolumeX, ArrowRight, ChevronDown
 } from 'lucide-react';
 import { bathshebaProject, bathshebaTrackList } from '../data/bathsheba-bundle';
+import ListenNavigation from '@/components/ListenNavigation';
+import DownloadButton from '@/components/DownloadButton';
+import AudioErrorNotice from '@/components/AudioErrorNotice';
 
 // Short narrative context for each track — gives the listener a frame
 const TRACK_CONTEXT: Record<number, { hook: string; pull: string }> = {
@@ -30,9 +33,8 @@ export default function BathshebaListen() {
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
-  const [isDownloadingFull, setIsDownloadingFull] = useState(false);
-  const [downloadingTrackId, setDownloadingTrackId] = useState<number | null>(null);
   const [hasStarted, setHasStarted] = useState(false);
+  const [audioError, setAudioError] = useState(false);
 
   const currentTrack = bathshebaTrackList[currentTrackIndex];
   const context = TRACK_CONTEXT[currentTrack.number];
@@ -144,61 +146,30 @@ export default function BathshebaListen() {
 
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
-  const handleDownloadFull = async () => {
-    setIsDownloadingFull(true);
-    try {
-      const response = await fetch('/api/download/bathsheba');
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'BATHSHEBA-Project.zip';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
-    } catch (err) {
-      console.error('Download failed:', err);
-    } finally {
-      setIsDownloadingFull(false);
-    }
-  };
-
-  const handleDownloadTrack = async (track: typeof bathshebaTrackList[0], e: React.MouseEvent) => {
-    e.stopPropagation();
-    setDownloadingTrackId(track.id);
-    try {
-      const response = await fetch(track.url);
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `${track.number.toString().padStart(2, '0')}-${track.title}.mp3`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
-    } catch (err) {
-      console.error('Download failed:', err);
-    } finally {
-      setDownloadingTrackId(null);
-    }
-  };
-
   const scrollToTracklist = () => {
     tracklistRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const retryTrack = () => {
+    setAudioError(false);
+    audioRef.current?.load();
+    if (isPlaying) void audioRef.current?.play().catch(() => setAudioError(true));
+  };
+
   return (
     <div className="min-h-screen bg-black text-white" style={{ fontFamily: "'DM Mono', monospace" }}>
+      <div className="mx-auto max-w-5xl px-4 pt-4">
+        <ListenNavigation project="BATHSHEBA" backHref="/bathsheba" backLabel="Project" />
+      </div>
       <audio
         ref={audioRef}
         src={currentTrack.url}
         crossOrigin="anonymous"
         preload="metadata"
+        onError={() => setAudioError(true)}
+        onLoadedMetadata={() => setAudioError(false)}
       />
+      {audioError && <div className="mx-auto max-w-5xl px-4"><AudioErrorNotice onRetry={retryTrack} tone="purple" /></div>}
 
       {/* ── STICKY PLAYER BAR (appears after first play) ─────────── */}
       {hasStarted && (
@@ -407,22 +378,24 @@ export default function BathshebaListen() {
 
               {/* Download Actions */}
               <div className="flex flex-col sm:flex-row gap-3">
-                <button
-                  onClick={handleDownloadFull}
-                  disabled={isDownloadingFull}
-                  className="flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-lg bg-purple-700 hover:bg-purple-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-bebas tracking-wide text-sm"
-                >
-                  <Download className="h-4 w-4" />
-                  {isDownloadingFull ? 'Preparing ZIP...' : 'Download Full Project'}
-                </button>
-                <button
-                  onClick={(e) => handleDownloadTrack(currentTrack, e as React.MouseEvent)}
-                  disabled={downloadingTrackId === currentTrack.id}
-                  className="flex items-center justify-center gap-2 px-5 py-3 rounded-lg border border-purple-700 hover:bg-purple-900/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-bebas tracking-wide text-sm text-purple-300"
-                >
-                  <Download className="h-4 w-4" />
-                  {downloadingTrackId === currentTrack.id ? 'Saving...' : 'Save This Track'}
-                </button>
+                <DownloadButton
+                  endpoint="/api/download/bathsheba"
+                  filename="BATHSHEBA-Project.zip"
+                  label="Download Full Project"
+                  variant="primary"
+                  size="md"
+                  className="flex-1 rounded-lg bg-purple-700 font-bebas tracking-wide text-sm hover:bg-purple-600"
+                />
+                <div onClick={(event) => event.stopPropagation()}>
+                  <DownloadButton
+                    href={currentTrack.url}
+                    filename={`${currentTrack.number.toString().padStart(2, '0')}-${currentTrack.title}.mp3`}
+                    label="Save This Track"
+                    variant="outline"
+                    size="md"
+                    className="w-full rounded-lg border-purple-700 font-bebas tracking-wide text-sm text-purple-300 hover:bg-purple-900/30"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -495,18 +468,16 @@ export default function BathshebaListen() {
                     </span>
 
                     {/* Download button */}
-                    <button
-                      onClick={(e) => handleDownloadTrack(track, e)}
-                      disabled={downloadingTrackId === track.id}
-                      className={`flex-shrink-0 p-2 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
-                        isActive
-                          ? 'bg-purple-700 hover:bg-purple-600 text-white'
-                          : 'bg-transparent hover:bg-purple-900/50 text-zinc-600 hover:text-purple-300 opacity-0 group-hover:opacity-100'
-                      }`}
-                      title="Download track"
-                    >
-                      <Download className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                    </button>
+                    <div onClick={(event) => event.stopPropagation()} className={isActive ? '' : 'opacity-0 transition-opacity group-hover:opacity-100'}>
+                      <DownloadButton
+                        href={track.url}
+                        filename={`${track.number.toString().padStart(2, '0')}-${track.title}.mp3`}
+                        variant="outline"
+                        size="sm"
+                        iconOnly
+                        className={`flex-shrink-0 rounded-lg p-2 ${isActive ? 'border-purple-700 bg-purple-700 text-white hover:bg-purple-600' : 'border-transparent bg-transparent text-zinc-600 hover:border-purple-900/50 hover:bg-purple-900/50 hover:text-purple-300'}`}
+                      />
+                    </div>
                   </div>
                 );
               })}

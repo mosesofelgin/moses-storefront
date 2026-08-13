@@ -2,9 +2,11 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link } from 'wouter';
 import {
   Play, Pause, SkipBack, SkipForward, Volume2, VolumeX,
-  Download, ArrowLeft, Music, ChevronDown, ChevronUp,
+  ArrowLeft, Music, ChevronDown, ChevronUp,
 } from 'lucide-react';
 import { ABCS_COVER, ABCS_META, ABCS_TRACKS, type AbcsTrack } from '@/data/abcs-bundle';
+import ListenNavigation from '@/components/ListenNavigation';
+import DownloadButton from '@/components/DownloadButton';
 
 function formatTime(secs: number): string {
   if (!isFinite(secs) || secs < 0) return '0:00';
@@ -20,8 +22,6 @@ export default function AbcsListen() {
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
-  const [isDownloadingAll, setIsDownloadingAll] = useState(false);
-  const [downloadingTrack, setDownloadingTrack] = useState<number | null>(null);
   const [showTracklist, setShowTracklist] = useState(true);
   const audioRef = useRef<HTMLAudioElement>(null);
   const currentTrack: AbcsTrack = ABCS_TRACKS[currentIndex];
@@ -111,48 +111,6 @@ export default function AbcsListen() {
     }
   };
 
-  // ── Downloads ─────────────────────────────────────────────────────────────
-  const handleDownloadAll = async () => {
-    setIsDownloadingAll(true);
-    try {
-      const res = await fetch(ABCS_META.downloadEndpoint);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = ABCS_META.zipFilename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
-    } catch (err) {
-      console.error('Download failed:', err);
-    } finally {
-      setIsDownloadingAll(false);
-    }
-  };
-
-  const handleDownloadTrack = async (track: AbcsTrack) => {
-    setDownloadingTrack(track.id);
-    try {
-      const res = await fetch(track.url);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = track.filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
-    } catch (err) {
-      console.error('Track download failed:', err);
-    } finally {
-      setDownloadingTrack(null);
-    }
-  };
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
@@ -160,18 +118,9 @@ export default function AbcsListen() {
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
       <audio ref={audioRef} preload="metadata" />
 
-      {/* ── NAV ── */}
-      <nav className="sticky top-0 z-50 border-b border-zinc-800/60 bg-zinc-950/90 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
-          <Link href="/abcs" className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-zinc-500 hover:text-zinc-300 transition-colors">
-            <ArrowLeft className="h-3 w-3" /> Back to Basics
-          </Link>
-          <span className="font-bebas text-lg tracking-widest text-amber-500">ABCs</span>
-          <Link href="/store" className="font-mono text-xs uppercase tracking-widest text-zinc-500 hover:text-zinc-300 transition-colors">
-            Store
-          </Link>
-        </div>
-      </nav>
+      <div className="mx-auto max-w-5xl px-4 pt-4">
+        <ListenNavigation project="BACK TO BASICS: ABCs" backHref="/abcs" backLabel="Project" actionHref="/store" actionLabel="Store" />
+      </div>
 
       {/* ── PLAYER ── */}
       <section className="px-4 py-10 md:py-16" style={{ background: 'linear-gradient(to bottom, rgba(120,60,10,0.12), transparent 60%)' }}>
@@ -271,14 +220,14 @@ export default function AbcsListen() {
                 className="w-24 cursor-pointer accent-amber-500"
               />
             </div>
-            <button
-              onClick={handleDownloadAll}
-              disabled={isDownloadingAll}
-              className="flex items-center gap-2 rounded-lg border border-amber-800 px-4 py-2 font-bebas text-sm tracking-wide text-amber-400 transition-colors hover:bg-amber-900/20 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Download className="h-3.5 w-3.5" />
-              {isDownloadingAll ? 'Preparing...' : 'Download All Free'}
-            </button>
+              <DownloadButton
+                endpoint={ABCS_META.downloadEndpoint}
+                filename={ABCS_META.zipFilename}
+                label="Download Full Project"
+                variant="primary"
+                size="md"
+                className="rounded-lg bg-amber-500 font-mono text-xs font-bold uppercase tracking-widest text-black hover:bg-amber-400"
+              />
           </div>
         </div>
       </section>
@@ -339,14 +288,16 @@ export default function AbcsListen() {
                     <span className="font-mono text-xs text-zinc-600 shrink-0">{track.duration}</span>
 
                     {/* Individual download */}
-                    <button
-                      onClick={e => { e.stopPropagation(); handleDownloadTrack(track); }}
-                      disabled={downloadingTrack === track.id}
-                      className="shrink-0 rounded p-1 text-zinc-700 opacity-0 group-hover:opacity-100 hover:text-amber-500 transition-all disabled:opacity-50"
-                      aria-label={`Download ${track.title}`}
-                    >
-                      <Download className="h-3.5 w-3.5" />
-                    </button>
+                      <div onClick={(event) => event.stopPropagation()}>
+                        <DownloadButton
+                          href={track.url}
+                          filename={track.filename}
+                          variant="outline"
+                          size="sm"
+                          iconOnly
+                          className="border-transparent bg-transparent p-2 text-zinc-600 hover:border-amber-900/50 hover:bg-zinc-800 hover:text-amber-400"
+                        />
+                      </div>
                   </div>
                 );
               })}

@@ -1,528 +1,99 @@
 import { useState } from 'react';
+import { ArrowDown, ArrowRight, CheckCircle2, Disc3, ExternalLink, Loader2, Mail, Sparkles } from 'lucide-react';
 import { Link } from 'wouter';
-import { ArrowRight, Mail, Loader2, CheckCircle } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { toast } from 'sonner';
-import DownloadButton from '@/components/DownloadButton';
+import ProjectVaultCard from '@/components/ProjectVaultCard';
+import { CLARITY_COVER, PROJECTS } from '@/data/project-catalog';
 
-/* ─── Email Capture Component ─────────────────────────────────────────── */
-function EmailCapture() {
+function CovenantCapture() {
   const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const subscribe = trpc.subscribe.addEmail.useMutation();
 
-  const subscribeMutation = trpc.subscribe.addEmail.useMutation();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
-
-    setIsLoading(true);
+  const submit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!email.trim()) return;
+    setIsSaving(true);
     try {
-      await subscribeMutation.mutateAsync({ email });
-      setSubmitted(true);
+      await subscribe.mutateAsync({ email: email.trim() });
+      setIsComplete(true);
       toast.success('Welcome to the covenant.');
     } catch {
-      toast.error('Something went wrong. Try again.');
+      toast.error('Your email could not be saved. Please try again.');
     } finally {
-      setIsLoading(false);
+      setIsSaving(false);
     }
   };
 
   return (
-    <section className="relative border-t border-zinc-800 overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-zinc-950 via-green-950/20 to-zinc-950" />
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-green-500/5 rounded-full blur-3xl" />
-      </div>
-
-      <div className="relative z-10 px-4 py-24 sm:py-32">
-        <div className="mx-auto max-w-2xl text-center">
-          {/* Icon */}
-          <div className="mb-6 inline-flex items-center justify-center w-14 h-14 rounded-full border border-green-700/50 bg-green-900/20">
-            <Mail className="w-6 h-6 text-green-400" />
-          </div>
-
-          {/* Heading */}
-          <h2 className="mb-3 font-bebas text-4xl sm:text-5xl tracking-widest text-zinc-100">
-            JOIN THE COVENANT
-          </h2>
-
-          {/* Subtext */}
-          <p className="mb-8 text-zinc-400 text-base sm:text-lg max-w-md mx-auto leading-relaxed">
-            First access to new music, unreleased content, and direct updates. No spam. Just the mission.
-          </p>
-
-          {/* Form or Success */}
-          {submitted ? (
-            <div className="flex flex-col items-center gap-3 animate-in fade-in duration-500">
-              <CheckCircle className="w-10 h-10 text-green-400" />
-              <p className="text-green-400 font-bebas text-xl tracking-wider">YOU'RE IN.</p>
-              <p className="text-zinc-500 text-sm">Check your inbox for confirmation.</p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                required
-                disabled={isLoading}
-                className="flex-1 px-5 py-3.5 bg-zinc-900/80 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500/30 transition-all disabled:opacity-50"
-              />
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="px-6 py-3.5 bg-green-500 hover:bg-green-400 disabled:bg-green-600 disabled:cursor-not-allowed text-black font-bebas text-base tracking-wider rounded-lg transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
-              >
-                {isLoading ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <>
-                    Subscribe <ArrowRight className="w-4 h-4" />
-                  </>
-                )}
-              </button>
-            </form>
-          )}
-
-          {/* Trust signal */}
-          <p className="mt-6 text-zinc-600 text-xs tracking-wide">
-            Direct from MOSES. Unsubscribe anytime.
-          </p>
-        </div>
+    <section className="relative overflow-hidden border-y border-amber-200/10 bg-[linear-gradient(135deg,#130f09,#0b0a09_48%,#16110a)] px-4 py-24 sm:py-32" aria-labelledby="covenant-title">
+      <div className="pointer-events-none absolute left-[12%] top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-amber-300/10 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-0 right-[10%] h-64 w-64 rounded-full bg-emerald-400/5 blur-3xl" />
+      <div className="relative mx-auto max-w-3xl text-center">
+        <p className="text-[10px] uppercase tracking-[0.32em] text-amber-200">Direct from the vault</p>
+        <h2 id="covenant-title" className="mt-5 font-display text-6xl leading-[0.86] tracking-[0.12em] text-zinc-50 sm:text-8xl">JOIN THE COVENANT</h2>
+        <p className="mx-auto mt-6 max-w-xl font-serif text-2xl italic leading-relaxed text-amber-50/80 sm:text-3xl">New music, unreleased recordings, and messages from the work.</p>
+        <p className="mx-auto mt-5 max-w-md text-sm leading-7 text-zinc-400">No noise. No rented audience. A direct line to the music and the mission.</p>
+        {isComplete ? (
+          <div className="mt-10" role="status"><CheckCircle2 className="mx-auto h-10 w-10 text-amber-200" aria-hidden="true" /><p className="mt-4 font-display text-2xl tracking-[0.16em] text-amber-100">YOU&apos;RE IN.</p><p className="mt-2 text-sm text-zinc-500">The next transmission will meet you in your inbox.</p></div>
+        ) : (
+          <form onSubmit={submit} className="mx-auto mt-10 flex max-w-xl flex-col gap-3 sm:flex-row">
+            <label className="sr-only" htmlFor="covenant-email">Email address</label>
+            <input id="covenant-email" type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} placeholder="your@email.com" disabled={isSaving} className="min-h-12 flex-1 rounded-xl border border-amber-100/20 bg-zinc-950/60 px-5 text-zinc-100 outline-none placeholder:text-zinc-600 focus:border-amber-200 focus:ring-2 focus:ring-amber-200/20 disabled:opacity-60" />
+            <button type="submit" disabled={isSaving} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-amber-300 px-7 font-display text-sm tracking-[0.16em] text-zinc-950 transition hover:bg-amber-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white disabled:opacity-60">
+              {isSaving ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <>ENTER <ArrowRight className="h-4 w-4" aria-hidden="true" /></>}
+            </button>
+          </form>
+        )}
+        <p className="mt-6 text-[10px] uppercase tracking-[0.18em] text-zinc-600">Direct from MOSES · Unsubscribe anytime</p>
       </div>
     </section>
   );
 }
 
-const DEDICATION_COVER =
-  'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/dedication-cover_20e0add5.jpg';
-
-const CLARITY_COVER =
-  'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/album-cover_2118610e.png';
-
-const BATHSHEBA_COVER =
-  'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/bathsheba-cover-a7iGpxp22xB7WCpL6jtdHa.webp';
-
-const MIXTAPE_COVER =
-  'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/if-i-wrote-a-mixtape-cover_6a183be2.jpg';
-
-const NEW_GENESIS_COVER =
-  'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/new-genesis-cover_23ac8f82.png';
-
-const ABCS_COVER =
-  'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/abcs-cover_be82498d.png';
-
 export default function Home() {
+  const flagship = PROJECTS[0];
+  const archiveProjects = PROJECTS.slice(1);
+
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100">
-
-      {/* ── 1. CLARITY HERO ─────────────────────────────────────── */}
-      <section className="relative min-h-screen px-4 py-16 sm:py-24">
-        {/* Ambient glow */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute left-1/4 top-1/3 h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-green-500/8 blur-3xl" />
-          <div className="absolute right-1/4 bottom-1/3 h-[300px] w-[300px] rounded-full bg-green-900/10 blur-3xl" />
-        </div>
-
-        <div className="relative z-10 mx-auto max-w-5xl grid gap-10 lg:grid-cols-2 lg:items-center">
-          {/* Cover Art */}
-          <div className="order-2 lg:order-1 flex justify-center">
-            <div className="relative w-full max-w-sm">
-              <div className="absolute inset-0 bg-green-500/15 blur-3xl rounded-2xl" />
-              <img
-                src={CLARITY_COVER}
-                alt="CLARITY cover"
-                className="relative w-full rounded-2xl object-cover shadow-2xl border border-green-900/40"
-              />
+    <main className="min-h-screen overflow-hidden bg-zinc-950 text-zinc-100">
+      <section className="relative isolate border-b border-amber-100/10 px-4 pb-16 pt-14 sm:pb-24 sm:pt-20 lg:min-h-[calc(100vh-4rem)] lg:pt-24">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_83%_20%,rgba(184,134,11,0.18),transparent_26%),radial-gradient(circle_at_18%_83%,rgba(44,98,69,0.12),transparent_32%)]" />
+        <div className="relative mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[0.96fr_1.04fr] lg:gap-20">
+          <div className="order-2 lg:order-1">
+            <p className="text-[10px] uppercase tracking-[0.34em] text-amber-200">MOSES SOG · Chicago · Prophetic Hip-Hop</p>
+            <h1 className="mt-6 max-w-4xl font-display text-[clamp(4.7rem,12vw,10.5rem)] leading-[0.76] tracking-[0.08em] text-zinc-50">MUSIC FOR THE WORK.</h1>
+            <p className="mt-8 max-w-2xl font-serif text-3xl italic leading-[1.08] text-amber-50/85 sm:text-4xl">A living archive of faith, discipline, testimony, and transformation.</p>
+            <p className="mt-6 max-w-xl text-sm leading-7 text-zinc-400 sm:text-base">MOSES builds prophetic hip-hop from Chicago—recording by recording, project by project. Start with the current transmission, then enter the wider vault.</p>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <Link href="/clarity-sales" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-amber-300 px-7 font-display text-sm tracking-[0.16em] text-zinc-950 transition hover:bg-amber-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">ENTER CLARITY <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
+              <Link href="#archive" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-amber-100/20 px-7 font-display text-sm tracking-[0.16em] text-zinc-200 transition hover:border-amber-200/70 hover:text-amber-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300">EXPLORE THE ARCHIVE <ArrowDown className="h-4 w-4" aria-hidden="true" /></Link>
+            </div>
+            <div className="mt-11 grid max-w-xl grid-cols-3 gap-4 border-t border-amber-100/10 pt-5">
+              {[['400+','Published songs'],['600+','Recordings'],['15+','Years active']].map(([value,label]) => <div key={label}><p className="font-display text-3xl tracking-[0.1em] text-amber-200">{value}</p><p className="mt-1 text-[9px] uppercase tracking-[0.14em] text-zinc-600">{label}</p></div>)}
             </div>
           </div>
-
-          {/* Text + CTAs */}
-          <div className="order-1 lg:order-2 text-center lg:text-left">
-            <div className="mb-8 inline-block">
-              <span className="rounded-full border border-green-700 px-4 py-1.5 font-mono text-xs uppercase tracking-[0.2em] text-green-400">
-                CLARITY Season 1 · April 2026
-              </span>
-            </div>
-
-            <h1 className="mb-3 sm:mb-4 font-bebas text-[clamp(3.5rem,15vw,11rem)] leading-none tracking-widest text-green-400">
-              CLARITY
-            </h1>
-
-            <p className="mb-3 sm:mb-4 font-cormorant text-xl sm:text-3xl md:text-4xl italic text-zinc-200">
-              A 12-track journey of faith, discipline, and transformation
-            </p>
-
-            <p className="mb-8 sm:mb-12 text-sm sm:text-base leading-relaxed text-zinc-300 md:text-lg">
-              This is more than music. This is a journey through confusion, surrender,
-              discipline, and purpose. Built direct, owned, and real.
-            </p>
-
-            <div className="flex flex-col gap-2 sm:gap-3 sm:flex-row sm:justify-center lg:justify-start">
-              <Link
-                href="/listen"
-                className="flex items-center justify-center gap-2 rounded-lg bg-green-500 px-6 sm:px-8 py-3 sm:py-4 font-bebas text-base sm:text-lg tracking-wide text-black transition-colors hover:bg-green-400 active:bg-green-600"
-              >
-                Listen Now <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-              </Link>
-              <Link
-                href="/checkout"
-                className="flex items-center justify-center gap-2 rounded-lg border border-green-600 px-6 sm:px-8 py-3 sm:py-4 font-bebas text-base sm:text-lg tracking-wide text-green-400 transition-colors hover:bg-green-600/10"
-              >
-                Own the Album <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-              </Link>
+          <div className="order-1 lg:order-2">
+            <div className="relative mx-auto max-w-xl">
+              <div className="absolute -inset-8 rounded-[2.5rem] bg-amber-300/10 blur-3xl" />
+              <div className="relative overflow-hidden rounded-[1.6rem] border border-amber-100/25 bg-zinc-900 p-2 shadow-[0_30px_100px_rgba(0,0,0,0.52)]">
+                <img src={CLARITY_COVER} alt="CLARITY album cover" className="aspect-square w-full rounded-[1.2rem] object-cover" />
+                <div className="absolute inset-x-8 bottom-8 flex items-end justify-between rounded-2xl border border-amber-100/15 bg-zinc-950/75 px-4 py-3 backdrop-blur-xl"><div><p className="text-[9px] uppercase tracking-[0.24em] text-amber-200">Current transmission</p><p className="mt-1 font-display text-2xl tracking-[0.14em] text-zinc-100">CLARITY / SEASON 1</p></div><Disc3 className="h-6 w-6 animate-[spin_10s_linear_infinite] text-amber-200" aria-hidden="true" /></div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── 2. BATHSHEBA FEATURED PROJECT ──────────────────────────── */}
-      <section className="border-t border-zinc-800 px-4 py-20 bg-gradient-to-b from-purple-950/20 to-zinc-900/30">
-        <div className="mx-auto grid max-w-4xl gap-10 md:grid-cols-2 md:items-center">
-          {/* Album art */}
-          <div className="overflow-hidden rounded-2xl border border-purple-800 shadow-2xl shadow-purple-900/40">
-            <img
-              src={BATHSHEBA_COVER}
-              alt="BATHSHEBA cover"
-              className="h-auto w-full object-cover transition-opacity hover:opacity-95"
-              loading="lazy"
-            />
-          </div>
+      <section className="border-b border-amber-100/10 bg-[#100d09] px-4 py-5" aria-label="MOSES proof points"><div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-5 gap-y-3 text-center text-[10px] uppercase tracking-[0.2em] text-zinc-500 sm:justify-between"><span className="text-amber-200">Independent by design</span><span>Chicago born & built</span><span>Music is the door</span><span>Dominion is the work</span><span>EPK ready</span></div></section>
 
-          {/* Copy */}
-          <div>
-            <div className="mb-4 inline-block">
-              <span className="rounded-full border border-purple-700 px-3 py-1 font-mono text-xs uppercase tracking-[0.15em] text-purple-400">
-                BATHSHEBA · 10 Tracks
-              </span>
-            </div>
+      <section id="archive" className="px-4 py-20 sm:py-28" aria-labelledby="archive-title"><div className="mx-auto max-w-7xl"><div className="mb-12 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-[10px] uppercase tracking-[0.3em] text-amber-200">The vault</p><h2 id="archive-title" className="mt-4 font-display text-6xl leading-[0.82] tracking-[0.1em] text-zinc-50 sm:text-8xl">CHOOSE YOUR DOORWAY.</h2><p className="mt-5 max-w-2xl text-sm leading-7 text-zinc-400">Each project carries a different season of the work. The archive is not a pile of releases—it is a map.</p></div><Link href="/projects" className="inline-flex min-h-11 items-center gap-2 self-start rounded-xl border border-amber-100/20 px-5 py-3 text-[10px] uppercase tracking-[0.16em] text-amber-100 transition hover:border-amber-200/60 hover:bg-amber-100/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 sm:self-auto">Open full archive <ExternalLink className="h-4 w-4" aria-hidden="true" /></Link></div><div className="grid gap-5 md:grid-cols-2"><ProjectVaultCard project={flagship} featured />{archiveProjects.map((project) => <ProjectVaultCard key={project.title} project={project} />)}</div></div></section>
 
-            <h2 className="mb-4 font-bebas text-5xl leading-tight tracking-wider text-zinc-100">
-              BATHSHEBA
-            </h2>
-
-            <p className="mb-6 font-cormorant text-2xl italic text-zinc-300">
-              A royal journey through grace and sovereignty
-            </p>
-
-            <p className="mb-8 leading-relaxed text-zinc-400">
-              10 tracks of artistic excellence. A project rooted in royalty, purpose, and creative vision.
-            </p>
-
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Link
-                href="/bathsheba/listen"
-                className="flex items-center justify-center gap-2 rounded-lg bg-purple-600 px-6 py-3 font-bebas text-base tracking-wide text-white transition-colors hover:bg-purple-500"
-              >
-                Listen Now <ArrowRight className="h-4 w-4" />
-              </Link>
-              <DownloadButton
-                endpoint="/api/download/bathsheba"
-                filename="BATHSHEBA-Project.zip"
-                label="Download Free"
-                variant="outline"
-                className="border-purple-600 text-purple-400 hover:bg-purple-600/10"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 3. IF I WROTE A MIXTAPE ─────────────────────────────── */}
-      <section className="border-t border-zinc-800 px-4 py-20 bg-gradient-to-b from-amber-950/10 to-zinc-900/20">
-        <div className="mx-auto grid max-w-4xl gap-10 md:grid-cols-2 md:items-center">
-          {/* Album art */}
-          <div className="overflow-hidden rounded-2xl border border-amber-900/40 shadow-2xl shadow-amber-900/20">
-            <img
-              src={MIXTAPE_COVER}
-              alt="If I Wrote A Mixtape cover"
-              className="h-auto w-full object-cover transition-opacity hover:opacity-95"
-              loading="lazy"
-            />
-          </div>
-
-          {/* Copy */}
-          <div>
-            <div className="mb-4 inline-block">
-              <span className="rounded-full border border-amber-800 px-3 py-1 font-mono text-xs uppercase tracking-[0.15em] text-amber-500">
-                Free Mixtape · 30 Tracks
-              </span>
-            </div>
-
-            <h2 className="mb-4 font-bebas text-5xl leading-tight tracking-wider text-zinc-100">
-              If I Wrote A Mixtape
-            </h2>
-
-            <p className="mb-6 font-cormorant text-2xl italic text-zinc-300">
-              Before the silence
-            </p>
-
-            <p className="mb-8 leading-relaxed text-zinc-400">
-              30 tracks recorded right before the lockdown season. Raw, uncut, and completely free.
-            </p>
-
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Link
-                href="/mixtape/listen"
-                className="flex items-center justify-center gap-2 rounded-lg bg-amber-700 px-6 py-3 font-bebas text-base tracking-wide text-white transition-colors hover:bg-amber-600"
-              >
-                Listen Now <ArrowRight className="h-4 w-4" />
-              </Link>
-              <DownloadButton
-                endpoint="/api/download/mixtape"
-                filename="If-I-Wrote-A-Mixtape.zip"
-                label="Download Free"
-                variant="outline"
-                className="border-amber-700 text-amber-400 hover:bg-amber-700/10"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 4. NEW GENESIS ──────────────────────────────────────── */}
-      <section className="border-t border-zinc-800 px-4 py-20" style={{ background: 'linear-gradient(to bottom, rgba(15,12,41,0.4), rgba(26,16,64,0.2), transparent)' }}>
-        <div className="mx-auto grid max-w-4xl gap-10 md:grid-cols-2 md:items-center">
-          {/* Album art */}
-          <div className="order-2 md:order-1 overflow-hidden rounded-2xl border border-indigo-900/40 shadow-2xl shadow-indigo-900/20">
-            <img
-              src={NEW_GENESIS_COVER}
-              alt="New Genesis cover"
-              className="h-auto w-full object-cover transition-opacity hover:opacity-95"
-              loading="lazy"
-            />
-          </div>
-
-          {/* Copy */}
-          <div className="order-1 md:order-2">
-            <div className="mb-4 inline-block">
-              <span className="rounded-full border border-indigo-800 px-3 py-1 font-mono text-xs uppercase tracking-[0.15em] text-indigo-400">
-                Project · 15 Tracks · Free Download
-              </span>
-            </div>
-
-            <h2 className="mb-4 font-bebas text-5xl leading-tight tracking-wider text-zinc-100">
-              New Genesis
-            </h2>
-
-            <p className="mb-6 font-cormorant text-2xl italic text-zinc-300">
-              A return to the source
-            </p>
-
-            <p className="mb-8 leading-relaxed text-zinc-400">
-              15 tracks. A new beginning after the silence. Free to download — or support it in the store for $12.
-            </p>
-
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Link
-                href="/new-genesis/listen"
-                className="flex items-center justify-center gap-2 rounded-lg bg-indigo-700 px-6 py-3 font-bebas text-base tracking-wide text-white transition-colors hover:bg-indigo-600"
-              >
-                Listen Now <ArrowRight className="h-4 w-4" />
-              </Link>
-              <DownloadButton
-                endpoint="/api/download/new-genesis"
-                filename="New-Genesis.zip"
-                label="Download Free"
-                variant="outline"
-                className="border-indigo-700 text-indigo-300 hover:bg-indigo-700/10"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 5. BACK TO BASICS: ABCs ───────────────────────────── */}
-      <section className="border-t border-zinc-800 px-4 py-20" style={{ background: 'linear-gradient(to bottom, rgba(120,60,10,0.08), transparent)' }}>
-        <div className="mx-auto grid max-w-4xl gap-10 md:grid-cols-2 md:items-center">
-          {/* Album art */}
-          <div className="overflow-hidden rounded-2xl border border-amber-900/30 shadow-2xl shadow-amber-950/20">
-            <img
-              src={ABCS_COVER}
-              alt="Back to Basics: ABCs cover"
-              className="h-auto w-full object-cover transition-opacity hover:opacity-95"
-              loading="lazy"
-            />
-          </div>
-
-          {/* Copy */}
-          <div>
-            <div className="mb-4 inline-block">
-              <span className="rounded-full border border-amber-900/60 px-3 py-1 font-mono text-xs uppercase tracking-[0.15em] text-amber-700">
-                Self-Made Project · 11 Tracks · Free
-              </span>
-            </div>
-
-            <h2 className="mb-1 font-bebas text-4xl leading-tight tracking-wider text-zinc-100">
-              Back to Basics
-            </h2>
-            <h3 className="mb-4 font-bebas text-3xl leading-tight tracking-wider text-amber-600">
-              ;ABCs
-            </h3>
-
-            <p className="mb-6 font-cormorant text-xl italic text-zinc-400">
-              Going back to the days when we were using FL Studio and pure focus.
-            </p>
-
-            <p className="mb-8 leading-relaxed text-zinc-500 text-sm">
-              Produced, mixed, written, photographed, and edited by one person. Not perfect — but complete.
-            </p>
-
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Link
-                href="/abcs/listen"
-                className="flex items-center justify-center gap-2 rounded-lg bg-amber-700 px-6 py-3 font-bebas text-base tracking-wide text-white transition-colors hover:bg-amber-600"
-              >
-                Listen Now <ArrowRight className="h-4 w-4" />
-              </Link>
-              <DownloadButton
-                endpoint="/api/download/abcs"
-                filename="Back-to-Basics-ABCs.zip"
-                label="Download Free"
-                variant="outline"
-                className="border-amber-800/60 text-amber-600 hover:bg-amber-900/10"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 6. DEDICATION ───────────────────────────────────────── */}
-      <section className="border-t border-zinc-800 px-4 py-20 bg-gradient-to-b from-red-950/10 to-zinc-900/20">
-        <div className="mx-auto grid max-w-4xl gap-10 md:grid-cols-2 md:items-center">
-          {/* Cover Art */}
-          <div className="overflow-hidden rounded-2xl border border-red-900/40 shadow-2xl shadow-red-900/20">
-            <img
-              src={DEDICATION_COVER}
-              alt="DEDICATION cover"
-              className="h-auto w-full object-cover transition-opacity hover:opacity-95"
-              loading="lazy"
-            />
-          </div>
-
-          {/* Text + CTAs */}
-          <div>
-            <div className="mb-4 inline-block">
-              <span className="rounded-full border border-red-700 px-3 py-1 font-mono text-xs uppercase tracking-[0.15em] text-red-400">
-                Free Mixtape · 14 Tracks
-              </span>
-            </div>
-
-            <h2 className="mb-4 font-bebas text-5xl leading-tight tracking-wider text-red-500">
-              DEDICATION
-            </h2>
-
-            <p className="mb-6 font-cormorant text-2xl italic text-zinc-300">
-              A homage to Lil Wayne
-            </p>
-
-            <p className="mb-8 leading-relaxed text-zinc-400">
-              14 tracks of pure artistry. Listen now. Download free. No email required.
-              Direct from MOSES SOG.
-            </p>
-
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Link
-                href="/dedication"
-                className="flex items-center justify-center gap-2 rounded-lg bg-red-600 px-6 py-3 font-bebas text-base tracking-wide text-white transition-colors hover:bg-red-500"
-              >
-                Listen Now <ArrowRight className="h-4 w-4" />
-              </Link>
-              <DownloadButton
-                endpoint="/api/download/dedication"
-                filename="DEDICATION-Mixtape.zip"
-                label="Download Free"
-                variant="outline"
-                className="border-zinc-600 text-zinc-100 hover:border-zinc-400 hover:text-white"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 7. VALUE PROPOSITION ────────────────────────────────── */}
-      <section className="border-t border-zinc-800 px-4 py-20">
-        <div className="mx-auto max-w-4xl">
-          <h2 className="mb-12 text-center font-bebas text-4xl tracking-wider uppercase">
-            The MOSES Difference
-          </h2>
-
-          <div className="grid gap-8 md:grid-cols-3">
-            <div className="rounded-lg border border-zinc-800 p-6 text-center hover:border-zinc-700 transition-colors">
-              <h3 className="mb-3 font-bebas text-2xl tracking-wider text-green-500">OWNED</h3>
-              <p className="text-sm leading-relaxed text-zinc-400">
-                No algorithms. No middlemen. Direct from artist to listener.
-              </p>
-            </div>
-            <div className="rounded-lg border border-zinc-800 p-6 text-center hover:border-zinc-700 transition-colors">
-              <h3 className="mb-3 font-bebas text-2xl tracking-wider text-green-500">DIRECT</h3>
-              <p className="text-sm leading-relaxed text-zinc-400">
-                Support the music and receive the full project instantly.
-              </p>
-            </div>
-            <div className="rounded-lg border border-zinc-800 p-6 text-center hover:border-zinc-700 transition-colors">
-              <h3 className="mb-3 font-bebas text-2xl tracking-wider text-green-500">REAL</h3>
-              <p className="text-sm leading-relaxed text-zinc-400">
-                Faith, testimony, and truth-driven music from lived experience.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 8. PATHWAY CARDS ────────────────────────────────────── */}
-      <section className="border-t border-zinc-800 px-4 py-20 bg-zinc-900/30">
-        <div className="mx-auto max-w-4xl">
-          <h2 className="mb-12 text-center font-bebas text-4xl tracking-wider uppercase">
-            Next Steps
-          </h2>
-
-          <div className="grid gap-6 md:grid-cols-3">
-            <Link
-              href="/store"
-              className="rounded-lg border border-zinc-700 p-8 text-center hover:border-green-600 hover:bg-green-600/5 transition-all"
-            >
-              <h3 className="mb-2 font-bebas text-2xl tracking-wider text-zinc-100">Store</h3>
-              <p className="text-sm text-zinc-400">Own albums. Support directly.</p>
-            </Link>
-
-            <Link
-              href="/connect"
-              className="rounded-lg border border-zinc-700 p-8 text-center hover:border-green-600 hover:bg-green-600/5 transition-all"
-            >
-              <h3 className="mb-2 font-bebas text-2xl tracking-wider text-zinc-100">Connect</h3>
-              <p className="text-sm text-zinc-400">Email. Social. Direct contact.</p>
-            </Link>
-
-            <Link
-              href="/links"
-              className="rounded-lg border border-zinc-700 p-8 text-center hover:border-green-600 hover:bg-green-600/5 transition-all"
-            >
-              <h3 className="mb-2 font-bebas text-2xl tracking-wider text-zinc-100">Links</h3>
-              <p className="text-sm text-zinc-400">All platforms. One place.</p>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 9. EMAIL CAPTURE ──────────────────────────────────────── */}
-      <EmailCapture />
-
-      {/* ── 10. FOOTER ───────────────────────────────────────────── */}
-      <footer className="border-t border-zinc-800 px-4 py-12 bg-zinc-900/50">
-        <div className="mx-auto max-w-4xl text-center">
-          <p className="mb-2 font-bebas text-lg tracking-wider text-zinc-100">
-            MOSES SOG
-          </p>
-          <p className="text-sm text-zinc-500">
-            Owned music. Direct access. © 2026
-          </p>
-        </div>
-      </footer>
-    </div>
+      <section className="border-y border-amber-100/10 bg-[#100d09] px-4 py-20 sm:py-28" aria-labelledby="pathways-title"><div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-end"><div><p className="text-[10px] uppercase tracking-[0.3em] text-amber-200">Beyond the music</p><h2 id="pathways-title" className="mt-4 font-display text-6xl leading-[0.84] tracking-[0.1em] text-zinc-50 sm:text-7xl">A WAY TO ENTER THE WORK.</h2><p className="mt-5 max-w-lg text-sm leading-7 text-zinc-400">For listeners, collaborators, churches, institutions, and the curious: there is a clear place to begin.</p></div><div className="grid gap-3 sm:grid-cols-3">{[["/artist",Sparkles,"Artist / EPK","Press, booking, proof, and the complete story."],["/links",ExternalLink,"Link tree","The cleanest doorway to every platform and video."],["/connect",Mail,"Connect","Booking, partnerships, and direct communication."]].map(([href,Icon,title,copy]) => <Link key={String(href)} href={String(href)} className="group rounded-2xl border border-amber-100/10 bg-zinc-950/70 p-5 transition hover:-translate-y-1 hover:border-amber-200/45 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300"><Icon className="h-5 w-5 text-amber-200" aria-hidden="true" /><h3 className="mt-8 font-display text-3xl tracking-[0.1em] text-zinc-100">{String(title)}</h3><p className="mt-3 text-sm leading-6 text-zinc-500">{String(copy)}</p><ArrowRight className="mt-6 h-4 w-4 text-amber-200 transition group-hover:translate-x-1" aria-hidden="true" /></Link>)}</div></div></section>
+      <CovenantCapture />
+      <footer className="bg-zinc-950 px-4 py-10"><div className="mx-auto flex max-w-7xl flex-col gap-4 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left"><div><p className="font-display text-2xl tracking-[0.14em] text-zinc-100">MOSES SOG</p><p className="mt-1 text-xs text-zinc-600">Owned music. Direct access. Chicago, IL.</p></div><div className="flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.14em] text-zinc-500"><Link href="/projects" className="inline-flex min-h-11 items-center px-2 hover:text-amber-200">Archive</Link><Link href="/artist" className="inline-flex min-h-11 items-center px-2 hover:text-amber-200">Artist</Link><Link href="/links" className="inline-flex min-h-11 items-center px-2 hover:text-amber-200">Links</Link><Link href="/connect" className="inline-flex min-h-11 items-center px-2 hover:text-amber-200">Connect</Link></div></div></footer>
+    </main>
   );
 }

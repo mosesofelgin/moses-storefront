@@ -588,10 +588,11 @@ export default function Artist() {
           </p>
           <div className="flex gap-6">
             {[
-              { label: 'Instagram', href: 'https://instagram.com/mosessog' },
-              { label: 'YouTube', href: 'https://youtube.com/@mosessog' },
+              { label: 'Instagram', href: 'https://instagram.com/moses_sog' },
+              { label: 'YouTube', href: 'https://youtube.com/@MosesSOG' },
               { label: 'TikTok', href: 'https://tiktok.com/@mosessog' },
-              { label: 'Twitter', href: 'https://twitter.com/mosessog' },
+              { label: 'Twitter', href: 'https://twitter.com/sogmoses' },
+              { label: 'Twitch', href: 'https://twitch.tv/mosessog' },
             ].map((s) => (
               <a
                 key={s.label}
@@ -605,7 +606,7 @@ export default function Artist() {
               </a>
             ))}
           </div>
-          <p className="text-[#f0e8d7]/30 text-xs font-mono">@mosessog · mosessog.com</p>
+          <p className="text-[#f0e8d7]/30 text-xs font-mono">@moses_sog · mosessog.com</p>
         </div>
       </section>
 

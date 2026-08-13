@@ -2,9 +2,11 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link } from 'wouter';
 import {
   Play, Pause, SkipBack, SkipForward,
-  Volume2, VolumeX, Download, ShoppingBag
+  Volume2, VolumeX, ShoppingBag
 } from 'lucide-react';
 import { NEW_GENESIS_COVER, NEW_GENESIS_TRACKS, NEW_GENESIS_META, type NewGenesisTrack } from '../data/new-genesis-bundle';
+import ListenNavigation from '@/components/ListenNavigation';
+import DownloadButton from '@/components/DownloadButton';
 
 export default function NewGenesisListen() {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -16,8 +18,6 @@ export default function NewGenesisListen() {
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
-  const [isDownloadingFull, setIsDownloadingFull] = useState(false);
-  const [downloadingTrackId, setDownloadingTrackId] = useState<number | null>(null);
   const [hasStarted, setHasStarted] = useState(false);
 
   const currentTrack = NEW_GENESIS_TRACKS[currentTrackIndex];
@@ -129,48 +129,6 @@ export default function NewGenesisListen() {
 
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
-  const handleDownloadFull = async () => {
-    setIsDownloadingFull(true);
-    try {
-      const response = await fetch(NEW_GENESIS_META.downloadEndpoint);
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = NEW_GENESIS_META.zipFilename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
-    } catch (err) {
-      console.error('Download failed:', err);
-    } finally {
-      setIsDownloadingFull(false);
-    }
-  };
-
-  const handleDownloadTrack = async (track: NewGenesisTrack, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setDownloadingTrackId(track.id);
-    try {
-      const response = await fetch(track.url);
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = track.filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
-    } catch (err) {
-      console.error('Track download failed:', err);
-    } finally {
-      setDownloadingTrackId(null);
-    }
-  };
 
   return (
     <div
@@ -180,6 +138,9 @@ export default function NewGenesisListen() {
         background: 'linear-gradient(to bottom, #0f0c29, #0d0d0d)',
       }}
     >
+      <div className="mx-auto max-w-5xl px-4 pt-4">
+        <ListenNavigation project="NEW GENESIS" backHref="/new-genesis" backLabel="Project" />
+      </div>
       <audio
         ref={audioRef}
         src={currentTrack.url}
@@ -343,14 +304,14 @@ export default function NewGenesisListen() {
 
           {/* Download full project */}
           <div className="flex justify-center">
-            <button
-              onClick={handleDownloadFull}
-              disabled={isDownloadingFull}
-              className="flex items-center gap-2 rounded-lg border border-indigo-700 px-6 py-3 font-bebas text-base tracking-wide text-indigo-200 transition-colors hover:border-indigo-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Download className="h-4 w-4" />
-              {isDownloadingFull ? 'Downloading...' : 'Download Full Project'}
-            </button>
+            <DownloadButton
+              endpoint={NEW_GENESIS_META.downloadEndpoint}
+              filename={NEW_GENESIS_META.zipFilename}
+              label="Download Full Project"
+              variant="outline"
+              size="md"
+              className="rounded-lg border-indigo-700 font-bebas text-base tracking-wide text-indigo-200 hover:border-indigo-400 hover:text-white"
+            />
           </div>
         </div>
       </section>
@@ -411,14 +372,16 @@ export default function NewGenesisListen() {
                   </span>
 
                   {/* Download button */}
-                  <button
-                    onClick={(e) => handleDownloadTrack(track, e)}
-                    disabled={downloadingTrackId === track.id}
-                    className="flex-shrink-0 p-1.5 text-indigo-700 hover:text-yellow-400 disabled:opacity-30 transition-colors opacity-0 group-hover:opacity-100"
-                    title={`Download ${track.title}`}
-                  >
-                    <Download className="h-3.5 w-3.5" />
-                  </button>
+                  <div onClick={(event) => event.stopPropagation()}>
+                    <DownloadButton
+                      href={track.url}
+                      filename={track.filename}
+                      variant="outline"
+                      size="sm"
+                      iconOnly
+                      className="border-transparent bg-transparent p-2 text-indigo-600 hover:border-indigo-900/50 hover:bg-indigo-900/20 hover:text-indigo-300"
+                    />
+                  </div>
                 </div>
               );
             })}

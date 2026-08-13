@@ -5,6 +5,9 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --font-display: "Bebas Neue", sans-serif;
+  --font-serif: "Cormorant Garamond", serif;
+  --font-mono: "DM Mono", monospace;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -44,15 +47,23 @@
 }
 
 :root {
-  --primary: var(--color-blue-700);
-  --primary-foreground: var(--color-blue-50);
-  --sidebar-primary: var(--color-blue-600);
-  --sidebar-primary-foreground: var(--color-blue-50);
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --primary: oklch(0.72 0.15 82);
+  --primary-foreground: oklch(0.16 0.015 70);
+  --sidebar-primary: oklch(0.72 0.15 82);
+  --sidebar-primary-foreground: oklch(0.16 0.015 70);
+  --chart-1: oklch(0.72 0.15 82);
+  --chart-2: oklch(0.62 0.10 148);
+  --chart-3: oklch(0.62 0.14 28);
+  --chart-4: oklch(0.56 0.11 280);
+  --chart-5: oklch(0.78 0.07 75);
   --radius: 0.65rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.235 0.015 65);
@@ -80,38 +91,38 @@
 }
 
 .dark {
-  --primary: var(--color-blue-700);
-  --primary-foreground: var(--color-blue-50);
-  --sidebar-primary: var(--color-blue-500);
-  --sidebar-primary-foreground: var(--color-blue-50);
-  --background: oklch(0.141 0.005 285.823);
-  --foreground: oklch(0.85 0.005 65);
-  --card: oklch(0.21 0.006 285.885);
-  --card-foreground: oklch(0.85 0.005 65);
-  --popover: oklch(0.21 0.006 285.885);
-  --popover-foreground: oklch(0.85 0.005 65);
-  --secondary: oklch(0.24 0.006 286.033);
-  --secondary-foreground: oklch(0.7 0.005 65);
-  --muted: oklch(0.274 0.006 286.033);
-  --muted-foreground: oklch(0.705 0.015 286.067);
-  --accent: oklch(0.274 0.006 286.033);
-  --accent-foreground:  oklch(0.92 0.005 65);
+  --primary: oklch(0.72 0.15 82);
+  --primary-foreground: oklch(0.16 0.015 70);
+  --sidebar-primary: oklch(0.72 0.15 82);
+  --sidebar-primary-foreground: oklch(0.16 0.015 70);
+  --background: oklch(0.145 0.008 60);
+  --foreground: oklch(0.91 0.02 75);
+  --card: oklch(0.20 0.012 60);
+  --card-foreground: oklch(0.91 0.02 75);
+  --popover: oklch(0.20 0.012 60);
+  --popover-foreground: oklch(0.91 0.02 75);
+  --secondary: oklch(0.245 0.012 60);
+  --secondary-foreground: oklch(0.79 0.025 75);
+  --muted: oklch(0.285 0.012 60);
+  --muted-foreground: oklch(0.68 0.02 75);
+  --accent: oklch(0.285 0.012 60);
+  --accent-foreground: oklch(0.94 0.02 75);
   --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.488 0.243 264.376);
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
-  --sidebar: oklch(0.21 0.006 285.885);
-  --sidebar-foreground: oklch(0.85 0.005 65);
-  --sidebar-accent: oklch(0.274 0.006 286.033);
-  --sidebar-accent-foreground:  oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.488 0.243 264.376);
+  --border: oklch(0.92 0.02 75 / 12%);
+  --input: oklch(0.92 0.02 75 / 16%);
+  --ring: oklch(0.72 0.15 82);
+  --chart-1: oklch(0.72 0.15 82);
+  --chart-2: oklch(0.62 0.10 148);
+  --chart-3: oklch(0.62 0.14 28);
+  --chart-4: oklch(0.56 0.11 280);
+  --chart-5: oklch(0.78 0.07 75);
+  --sidebar: oklch(0.20 0.012 60);
+  --sidebar-foreground: oklch(0.91 0.02 75);
+  --sidebar-accent: oklch(0.285 0.012 60);
+  --sidebar-accent-foreground: oklch(0.94 0.02 75);
+  --sidebar-border: oklch(0.92 0.02 75 / 12%);
+  --sidebar-ring: oklch(0.72 0.15 82);
 }
 
 @layer base {
@@ -120,6 +131,7 @@
   }
   body {
     @apply bg-background text-foreground;
+    text-rendering: optimizeLegibility;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
@@ -144,6 +156,11 @@
   
   .serif-display {
     font-family: 'Cormorant Garamond', serif;
+  }
+
+  ::selection {
+    background: oklch(0.72 0.15 82 / 32%);
+    color: oklch(0.98 0.01 80);
   }
 }
 

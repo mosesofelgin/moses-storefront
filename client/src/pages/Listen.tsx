@@ -4,6 +4,8 @@ import { useMemo, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, Pause, Play, Mail, ArrowRight, Loader2, Check } from 'lucide-react';
 import TrackContext from '@/components/TrackContext';
 import PersistentCTA from '@/components/PersistentCTA';
+import ListenNavigation from '@/components/ListenNavigation';
+import AudioErrorNotice from '@/components/AudioErrorNotice';
 import { trpc } from '@/lib/trpc';
 import { toast } from 'sonner';
 
@@ -25,6 +27,7 @@ export default function Listen() {
   const [isEmailSubmitting, setIsEmailSubmitting] = useState(false);
   const [emailSubmitted, setEmailSubmitted] = useState(false);
   const [emailUnlocked, setEmailUnlocked] = useState(false);
+  const [audioError, setAudioError] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [, navigate] = useLocation();
   const subscribeEmailMutation = trpc.subscribe.addEmail.useMutation();
@@ -38,13 +41,14 @@ export default function Listen() {
     const track = tracks.find((item) => item.id === trackId);
     if (!audio || !track) return;
 
+    setAudioError(false);
     if (audio.src !== track.url) {
       audio.src = track.url;
       setCurrentTime(0);
       setDuration(0);
     }
 
-    void audio.play();
+    void audio.play().catch(() => setAudioError(true));
     setPlayingTrackId(trackId);
   };
 
@@ -127,25 +131,29 @@ export default function Listen() {
   // Email gate
   if (!emailUnlocked) {
     return (
-      <div className="min-h-screen bg-zinc-950 px-4 py-8 text-zinc-100 flex items-center justify-center">
-        <div className="mx-auto max-w-md text-center">
-          <Mail className="w-16 h-16 text-amber-500 mx-auto mb-6" />
-          <h1 className="text-3xl font-semibold mb-3">Listen to CLARITY</h1>
-          <p className="text-zinc-300 mb-6">Enter your email to unlock the full album and get exclusive updates.</p>
-          
-          <form onSubmit={handleEmailSubmit} className="space-y-4">
+      <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_76%_18%,rgba(184,134,11,0.16),transparent_25%),#090909] px-4 py-10 text-zinc-100">
+        <div className="pointer-events-none absolute left-1/2 top-1/2 h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-amber-100/5" />
+        <div className="relative mx-auto w-full max-w-lg rounded-3xl border border-amber-100/15 bg-zinc-950/80 p-7 text-center shadow-[0_30px_100px_rgba(0,0,0,0.5)] backdrop-blur-xl sm:p-10">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-amber-100/20 bg-amber-300/10"><Mail className="h-6 w-6 text-amber-200" aria-hidden="true" /></div>
+          <p className="mt-7 text-[10px] uppercase tracking-[0.3em] text-amber-200">CLARITY · Full listening access</p>
+          <h1 className="mt-4 font-display text-5xl tracking-[0.1em] text-zinc-50 sm:text-6xl">UNLOCK THE ALBUM</h1>
+          <p className="mx-auto mt-5 max-w-sm font-serif text-2xl italic leading-snug text-amber-50/80">Enter your email, then step into the full CLARITY listening experience.</p>
+          <p className="mx-auto mt-4 max-w-sm text-sm leading-6 text-zinc-500">This unlocks the record and opens a direct line for future transmissions from the vault.</p>
+          <form onSubmit={handleEmailSubmit} className="mt-8 space-y-3">
             <input
               type="email"
+              aria-label="Email address"
+              autoComplete="email"
               placeholder="your@email.com"
               value={emailCapture}
               onChange={(e) => setEmailCapture(e.target.value)}
               disabled={isEmailSubmitting}
-              className="w-full px-4 py-3 rounded-lg bg-zinc-800 border border-zinc-700 text-white placeholder-zinc-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/30 disabled:opacity-50"
+              className="min-h-12 w-full rounded-xl border border-amber-100/15 bg-zinc-900/80 px-5 text-zinc-100 outline-none placeholder:text-zinc-600 focus:border-amber-200 focus:ring-2 focus:ring-amber-200/20 disabled:opacity-50"
             />
             <button
               type="submit"
               disabled={isEmailSubmitting}
-              className="w-full px-4 py-3 bg-amber-500 hover:bg-amber-600 disabled:bg-amber-700 disabled:cursor-not-allowed text-black font-semibold rounded-lg flex items-center justify-center gap-2 transition-all"
+              className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-amber-300 px-5 font-display text-lg tracking-[0.14em] text-zinc-950 transition hover:bg-amber-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isEmailSubmitting ? (
                 <><Loader2 className="w-4 h-4 animate-spin" /> Unlocking...</>
@@ -154,23 +162,21 @@ export default function Listen() {
               )}
             </button>
           </form>
+          <p className="mt-5 text-[10px] uppercase tracking-[0.14em] text-zinc-600">No noise · Direct from MOSES · Unsubscribe anytime</p>
         </div>
-      </div>
+      </main>
     );
   }
 
 
   return (
-    <div className="min-h-screen bg-zinc-950 px-4 py-8 text-zinc-100">
-      <div className="mx-auto max-w-2xl">
-        <header className="mb-8">
-          <p className="mb-3 text-xs uppercase tracking-[0.2em] text-zinc-400">
-            Clarity Season 1 · April 2026
-          </p>
-          <h1 className="text-4xl font-semibold">Listen</h1>
-          <p className="mt-2 text-sm text-zinc-300">
-            A focused listening space for the full CLARITY journey.
-          </p>
+    <main className="min-h-screen bg-zinc-950 px-4 py-6 text-zinc-100 sm:py-10">
+      <div className="mx-auto max-w-3xl">
+        <ListenNavigation project="CLARITY" backHref="/clarity-sales" backLabel="Buy CLARITY" actionHref="/artist" actionLabel="Artist / EPK" />
+        <header className="mb-8 border-b border-amber-100/10 pb-7 sm:mb-10">
+          <p className="text-[10px] uppercase tracking-[0.26em] text-amber-200">CLARITY · Season 1 · Full album</p>
+          <h1 className="mt-4 font-display text-6xl leading-[0.82] tracking-[0.1em] text-zinc-50 sm:text-7xl">LISTEN WITH INTENTION.</h1>
+          <p className="mt-5 max-w-xl font-serif text-2xl italic leading-snug text-amber-50/75">A focused listening room for the complete CLARITY journey.</p>
         </header>
 
         {albumCover && (
@@ -235,6 +241,10 @@ export default function Listen() {
           </div>
         </section>
 
+        {audioError && playingTrackId && (
+          <AudioErrorNotice onRetry={() => playTrack(playingTrackId)} />
+        )}
+
         <section className="mb-8 rounded-xl border border-zinc-800 bg-zinc-900 p-4 sm:p-5">
           <h2 className="mb-4 text-lg font-medium">All Tracks</h2>
           <div className="space-y-2">
@@ -270,7 +280,11 @@ export default function Listen() {
           </div>
           <audio
             ref={audioRef}
-            onLoadedMetadata={() => setDuration(audioRef.current?.duration ?? 0)}
+            onError={() => setAudioError(true)}
+            onLoadedMetadata={() => {
+              setAudioError(false);
+              setDuration(audioRef.current?.duration ?? 0);
+            }}
             onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime ?? 0)}
             onEnded={handleTrackEnd}
             className="hidden"
@@ -334,6 +348,6 @@ export default function Listen() {
           </div>
         </div>
       )}
-    </div>
+    </main>
   );
 }

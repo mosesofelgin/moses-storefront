@@ -1,38 +1,50 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import GlobalNav from "./components/GlobalNav";
+import { isFocusedRoutePath, shouldShowVaultGate } from "./lib/routePolicy";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
-import Links from "./pages/Links";
-import ClarityProject from "./pages/ClarityProject";
-import Success from "./pages/Success";
-import Downloads from "./pages/Downloads";
-import Listen from "./pages/Listen";
-import Store from "./pages/Store";
-import Connect from "./pages/Connect";
-import Bathsheba from "./pages/Bathsheba";
-import BathshebaListen from "./pages/BathshebaListen";
-import Dedication from "./pages/Mixtape";
-import Abcs from "./pages/Abcs";
-import AbcsListen from "./pages/AbcsListen";
-import IfIWroteAMixtape from "./pages/IfIWroteAMixtape";
-import MixtapeListen from "./pages/MixtapeListen";
-import NewGenesis from "./pages/NewGenesis";
-import NewGenesisListen from "./pages/NewGenesisListen";
-import Artist from "./pages/Artist";
-import Checkout from "./pages/Checkout";
 import VaultGate, { isVaultUnlocked } from "./components/VaultGate";
-import Event from "./pages/Event";
-import ClaritySales from "./pages/ClaritySales";
+
+const Links = lazy(() => import("./pages/Links"));
+const ClarityProject = lazy(() => import("./pages/ClarityProject"));
+const Success = lazy(() => import("./pages/Success"));
+const Downloads = lazy(() => import("./pages/Downloads"));
+const Listen = lazy(() => import("./pages/Listen"));
+const Store = lazy(() => import("./pages/Store"));
+const Connect = lazy(() => import("./pages/Connect"));
+const Bathsheba = lazy(() => import("./pages/Bathsheba"));
+const BathshebaListen = lazy(() => import("./pages/BathshebaListen"));
+const Dedication = lazy(() => import("./pages/Mixtape"));
+const Abcs = lazy(() => import("./pages/Abcs"));
+const AbcsListen = lazy(() => import("./pages/AbcsListen"));
+const IfIWroteAMixtape = lazy(() => import("./pages/IfIWroteAMixtape"));
+const MixtapeListen = lazy(() => import("./pages/MixtapeListen"));
+const NewGenesis = lazy(() => import("./pages/NewGenesis"));
+const NewGenesisListen = lazy(() => import("./pages/NewGenesisListen"));
+const Artist = lazy(() => import("./pages/Artist"));
+const Checkout = lazy(() => import("./pages/Checkout"));
+const Event = lazy(() => import("./pages/Event"));
+const Projects = lazy(() => import("./pages/Projects"));
+const ClaritySales = lazy(() => import("./pages/ClaritySales"));
+
+function RouteFallback() {
+  return (
+    <div className="flex min-h-[50vh] items-center justify-center bg-zinc-950 px-4 text-center text-zinc-400">
+      <p className="font-display text-2xl tracking-[0.16em]">OPENING THE VAULT…</p>
+    </div>
+  );
+}
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
-    <Switch>
+    <Suspense fallback={<RouteFallback />}>
+      <Switch>
       <Route path={"/success"} component={Success} />
       <Route path={"/downloads"} component={Downloads} />
       <Route path={"/clarity"} component={ClarityProject} />
@@ -50,6 +62,7 @@ function Router() {
       <Route path={"/new-genesis/listen"} component={NewGenesisListen} />
       <Route path={"/new-genesis"} component={NewGenesis} />
       <Route path={"/artist"} component={Artist} />
+      <Route path={"/projects"} component={Projects} />
       <Route path={"/checkout"} component={Checkout} />
       <Route path={"/event"} component={Event} />
       <Route path={"/clarity-sales"} component={ClaritySales} />
@@ -57,7 +70,8 @@ function Router() {
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
-    </Switch>
+      </Switch>
+    </Suspense>
   );
 }
 
@@ -68,11 +82,10 @@ function Router() {
 
 function App() {
   const [vaultOpen, setVaultOpen] = useState(() => isVaultUnlocked());
-  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+  const [currentPath] = useLocation();
 
-  // Gate only shows on homepage; sales/event/links pages bypass it
-  const bypassPaths = ['/clarity-sales', '/event', '/links', '/checkout', '/artist'];
-  const shouldShowGate = !vaultOpen && !bypassPaths.some(path => currentPath.startsWith(path));
+  const shouldShowGate = shouldShowVaultGate(currentPath, vaultOpen);
+  const isFocusedRoute = isFocusedRoutePath(currentPath);
 
   return (
     <ErrorBoundary>
@@ -86,8 +99,16 @@ function App() {
             className={shouldShowGate ? 'pointer-events-none select-none opacity-0' : ''}
             aria-hidden={shouldShowGate}
           >
-            <GlobalNav />
-            <Router />
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-amber-400 focus:px-4 focus:py-3 focus:text-sm focus:font-semibold focus:text-zinc-950 focus:shadow-lg"
+            >
+              Skip to main content
+            </a>
+            {!isFocusedRoute && <GlobalNav />}
+            <div id="main-content" tabIndex={-1}>
+              <Router />
+            </div>
           </div>
         </TooltipProvider>
       </ThemeProvider>

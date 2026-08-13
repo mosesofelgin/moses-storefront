@@ -1,199 +1,22 @@
+import { ArrowRight, Instagram, LibraryBig, Mail, MicVocal, Play, ShoppingBag, Twitch, Twitter, Youtube } from 'lucide-react';
 import { Link } from 'wouter';
-import { Music, Zap, Users, ShoppingCart, Instagram, Youtube, Twitter, Twitch } from 'lucide-react';
+import { CLARITY_COVER } from '@/data/project-catalog';
+
+const pathways = [
+  { href: '/clarity-sales', eyebrow: 'Flagship project', title: 'BUY CLARITY', copy: 'Twelve tracks. Direct purchase. Secure checkout.', icon: ShoppingBag, primary: true },
+  { href: '/listen', eyebrow: 'Listen first', title: 'UNLOCK THE ALBUM', copy: 'Enter email, then hear the full CLARITY journey.', icon: Play },
+  { href: '/projects', eyebrow: 'The vault', title: 'EXPLORE THE ARCHIVE', copy: 'Six projects and a deeper catalog of recordings.', icon: LibraryBig },
+  { href: '/artist', eyebrow: 'Professional pathway', title: 'ARTIST / EPK', copy: 'Videos, booking information, and press materials.', icon: MicVocal },
+  { href: '/connect', eyebrow: 'Direct line', title: 'CONNECT', copy: 'Booking, partnership, media, and community.', icon: Mail },
+];
 
 export default function Event() {
   return (
-    <div className="min-h-screen bg-[#0a0908] text-[#f0e8d7] flex flex-col">
-      {/* ── HEADER ── */}
-      <div className="sticky top-0 z-40 border-b border-[#3a3020] bg-[#0a0908]/95 backdrop-blur-sm px-4 py-3">
-        <div className="max-w-md mx-auto">
-          <p className="font-mono text-[10px] tracking-[0.3em] text-[#b8860b] uppercase">
-            MOSES SOG
-          </p>
-          <p className="font-bebas text-lg tracking-wider text-[#f0e8d7]">
-            THE VAULT
-          </p>
-        </div>
-      </div>
-
-      {/* ── HERO SECTION ── */}
-      <section className="px-4 py-6 bg-gradient-to-b from-[#1a1410] to-[#0a0908] border-b border-[#3a3020]">
-        <div className="max-w-md mx-auto text-center">
-          <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-full border border-[#b8860b]/50 bg-[#b8860b]/10">
-            <Zap className="w-6 h-6 text-[#b8860b]" />
-          </div>
-          <h1 className="font-bebas text-3xl tracking-widest text-[#f0e8d7] mb-2">
-            PROPHETIC HIP-HOP
-          </h1>
-          <p className="text-[#a09880] text-sm font-cormorant italic mb-4">
-            Chicago · Music · Mission
-          </p>
-          <p className="text-[#7a7060] text-xs leading-relaxed">
-            Explore music, projects, and exclusive content. Direct from MOSES.
-          </p>
-        </div>
-      </section>
-
-      {/* ── MAIN CONTENT ── */}
-      <div className="flex-1 px-4 py-6 overflow-y-auto">
-        <div className="max-w-md mx-auto space-y-3">
-
-          {/* ── CLARITY PROJECT ── */}
-          <Link
-            href="/checkout"
-            className="block p-4 rounded-sm border border-[#3a3020] bg-[#0f0c0a] hover:border-[#b8860b] hover:bg-[#b8860b]/5 transition-all group"
-          >
-            <div className="flex items-start gap-3">
-              <Music className="w-5 h-5 text-[#b8860b] flex-shrink-0 mt-1" />
-              <div className="flex-1 min-w-0">
-                <p className="font-bebas text-sm tracking-wider text-[#f0e8d7] group-hover:text-[#b8860b] transition-colors">
-                  CLARITY
-                </p>
-                <p className="text-[#7a7060] text-xs mt-0.5">
-                  12-track album. Faith, discipline, transformation.
-                </p>
-                <p className="text-[#b8860b] text-xs font-mono mt-2">
-                  → Own Now
-                </p>
-              </div>
-            </div>
-          </Link>
-
-          {/* ── ARTIST PAGE ── */}
-          <Link
-            href="/artist"
-            className="block p-4 rounded-sm border border-[#3a3020] bg-[#0f0c0a] hover:border-[#b8860b] hover:bg-[#b8860b]/5 transition-all group"
-          >
-            <div className="flex items-start gap-3">
-              <Users className="w-5 h-5 text-[#b8860b] flex-shrink-0 mt-1" />
-              <div className="flex-1 min-w-0">
-                <p className="font-bebas text-sm tracking-wider text-[#f0e8d7] group-hover:text-[#b8860b] transition-colors">
-                  ARTIST PAGE
-                </p>
-                <p className="text-[#7a7060] text-xs mt-0.5">
-                  Bio, videos, EPK downloads, booking info.
-                </p>
-                <p className="text-[#b8860b] text-xs font-mono mt-2">
-                  → Learn More
-                </p>
-              </div>
-            </div>
-          </Link>
-
-          {/* ── LISTEN ── */}
-          <Link
-            href="/listen"
-            className="block p-4 rounded-sm border border-[#3a3020] bg-[#0f0c0a] hover:border-[#b8860b] hover:bg-[#b8860b]/5 transition-all group"
-          >
-            <div className="flex items-start gap-3">
-              <Music className="w-5 h-5 text-[#b8860b] flex-shrink-0 mt-1" />
-              <div className="flex-1 min-w-0">
-                <p className="font-bebas text-sm tracking-wider text-[#f0e8d7] group-hover:text-[#b8860b] transition-colors">
-                  LISTEN
-                </p>
-                <p className="text-[#7a7060] text-xs mt-0.5">
-                  All projects. Streaming & downloads.
-                </p>
-                <p className="text-[#b8860b] text-xs font-mono mt-2">
-                  → Play Now
-                </p>
-              </div>
-            </div>
-          </Link>
-
-          {/* ── STORE ── */}
-          <Link
-            href="/store"
-            className="block p-4 rounded-sm border border-[#3a3020] bg-[#0f0c0a] hover:border-[#b8860b] hover:bg-[#b8860b]/5 transition-all group"
-          >
-            <div className="flex items-start gap-3">
-              <ShoppingCart className="w-5 h-5 text-[#b8860b] flex-shrink-0 mt-1" />
-              <div className="flex-1 min-w-0">
-                <p className="font-bebas text-sm tracking-wider text-[#f0e8d7] group-hover:text-[#b8860b] transition-colors">
-                  STORE
-                </p>
-                <p className="text-[#7a7060] text-xs mt-0.5">
-                  Albums, projects, exclusive content.
-                </p>
-                <p className="text-[#b8860b] text-xs font-mono mt-2">
-                  → Shop
-                </p>
-              </div>
-            </div>
-          </Link>
-
-          {/* ── CONNECT ── */}
-          <Link
-            href="/connect"
-            className="block p-4 rounded-sm border border-[#3a3020] bg-[#0f0c0a] hover:border-[#b8860b] hover:bg-[#b8860b]/5 transition-all group"
-          >
-            <div className="flex items-start gap-3">
-              <Zap className="w-5 h-5 text-[#b8860b] flex-shrink-0 mt-1" />
-              <div className="flex-1 min-w-0">
-                <p className="font-bebas text-sm tracking-wider text-[#f0e8d7] group-hover:text-[#b8860b] transition-colors">
-                  CONNECT
-                </p>
-                <p className="text-[#7a7060] text-xs mt-0.5">
-                  Email, booking, partnerships, press.
-                </p>
-                <p className="text-[#b8860b] text-xs font-mono mt-2">
-                  → Get in Touch
-                </p>
-              </div>
-            </div>
-          </Link>
-        </div>
-      </div>
-
-      {/* ── SOCIAL FOOTER ── */}
-      <section className="px-4 py-4 border-t border-[#3a3020] bg-[#0f0c0a]">
-        <div className="max-w-md mx-auto">
-          <p className="text-[#7a7060] text-xs font-mono tracking-wider mb-3 text-center">
-            FOLLOW @MOSESSOG
-          </p>
-          <div className="flex justify-center gap-3">
-            <a
-              href="https://instagram.com/moses_sog"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 rounded-sm border border-[#3a3020] bg-[#0a0908] hover:border-[#b8860b] hover:bg-[#b8860b]/10 flex items-center justify-center transition-all"
-              title="Instagram"
-            >
-              <Instagram className="w-4 h-4 text-[#b8860b]" />
-            </a>
-            <a
-              href="https://youtube.com/@MosesSOG"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 rounded-sm border border-[#3a3020] bg-[#0a0908] hover:border-[#b8860b] hover:bg-[#b8860b]/10 flex items-center justify-center transition-all"
-              title="YouTube"
-            >
-              <Youtube className="w-4 h-4 text-[#b8860b]" />
-            </a>
-            <a
-              href="https://twitch.tv/mosessog"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 rounded-sm border border-[#3a3020] bg-[#0a0908] hover:border-[#b8860b] hover:bg-[#b8860b]/10 flex items-center justify-center transition-all"
-              title="Twitch"
-            >
-              <Twitch className="w-4 h-4 text-[#b8860b]" />
-            </a>
-            <a
-              href="https://twitter.com/sogmoses"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 rounded-sm border border-[#3a3020] bg-[#0a0908] hover:border-[#b8860b] hover:bg-[#b8860b]/10 flex items-center justify-center transition-all"
-              title="Twitter"
-            >
-              <Twitter className="w-4 h-4 text-[#b8860b]" />
-            </a>
-          </div>
-          <p className="text-[#3a3020] text-[10px] text-center mt-3 tracking-wide">
-            Direct from MOSES · Chicago
-          </p>
-        </div>
-      </section>
-    </div>
+    <main className="min-h-screen bg-[radial-gradient(circle_at_70%_0%,rgba(184,134,11,0.16),transparent_22%),#090909] text-zinc-100">
+      <header className="border-b border-amber-100/10 bg-zinc-950/85 px-4 py-4 backdrop-blur-xl"><div className="mx-auto flex max-w-md items-center justify-between"><p className="font-display text-xl tracking-[0.16em] text-zinc-100">MOSES SOG</p><p className="text-[10px] uppercase tracking-[0.22em] text-amber-200">The Vault</p></div></header>
+      <section className="px-4 pb-10 pt-12"><div className="mx-auto max-w-md text-center"><div className="mx-auto overflow-hidden rounded-2xl border border-amber-100/20 bg-zinc-900 p-1 shadow-2xl"><img src={CLARITY_COVER} alt="CLARITY album cover" className="aspect-square w-full rounded-xl object-cover" /></div><p className="mt-8 text-[10px] uppercase tracking-[0.28em] text-amber-200">Chicago · Music · Mission</p><h1 className="mt-4 font-display text-5xl leading-[0.82] tracking-[0.1em] text-zinc-50">WELCOME TO THE WORK.</h1><p className="mt-5 font-serif text-2xl italic leading-snug text-amber-50/80">Scan complete. Choose your doorway.</p></div></section>
+      <section className="px-4 pb-10"><div className="mx-auto max-w-md space-y-3">{pathways.map(({ href, eyebrow, title, copy, icon: Icon, primary }) => <Link key={href} href={href} className={`group block rounded-2xl border p-5 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 ${primary ? 'border-amber-200/50 bg-amber-300 text-zinc-950 hover:bg-amber-200' : 'border-amber-100/12 bg-zinc-950/80 hover:-translate-y-0.5 hover:border-amber-200/40'}`}><div className="flex items-start gap-4"><div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border ${primary ? 'border-zinc-950/20 bg-zinc-950/10' : 'border-amber-100/15 bg-amber-300/10 text-amber-200'}`}><Icon className="h-5 w-5" aria-hidden="true" /></div><div className="min-w-0 flex-1 text-left"><p className={`text-[9px] uppercase tracking-[0.2em] ${primary ? 'text-zinc-950/65' : 'text-amber-200'}`}>{eyebrow}</p><h2 className={`mt-1 font-display text-2xl tracking-[0.12em] ${primary ? 'text-zinc-950' : 'text-zinc-100'}`}>{title}</h2><p className={`mt-2 text-xs leading-5 ${primary ? 'text-zinc-950/75' : 'text-zinc-500'}`}>{copy}</p></div><ArrowRight className={`mt-3 h-4 w-4 shrink-0 transition group-hover:translate-x-1 ${primary ? 'text-zinc-950' : 'text-amber-200'}`} aria-hidden="true" /></div></Link>)}</div></section>
+      <footer className="border-t border-amber-100/10 bg-[#100d09] px-4 py-8"><div className="mx-auto max-w-md"><p className="text-center text-[10px] uppercase tracking-[0.2em] text-zinc-600">Follow the work</p><div className="mt-4 flex justify-center gap-3">{[[Instagram,'Instagram','https://instagram.com/moses_sog'],[Youtube,'YouTube','https://youtube.com/@MosesSOG'],[Twitch,'Twitch','https://twitch.tv/mosessog'],[Twitter,'Twitter / X','https://twitter.com/sogmoses']].map(([Icon,label,href]) => <a key={String(label)} href={String(href)} target="_blank" rel="noopener noreferrer" aria-label={String(label)} className="flex h-11 w-11 items-center justify-center rounded-xl border border-amber-100/12 text-amber-200 transition hover:border-amber-200/50 hover:bg-amber-200/5"><Icon className="h-4 w-4" aria-hidden="true" /></a>)}</div><p className="mt-5 text-center text-[10px] uppercase tracking-[0.18em] text-zinc-600">@moses_sog · Direct from MOSES</p></div></footer>
+    </main>
   );
 }

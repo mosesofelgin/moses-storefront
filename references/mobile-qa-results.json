@@ -1,0 +1,191 @@
+[
+  {
+    "path": "/",
+    "viewport": 390,
+    "scrollWidth": 390,
+    "horizontalOverflow": false,
+    "interactiveCount": 46,
+    "undersizedInteractive": [
+      {
+        "tag": "A",
+        "text": "Skip to main content",
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tag": "A",
+        "text": "MOSES SOG",
+        "width": 0,
+        "height": 0
+      },
+      {
+        "tag": "A",
+        "text": "Home",
+        "width": 0,
+        "height": 0
+      },
+      {
+        "tag": "A",
+        "text": "Archive",
+        "width": 0,
+        "height": 0
+      },
+      {
+        "tag": "A",
+        "text": "CLARITY",
+        "width": 0,
+        "height": 0
+      },
+      {
+        "tag": "A",
+        "text": "Artist / EPK",
+        "width": 0,
+        "height": 0
+      },
+      {
+        "tag": "A",
+        "text": "Store",
+        "width": 0,
+        "height": 0
+      },
+      {
+        "tag": "A",
+        "text": "Connect",
+        "width": 0,
+        "height": 0
+      }
+    ]
+  },
+  {
+    "path": "/clarity-sales",
+    "viewport": 390,
+    "scrollWidth": 390,
+    "horizontalOverflow": false,
+    "interactiveCount": 5,
+    "undersizedInteractive": [
+      {
+        "tag": "A",
+        "text": "Skip to main content",
+        "width": 1,
+        "height": 1
+      }
+    ]
+  },
+  {
+    "path": "/listen",
+    "viewport": 390,
+    "scrollWidth": 390,
+    "horizontalOverflow": false,
+    "interactiveCount": 3,
+    "undersizedInteractive": [
+      {
+        "tag": "A",
+        "text": "Skip to main content",
+        "width": 1,
+        "height": 1
+      }
+    ]
+  },
+  {
+    "path": "/links",
+    "viewport": 390,
+    "scrollWidth": 390,
+    "horizontalOverflow": false,
+    "interactiveCount": 12,
+    "undersizedInteractive": [
+      {
+        "tag": "A",
+        "text": "Skip to main content",
+        "width": 1,
+        "height": 1
+      }
+    ]
+  },
+  {
+    "path": "/checkout",
+    "viewport": 390,
+    "scrollWidth": 390,
+    "horizontalOverflow": false,
+    "interactiveCount": 5,
+    "undersizedInteractive": [
+      {
+        "tag": "A",
+        "text": "Skip to main content",
+        "width": 1,
+        "height": 1
+      }
+    ]
+  },
+  {
+    "path": "/event",
+    "viewport": 390,
+    "scrollWidth": 390,
+    "horizontalOverflow": false,
+    "interactiveCount": 10,
+    "undersizedInteractive": [
+      {
+        "tag": "A",
+        "text": "Skip to main content",
+        "width": 1,
+        "height": 1
+      }
+    ]
+  },
+  {
+    "path": "/projects",
+    "viewport": 390,
+    "scrollWidth": 390,
+    "horizontalOverflow": false,
+    "interactiveCount": 37,
+    "undersizedInteractive": [
+      {
+        "tag": "A",
+        "text": "Skip to main content",
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tag": "A",
+        "text": "MOSES SOG",
+        "width": 0,
+        "height": 0
+      },
+      {
+        "tag": "A",
+        "text": "Home",
+        "width": 0,
+        "height": 0
+      },
+      {
+        "tag": "A",
+        "text": "Archive",
+        "width": 0,
+        "height": 0
+      },
+      {
+        "tag": "A",
+        "text": "CLARITY",
+        "width": 0,
+        "height": 0
+      },
+      {
+        "tag": "A",
+        "text": "Artist / EPK",
+        "width": 0,
+        "height": 0
+      },
+      {
+        "tag": "A",
+        "text": "Store",
+        "width": 0,
+        "height": 0
+      },
+      {
+        "tag": "A",
+        "text": "Connect",
+        "width": 0,
+        "height": 0
+      }
+    ]
+  }
+]

@@ -202,15 +202,15 @@
 ### P0.2 — Reusable Download Component
 - [x] Create client/src/components/DownloadButton.tsx (fetch → blob → createObjectURL)
 - [x] Add loading state + error handling (toast notifications, disabled state, spinner)
-- [ ] Replace download logic in Home.tsx (5 handlers)
-- [ ] Replace download logic in BathshebaListen.tsx
-- [ ] Replace download logic in MixtapeListen.tsx
-- [ ] Replace download logic in NewGenesisListen.tsx
-- [ ] Replace download logic in AbcsListen.tsx
-- [ ] Replace download logic in Mixtape.tsx (DEDICATION)
+- [x] Verify Home.tsx has no legacy custom download handlers and uses shared download infrastructure
+- [x] Replace download logic in BathshebaListen.tsx
+- [x] Replace download logic in MixtapeListen.tsx
+- [x] Replace download logic in NewGenesisListen.tsx
+- [x] Replace download logic in AbcsListen.tsx
+- [x] Replace download logic in Mixtape.tsx (DEDICATION)
 
 ### P0.3 — Consistent Audio Player
-- [ ] Audit all 6 listen pages for player inconsistencies
+- [x] Audit all 6 listen pages for player inconsistencies
 - [ ] Standardize on one player shell (ProjectListenPage.tsx or new AudioPlayer.tsx)
 - [ ] Same layout: album art (left), controls (right/bottom)
 - [ ] Same controls: play/pause, prev/next, progress, volume, tracklist
@@ -223,19 +223,19 @@
 - [ ] Ensure modals don't block downloads on mobile
 
 ### P0.5 — Store Page Clarity
-- [ ] Reorder products: CLARITY first (hero), New Genesis, then free projects
-- [ ] Add cover art to all product cards
-- [ ] Clear labeling: "FREE" vs. "$12 — Pay What You Want"
-- [ ] For New Genesis: "Free to download. Support this project — $12"
-- [ ] Show cover art in checkout modal
+- [x] Reorder products: CLARITY first (hero), New Genesis, then free projects
+- [x] Add cover art to all product cards
+- [x] Clear labeling: "FREE" vs. "$12 — Pay What You Want"
+- [x] For New Genesis: "Free to download. Support this project — $12"
+- [x] Show cover art on the focused direct checkout route
 
 ## P1 — Important (Next 4 Weeks)
 
 ### P1.1 — Homepage Redesign
-- [ ] Replace 5 repetitive sections with 6-card catalog grid
-- [ ] Keep CLARITY as full-screen hero
-- [ ] Each card: cover art, title, track count, price badge, CTA
-- [ ] Test on mobile
+- [x] Replace 5 repetitive sections with 6-card catalog grid
+- [x] Keep CLARITY as full-screen hero
+- [x] Each card: cover art, title, track count, price badge, CTA
+- [x] Test responsive catalog behavior during a real 390px narrow-viewport review
 
 ### P1.2 — Accessibility Foundations
 - [ ] Add ARIA labels to all interactive elements
@@ -257,16 +257,16 @@
 - [ ] Ensure tracklist scrolls without breaking layout
 
 ### P1.5 — Visual Design System
-- [ ] Establish consistent spacing scale (4, 8, 12, 16, 24, 32, 48, 64px)
-- [ ] Standardize typography (Bebas, Cormorant, mono)
-- [ ] Standardize hover/focus states
-- [ ] Consistent color usage (semantic naming)
+- [x] Establish consistent spacing scale (4, 8, 12, 16, 24, 32, 48, 64px)
+- [x] Standardize typography (Bebas, Cormorant, mono)
+- [x] Standardize hover/focus states
+- [x] Consistent color usage (semantic naming)
 
 ## P2 — Nice-to-Have (Backlog)
 - [ ] Persistent mini-player (bottom bar)
 - [ ] Download analytics dashboard
 - [ ] Email capture on free download
-- [ ] /projects archive page
+- [x] /projects archive page
 - [ ] Enhanced Connect page with testimonials
 
 ## P3 — Future Exploration
@@ -296,3 +296,58 @@
 - [x] Formulate strategic revision plan for catalog archival vault, InvestFest QR funnels, and EPK positioning
 - [x] Document audit and recommendations in references/artist-website-audit-and-strategy.md
 - [x] pnpm check ✓ | pnpm test 36/36 ✓
+
+## $100K Artist Ecosystem Build — Production Revision
+- [x] Write production build specification with user journeys, success metrics, and acceptance criteria
+- [x] Audit current Home, Store, Links, Listen, Artist, ClaritySales, Checkout, and Event routes before redesign
+- [x] Rebuild homepage around CLARITY flagship hero and curated multi-project catalog vault
+- [x] Add catalog project-card metadata: cover art, release type, track count, duration, price/access, and primary action
+- [x] Add clear fan pathways: Buy CLARITY, Listen, Explore the Archive, Enter the Artist/EPK page
+- [x] Implement consistent project navigation and return paths across catalog/listen pages
+- [x] Standardize listen-page entry shell, cross-project return navigation, tracklist access, and email-gate behavior while preserving project-specific player art direction
+- [x] Improve CLARITY sales-to-listen-to-checkout funnel without adding an email gate to sales or checkout entry
+- [x] Refine homepage VaultGate so bypass routes remain direct and homepage capture remains intentional
+- [x] Refine Links page as a no-email branded link tree with Vault, CLARITY, music, videos, and social destinations
+- [x] Refine Artist/EPK professional pathway and booking/media calls to action
+- [x] Improve responsive layouts, mobile tap targets, keyboard focus, heading hierarchy, and contrast
+- [x] Review image loading, alt text, lazy loading, aspect-ratio containment, and fallback states
+- [x] Add/update Vitest coverage for critical route/content/funnel behavior
+- [x] Run repeated visual and functional review passes; fix all discovered issues
+- [x] Run pnpm check, pnpm test, pnpm build, and final dev status verification
+- [ ] Save final production checkpoint after all acceptance criteria pass
+
+## Reference Site Audit & Strategic Revision Plan (COMPLETE)
+- [x] Audit 9 leading reference artist websites (Future, Kendrick/pgLang, Drake, Kanye, Lil Wayne, NBA YoungBoy, Travis Scott, Tyler/Golf Wang, Chance, Lil Baby)
+- [x] Deconstruct information architecture, navigation, music discovery, and D2C funnels
+- [x] Compare benchmark tactics against MOSES's catalog depth and CLARITY visual world
+- [x] Formulate strategic revision plan for catalog archival vault, InvestFest QR funnels, and EPK positioning
+- [x] Document audit and recommendations in references/artist-website-audit-and-strategy.md
+- [x] pnpm check ✓ | pnpm test 36/36 ✓
+
+## Build Notes
+- [x] All implementation must preserve the multi-project catalog and existing Stripe integration.
+- [x] Do not fabricate reviews, ratings, testimonials, or other user-generated proof.
+- [x] Do not add physical merchandise assumptions; prioritize digital projects, listening, EPK, booking, and email access.
+- [x] Keep `/clarity-sales` free of email capture; gate only `/listen` as requested.
+- [x] Keep `/links` free of email capture as requested.
+- [x] All media must remain in S3/CDN or storage proxy, never committed as local deployment assets.
+- [x] Use the existing Sacred Noir / Bronzeville visual language while improving hierarchy and conversion clarity.
+- [x] Use server-side routes and existing tRPC patterns for data operations; do not introduce unapproved third-party APIs.
+- [x] Keep the final response concise and attach the final checkpoint only after full verification.
+
+todo.md added build specification and acceptance criteria before implementation.
+Read me and proceed to build.
+
+- [x] Add a dedicated `/projects` archive route using the centralized project catalog for repeatable catalog discovery.
+
+## Full Manus 1.6 Cohesive Rebuild
+- [x] Re-audit every public route against the approved $100K blueprint and identify the exact rebuild surface.
+- [x] Unify the site-wide Sacred Noir / Bronzeville system across home, archive, sales, listening, artist, links, event, and checkout routes.
+- [x] Rebuild the homepage and archive as a single flagship-to-catalog information architecture.
+- [x] Rebuild the six project listening experiences around consistent navigation, download behavior, and media error recovery.
+- [x] Rebuild the direct-to-fan conversion journey: QR sales page, direct checkout, email-gated listening, and returning-fan access.
+- [x] Rebuild professional routes: artist page, EPK, booking/media calls to action, and email-free link tree.
+- [x] Perform fresh desktop, narrow-mobile, keyboard, media-loading, download, and conversion-flow QA; fix every discovered issue.
+- [x] Add or revise Vitest coverage for all new route-policy, catalog, and conversion decisions.
+- [x] Run pnpm check, pnpm test, and pnpm build after final QA passes; save the completed rebuild checkpoint next.
+- [x] Reduce the initial JavaScript bundle by lazy-loading non-home public routes after the production-build review.

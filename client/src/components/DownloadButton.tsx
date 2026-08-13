@@ -10,6 +10,7 @@ interface DownloadButtonProps {
   variant?: "primary" | "secondary" | "outline";
   size?: "sm" | "md" | "lg";
   className?: string;
+  iconOnly?: boolean;
 }
 
 export default function DownloadButton({
@@ -20,6 +21,7 @@ export default function DownloadButton({
   variant = "primary",
   size = "md",
   className = "",
+  iconOnly = false,
 }: DownloadButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -82,16 +84,18 @@ export default function DownloadButton({
 
   return (
     <button
+      type="button"
       onClick={handleDownload}
       disabled={isLoading}
       className={`
-        inline-flex items-center gap-2 font-medium rounded transition-all
+        inline-flex items-center justify-center gap-2 font-medium rounded transition-all
+        active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950
         disabled:opacity-50 disabled:cursor-not-allowed
         ${variantClasses[variant]}
         ${sizeClasses[size]}
         ${className}
       `}
-      aria-label={`Download ${filename}`}
+      aria-label={iconOnly ? `Download ${filename}` : undefined}
     >
       {isLoading ? (
         <>
@@ -100,8 +104,8 @@ export default function DownloadButton({
         </>
       ) : (
         <>
-          <Download size={20} />
-          {label}
+          <Download size={iconOnly ? 16 : 20} />
+          {!iconOnly && label}
         </>
       )}
     </button>

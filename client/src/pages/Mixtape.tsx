@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
-import { Music, Download, ArrowRight, Play, Pause, SkipBack, SkipForward, Volume2 } from 'lucide-react';
+import { Music, ArrowRight, Play, Pause, SkipBack, SkipForward, Volume2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { dedicationBundle } from '@/data/dedication-bundle';
 import { Link } from 'wouter';
+import ListenNavigation from '@/components/ListenNavigation';
+import DownloadButton from '@/components/DownloadButton';
 
 export default function Mixtape() {
-  const [isDownloading, setIsDownloading] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -78,27 +79,6 @@ export default function Mixtape() {
     }
   }, [currentTrackIndex]);
 
-  const handleDownload = async () => {
-    setIsDownloading(true);
-    try {
-      const response = await fetch('/api/download/dedication');
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'DEDICATION-Mixtape.zip';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
-    } catch (error) {
-      console.error('Download failed:', error);
-    } finally {
-      setIsDownloading(false);
-    }
-  };
-
   const formatTime = (time: number) => {
     if (!time || isNaN(time)) return '0:00';
     const minutes = Math.floor(time / 60);
@@ -108,6 +88,9 @@ export default function Mixtape() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
+      <div className="mx-auto max-w-5xl px-4 pt-4">
+        <ListenNavigation project="DEDICATION" backHref="/" backLabel="All projects" actionHref="/clarity-sales" actionLabel="Buy CLARITY" />
+      </div>
       {/* Hidden audio element */}
       <audio
         ref={audioRef}
@@ -244,14 +227,14 @@ export default function Mixtape() {
               </div>
 
               {/* Download Button */}
-              <Button
-                onClick={handleDownload}
-                disabled={isDownloading}
-                className="w-full bg-[#00ff00] text-black hover:bg-[#00dd00] text-lg px-8 py-6 font-bold"
-              >
-                <Download className="mr-2 w-5 h-5" />
-                {isDownloading ? 'Downloading...' : 'Download Free'}
-              </Button>
+              <DownloadButton
+                endpoint="/api/download/dedication"
+                filename="DEDICATION-Mixtape.zip"
+                label="Download Free"
+                variant="primary"
+                size="lg"
+                className="w-full bg-[#00ff00] px-8 py-6 text-lg font-bold text-black hover:bg-[#00dd00]"
+              />
             </div>
           </div>
         </div>
@@ -301,30 +284,16 @@ export default function Mixtape() {
                   </div>
                   <div className="text-sm text-zinc-400 ml-4">{track.duration}</div>
                 </button>
-                <button
-                  className="ml-4 p-2 rounded hover:bg-zinc-700 transition text-zinc-400 hover:text-[#00ff00]"
-                  title="Download MP3"
-                  onClick={async (e) => {
-                    e.stopPropagation();
-                    try {
-                      const response = await fetch(track.url);
-                      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                      const blob = await response.blob();
-                      const url = URL.createObjectURL(blob);
-                      const a = document.createElement('a');
-                      a.href = url;
-                      a.download = `${track.title}.mp3`;
-                      document.body.appendChild(a);
-                      a.click();
-                      document.body.removeChild(a);
-                      setTimeout(() => URL.revokeObjectURL(url), 10000);
-                    } catch (err) {
-                      console.error('Track download failed:', err);
-                    }
-                  }}
-                >
-                  <Download className="w-4 h-4" />
-                </button>
+                <div onClick={(event) => event.stopPropagation()} className="ml-4">
+                  <DownloadButton
+                    href={track.url}
+                    filename={`${track.title}.mp3`}
+                    variant="outline"
+                    size="sm"
+                    iconOnly
+                    className="rounded border-transparent bg-transparent p-2 text-zinc-400 hover:border-zinc-700 hover:bg-zinc-700 hover:text-[#00ff00]"
+                  />
+                </div>
               </div>
             ))}
           </div>

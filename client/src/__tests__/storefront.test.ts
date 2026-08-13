@@ -150,3 +150,83 @@ describe('Storefront - Product Details', () => {
     expect(PRODUCTS[0].year).toBe('2025');
   });
 });
+
+
+describe('MOSES project catalog', () => {
+  it('keeps the flagship CLARITY project first', async () => {
+    const { PROJECTS } = await import('@/data/project-catalog');
+    expect(PROJECTS[0].title).toBe('CLARITY');
+    expect(PROJECTS[0].route).toBe('/clarity-sales');
+    expect(PROJECTS[0].listenRoute).toBe('/listen');
+    expect(PROJECTS[0].download).toBeNull();
+  });
+
+  it('preserves every project as a discoverable catalog entry', async () => {
+    const { PROJECTS } = await import('@/data/project-catalog');
+    expect(PROJECTS).toHaveLength(6);
+    expect(new Set(PROJECTS.map((project) => project.title)).size).toBe(PROJECTS.length);
+    PROJECTS.forEach((project) => {
+      expect(project.cover).toMatch(/^https?:\/\//);
+      expect(project.alt.length).toBeGreaterThan(0);
+      expect(project.tracks).toMatch(/tracks/);
+      expect(project.route).toMatch(/^\//);
+      expect(project.listenRoute).toMatch(/^\//);
+    });
+  });
+
+  it('keeps free-project downloads mapped to server endpoints', async () => {
+    const { PROJECTS } = await import('@/data/project-catalog');
+    PROJECTS.slice(1).forEach((project) => {
+      expect(project.download).not.toBeNull();
+      expect(project.download?.endpoint).toMatch(/^\/api\/download\//);
+      expect(project.download?.filename).toMatch(/\.zip$/);
+    });
+  });
+});
+
+
+describe('MOSES route policy', () => {
+  it('keeps the homepage gated for first-time visitors', async () => {
+    const { shouldShowVaultGate } = await import('@/lib/routePolicy');
+    expect(shouldShowVaultGate('/', false)).toBe(true);
+    expect(shouldShowVaultGate('/', true)).toBe(false);
+  });
+
+  it('keeps sales, checkout, event, artist, and links routes directly accessible', async () => {
+    const { shouldShowVaultGate } = await import('@/lib/routePolicy');
+    ['/clarity-sales', '/checkout', '/event', '/artist', '/links'].forEach((path) => {
+      expect(shouldShowVaultGate(path, false)).toBe(false);
+    });
+  });
+
+  it('marks sales, listen, links, event, and checkout as focused routes', async () => {
+    const { isFocusedRoutePath } = await import('@/lib/routePolicy');
+    expect(isFocusedRoutePath('/clarity-sales')).toBe(true);
+    expect(isFocusedRoutePath('/listen')).toBe(true);
+    expect(isFocusedRoutePath('/links')).toBe(true);
+    expect(isFocusedRoutePath('/artist')).toBe(false);
+  });
+
+  it('keeps the catalog archive available after a visitor has entered the vault', async () => {
+    const { shouldShowVaultGate } = await import('@/lib/routePolicy');
+    expect(shouldShowVaultGate('/projects', true)).toBe(false);
+  });
+});
+
+describe('MOSES direct-to-fan rebuild contracts', () => {
+  it('keeps CLARITY purchase and listening as distinct first-project actions', async () => {
+    const { PROJECTS } = await import('@/data/project-catalog');
+    const clarity = PROJECTS[0];
+    expect(clarity.route).toBe('/clarity-sales');
+    expect(clarity.listenRoute).toBe('/listen');
+    expect(clarity.download).toBeNull();
+  });
+
+  it('keeps every free archive project equipped with both a listening route and ZIP delivery', async () => {
+    const { PROJECTS } = await import('@/data/project-catalog');
+    PROJECTS.filter((project) => project.download).forEach((project) => {
+      expect(project.listenRoute).toMatch(/^\//);
+      expect(project.download?.endpoint).toMatch(/^\/api\/download\//);
+    });
+  });
+});

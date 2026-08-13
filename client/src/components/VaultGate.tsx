@@ -105,20 +105,24 @@ export default function VaultGate({ onUnlock }: VaultGateProps) {
 
             {/* Email form */}
             <form onSubmit={handleSubmit} className="flex flex-col gap-3 max-w-sm mx-auto">
+              <label htmlFor="vault-email" className="sr-only">Email address</label>
               <input
+                id="vault-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
+                autoComplete="email"
+                aria-describedby="vault-disclaimer"
                 required
                 disabled={isLoading}
                 autoFocus
-                className="w-full px-5 py-4 bg-[#0a0908]/80 border border-[#3a3020] rounded-sm text-[#f0e8d7] placeholder-[#4a4030] focus:outline-none focus:border-[#b8860b] focus:ring-1 focus:ring-[#b8860b]/30 transition-all text-base disabled:opacity-50 backdrop-blur-sm"
+                className="w-full px-5 py-4 bg-[#0a0908]/80 border border-[#3a3020] rounded-sm text-[#f0e8d7] placeholder-[#7d725f] focus:outline-none focus:border-[#b8860b] focus:ring-2 focus:ring-[#b8860b]/30 transition-all text-base disabled:opacity-50 backdrop-blur-sm"
               />
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full px-6 py-4 bg-[#b8860b] hover:bg-[#d4a017] disabled:bg-[#7a5c08] disabled:cursor-not-allowed text-[#0a0908] font-bebas text-lg tracking-[0.2em] rounded-sm transition-all flex items-center justify-center gap-2 group"
+                className="w-full px-6 py-4 bg-[#b8860b] hover:bg-[#d4a017] disabled:bg-[#7a5c08] disabled:cursor-not-allowed text-[#0a0908] font-bebas text-lg tracking-[0.2em] rounded-sm transition-all flex items-center justify-center gap-2 group active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >
                 {isLoading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -132,7 +136,7 @@ export default function VaultGate({ onUnlock }: VaultGateProps) {
             </form>
 
             {/* Fine print */}
-            <p className="mt-6 text-[#3a3020] text-xs tracking-wide">
+            <p id="vault-disclaimer" className="mt-6 text-[#a09880] text-xs tracking-wide">
               Direct from MOSES. No spam. Unsubscribe anytime.
             </p>
           </div>
