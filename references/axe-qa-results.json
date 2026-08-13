@@ -1,0 +1,58 @@
+[
+  {
+    "path": "/",
+    "violations": []
+  },
+  {
+    "path": "/clarity-sales",
+    "violations": []
+  },
+  {
+    "path": "/listen",
+    "violations": []
+  },
+  {
+    "path": "/bathsheba/listen",
+    "violations": []
+  },
+  {
+    "path": "/dedication",
+    "violations": []
+  },
+  {
+    "path": "/mixtape/listen",
+    "violations": []
+  },
+  {
+    "path": "/new-genesis/listen",
+    "violations": []
+  },
+  {
+    "path": "/abcs/listen",
+    "violations": []
+  },
+  {
+    "path": "/links",
+    "violations": []
+  },
+  {
+    "path": "/checkout",
+    "violations": []
+  },
+  {
+    "path": "/event",
+    "violations": []
+  },
+  {
+    "path": "/projects",
+    "violations": []
+  },
+  {
+    "path": "/artist",
+    "violations": []
+  },
+  {
+    "path": "/store",
+    "violations": []
+  }
+]

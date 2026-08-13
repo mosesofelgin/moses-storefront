@@ -1,0 +1,45 @@
+{
+  "path": "/checkout",
+  "steps": [
+    {
+      "tag": "A",
+      "id": null,
+      "label": "Skip to main content",
+      "width": 200,
+      "height": 44,
+      "hasVisibleFocus": true
+    },
+    {
+      "tag": "A",
+      "id": null,
+      "label": "Back to CLARITY",
+      "width": 141,
+      "height": 44,
+      "hasVisibleFocus": true
+    },
+    {
+      "tag": "INPUT",
+      "id": "checkout-name",
+      "label": "Your name",
+      "width": 434,
+      "height": 48,
+      "hasVisibleFocus": true
+    },
+    {
+      "tag": "INPUT",
+      "id": "checkout-email",
+      "label": "your@email.com",
+      "width": 434,
+      "height": 48,
+      "hasVisibleFocus": true
+    },
+    {
+      "tag": "BUTTON",
+      "id": null,
+      "label": "CONTINUE TO PAYMENT",
+      "width": 434,
+      "height": 56,
+      "hasVisibleFocus": true
+    }
+  ]
+}

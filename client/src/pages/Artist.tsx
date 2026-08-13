@@ -195,7 +195,7 @@ export default function Artist() {
               >
                 {pt.number}
               </p>
-              <p className="text-xs text-[#f0e8d7]/40 tracking-widest uppercase">{pt.label}</p>
+              <p className="text-xs text-[#f0e8d7]/70 tracking-widest uppercase">{pt.label}</p>
             </div>
           ))}
         </div>
@@ -259,7 +259,7 @@ export default function Artist() {
                     document.getElementById('featured-performance')?.scrollIntoView({ behavior: 'smooth' });
                   }}
                   className={`group text-left transition-all duration-300 ${
-                    isActive ? 'opacity-100' : 'opacity-50 hover:opacity-80'
+                    isActive ? 'opacity-100' : 'opacity-90 hover:opacity-100'
                   }`}
                 >
                   <div className={`relative aspect-video bg-[#1a1812] overflow-hidden mb-4 ${
@@ -473,13 +473,13 @@ export default function Artist() {
                       <p className="text-[#f0e8d7]/50 text-sm">{doc.description}</p>
                       {doc.featured && (
                         <div className="flex items-center gap-3 mt-3">
-                          <span className="flex items-center gap-1 text-xs text-[#f0e8d7]/40">
+                          <span className="flex items-center gap-1 text-xs text-[#f0e8d7]/70">
                             <FileText size={11} /> 3 PDFs
                           </span>
-                          <span className="flex items-center gap-1 text-xs text-[#f0e8d7]/40">
+                          <span className="flex items-center gap-1 text-xs text-[#f0e8d7]/70">
                             <ImageIcon size={11} /> 4 Photos
                           </span>
-                          <span className="flex items-center gap-1 text-xs text-[#f0e8d7]/40">
+                          <span className="flex items-center gap-1 text-xs text-[#f0e8d7]/70">
                             <Archive size={11} /> ZIP Bundle
                           </span>
                         </div>
@@ -504,7 +504,7 @@ export default function Artist() {
 
           {/* Photo Preview Strip */}
           <div className="mt-8">
-            <p className="text-xs text-[#f0e8d7]/30 font-mono tracking-widest uppercase mb-4">
+            <p className="text-xs text-[#f0e8d7]/70 font-mono tracking-widest uppercase mb-4">
               Press Photos (included in full kit)
             </p>
             <div className="grid grid-cols-4 gap-2">
@@ -606,7 +606,7 @@ export default function Artist() {
               </a>
             ))}
           </div>
-          <p className="text-[#f0e8d7]/30 text-xs font-mono">@moses_sog · mosessog.com</p>
+          <p className="text-[#f0e8d7]/70 text-xs font-mono">@moses_sog · mosessog.com</p>
         </div>
       </section>
 

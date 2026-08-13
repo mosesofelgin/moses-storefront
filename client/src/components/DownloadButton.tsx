@@ -26,7 +26,7 @@ export default function DownloadButton({
   const [isLoading, setIsLoading] = useState(false);
 
   const variantClasses = {
-    primary: "bg-green-600 hover:bg-green-700 text-white",
+    primary: "bg-green-600 hover:bg-green-700 text-zinc-950",
     secondary: "bg-zinc-700 hover:bg-zinc-600 text-white",
     outline: "border border-zinc-600 hover:border-zinc-500 text-zinc-100",
   };

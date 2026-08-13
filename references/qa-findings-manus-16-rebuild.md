@@ -46,8 +46,12 @@ The final target audit reported no undersized visible interactive elements acros
 
 ## Keyboard entry review
 
-On the focused CLARITY checkout route, the first `Tab` action exposed the visually hidden **Skip to main content** control with a highly visible focus treatment. The full verified focusable order is **Skip to main content → Back to CLARITY → Full name → Email address → Continue to payment**. The active name field exposed a visible amber ring, and there is no focus trap in the conversion path.
+On the focused CLARITY checkout route, the first `Tab` action exposed the visually hidden **Skip to main content** control with a highly visible focus treatment. A browser-level keyboard audit then traversed the full focusable order: **Skip to main content → Back to CLARITY → Full name → Email address → Continue to payment**. Every one of the five controls measured at least 44px tall and exposed a visible focus treatment after the final global focus-style repair. There is no keyboard trap in the conversion path; the recorded control-by-control evidence is retained in `references/keyboard-qa-results.json`.
 
 ## Semantic accessibility review
 
 The semantic audit covered 14 public routes and found **no visible unnamed controls**. Every audited route has a valid `h1`-first outline with no skipped heading levels; the only missing page-level heading, on the ABCs listening room, was added as an accessible screen-reader heading. The raw audit record is retained in `references/a11y-qa-results.json`.
+
+## WCAG AA audit
+
+An automated axe-core audit was run against the homepage, flagship sales and listen routes, all five archive listening rooms, the link tree, checkout, event gateway, archive, Artist/EPK, and Store. After lifting low-emphasis text colors, repairing download-button foreground color, restoring mobile zoom, and strengthening Artist metadata, the final audit returned **zero WCAG 2 A/AA/2.1 AA violations across all 14 routes**. The final route-by-route results are retained in `references/axe-qa-results.json`.

@@ -144,6 +144,15 @@
   input[type="radio"]:not(:disabled) {
     @apply cursor-pointer;
   }
+
+  a[href]:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid oklch(0.78 0.15 82) !important;
+    outline-offset: 3px !important;
+  }
   
   /* Storefront typography */
   h1, h2, h3, h4, h5, h6 {
@@ -162,6 +171,13 @@
     background: oklch(0.72 0.15 82 / 32%);
     color: oklch(0.98 0.01 80);
   }
+
+  /* WCAG AA repairs for low-emphasis text on the storefront's obsidian surfaces. */
+  .text-zinc-500 { color: #a1a1aa !important; }
+  .text-zinc-600 { color: #a1a1aa !important; }
+  .text-zinc-700 { color: #a1a1aa !important; }
+  .text-stone-500 { color: #a8a29e !important; }
+  .text-stone-600 { color: #a8a29e !important; }
 }
 
 @layer components {

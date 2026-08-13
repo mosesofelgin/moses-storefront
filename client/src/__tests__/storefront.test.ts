@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { PRODUCTS } from '@/data/products';
 import type { Product, CartItem } from '@/types/storefront';
 
@@ -227,6 +229,35 @@ describe('MOSES direct-to-fan rebuild contracts', () => {
     PROJECTS.filter((project) => project.download).forEach((project) => {
       expect(project.listenRoute).toMatch(/^\//);
       expect(project.download?.endpoint).toMatch(/^\/api\/download\//);
+    });
+  });
+});
+
+describe('MOSES accessibility regression contracts', () => {
+  it('preserves mobile zoom support in the document viewport', () => {
+    const html = readFileSync(resolve(process.cwd(), 'client/index.html'), 'utf8');
+    expect(html).toContain('width=device-width, initial-scale=1.0');
+    expect(html).not.toContain('maximum-scale');
+  });
+
+  it('keeps shared download controls readable on their primary green action treatment', () => {
+    const source = readFileSync(resolve(process.cwd(), 'client/src/components/DownloadButton.tsx'), 'utf8');
+    expect(source).toContain('bg-green-600 hover:bg-green-700 text-zinc-950');
+  });
+
+  it('keeps all archive players equipped with accessible playback and recovery controls', () => {
+    const playerFiles = [
+      'BathshebaListen.tsx',
+      'Mixtape.tsx',
+      'MixtapeListen.tsx',
+      'NewGenesisListen.tsx',
+      'AbcsListen.tsx',
+    ];
+
+    playerFiles.forEach((file) => {
+      const source = readFileSync(resolve(process.cwd(), `client/src/pages/${file}`), 'utf8');
+      expect(source).toContain('AudioErrorNotice');
+      expect(source).toContain('aria-label');
     });
   });
 });

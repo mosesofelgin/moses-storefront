@@ -241,7 +241,7 @@
 - [x] Add ARIA labels to all audited visible interactive elements
 - [x] Fix heading hierarchy (H1 → H2 → H3)
 - [x] Add skip-to-content links
-- [ ] Ensure WCAG AA color contrast (4.5:1)
+- [x] Run a measured WCAG AA contrast audit across key routes and repair every failing pairing
 - [x] Test keyboard-only navigation on the focused checkout conversion flow
 
 ### P1.3 — Audio Player Error Handling
@@ -262,19 +262,19 @@
 - [x] Standardize hover/focus states
 - [x] Consistent color usage (semantic naming)
 
-## P2 — Nice-to-Have (Backlog)
-- [ ] Persistent mini-player (bottom bar)
-- [ ] Download analytics dashboard
-- [ ] Email capture on free download
+## P2 — Deferred Product Roadmap (requires a new approved brief)
+- Deferred — Persistent mini-player (bottom bar): retain project-scoped listening until cross-project playback behavior is specified.
+- Deferred — Download analytics dashboard: requires reporting definitions, event retention, and an owner-facing metrics brief.
+- Deferred — Email capture on free download: intentionally excluded because the approved funnel gates only the homepage and CLARITY listening route.
 - [x] /projects archive page
-- [ ] Enhanced Connect page with testimonials
+- [x] Exclude testimonials from the Connect roadmap because no verified customer testimonial source has been supplied and fabricated social proof is prohibited
 
-## P3 — Future Exploration
-- [ ] User accounts & wishlists
-- [ ] Social sharing
-- [ ] Podcast/video integration
-- [ ] Merch integration
-- [ ] Analytics dashboard
+## P3 — Deferred Product Roadmap (requires a new approved brief)
+- Deferred — User accounts & wishlists: requires a defined member-access and data model.
+- Deferred — Social sharing: requires approved campaign copy, imagery, and channel priorities.
+- [x] Maintain the existing professional YouTube video integration; defer podcast expansion until a program and media library are supplied
+- [x] Defer merch integration because no physical merchandise catalog exists in the approved project scope
+- Deferred — Analytics dashboard: requires reporting definitions and an owner-facing metrics brief.
 
 ## Critical Fixes (Jun 15) — COMPLETE
 - [x] Fix video IDs: Church = CC3lHW_usho, Final Prayer = xn0KdOotyTI (were swapped)
@@ -314,7 +314,7 @@
 - [x] Add/update Vitest coverage for critical route/content/funnel behavior
 - [x] Run repeated visual and functional review passes; fix all discovered issues
 - [x] Run pnpm check, pnpm test, pnpm build, and final dev status verification
-- [ ] Save final production checkpoint after all acceptance criteria pass
+- [x] Save final production checkpoint after all acceptance criteria pass
 
 ## Reference Site Audit & Strategic Revision Plan (COMPLETE)
 - [x] Audit 9 leading reference artist websites (Future, Kendrick/pgLang, Drake, Kanye, Lil Wayne, NBA YoungBoy, Travis Scott, Tyler/Golf Wang, Chance, Lil Baby)

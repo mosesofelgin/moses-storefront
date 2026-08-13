@@ -373,9 +373,9 @@ export default function BathshebaListen() {
                   endpoint="/api/download/bathsheba"
                   filename="BATHSHEBA-Project.zip"
                   label="Download Full Project"
-                  variant="primary"
+                  variant="outline"
                   size="md"
-                  className="flex-1 rounded-lg bg-purple-700 font-bebas tracking-wide text-sm hover:bg-purple-600"
+                  className="flex-1 rounded-lg bg-purple-700 font-bebas tracking-wide text-sm text-white hover:bg-purple-600"
                 />
                 <div onClick={(event) => event.stopPropagation()}>
                   <DownloadButton
