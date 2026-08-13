@@ -288,3 +288,11 @@
 - [x] Rewrite Artist.tsx with Manus 1.6 polish (Sacred Noir design system)
 - [x] EPK download panel with 4 items + photo preview strip
 - [x] pnpm check ✓ | pnpm test 36/36 ✓
+
+## Reference Site Audit & Strategic Revision Plan (COMPLETE)
+- [x] Audit 9 leading reference artist websites (Future, Kendrick/pgLang, Drake, Kanye, Lil Wayne, NBA YoungBoy, Travis Scott, Tyler/Golf Wang, Chance, Lil Baby)
+- [x] Deconstruct information architecture, navigation, music discovery, and D2C funnels
+- [x] Compare benchmark tactics against MOSES's catalog depth and CLARITY visual world
+- [x] Formulate strategic revision plan for catalog archival vault, InvestFest QR funnels, and EPK positioning
+- [x] Document audit and recommendations in references/artist-website-audit-and-strategy.md
+- [x] pnpm check ✓ | pnpm test 36/36 ✓
