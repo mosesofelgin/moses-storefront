@@ -197,37 +197,23 @@ export default function BathshebaListen() {
             </div>
             {/* Controls */}
             <div className="flex items-center gap-2 flex-shrink-0">
-              <button onClick={handlePrevious} disabled={currentTrackIndex === 0} className="p-1.5 text-purple-300 hover:text-white disabled:opacity-30 transition-colors">
+              <button onClick={handlePrevious} disabled={currentTrackIndex === 0} aria-label="Previous track" className="flex h-11 w-11 items-center justify-center text-purple-300 hover:text-white disabled:opacity-30 transition-colors">
                 <SkipBack className="h-4 w-4" />
               </button>
               <button
                 onClick={handlePlayPause}
-                className="p-2 rounded-full bg-purple-600 hover:bg-purple-500 transition-colors"
+                aria-label={isPlaying ? 'Pause' : 'Play'}
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-purple-600 hover:bg-purple-500 transition-colors"
               >
                 {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 ml-0.5" />}
               </button>
-              <button onClick={handleNext} disabled={currentTrackIndex === bathshebaTrackList.length - 1} className="p-1.5 text-purple-300 hover:text-white disabled:opacity-30 transition-colors">
+              <button onClick={handleNext} disabled={currentTrackIndex === bathshebaTrackList.length - 1} aria-label="Next track" className="flex h-11 w-11 items-center justify-center text-purple-300 hover:text-white disabled:opacity-30 transition-colors">
                 <SkipForward className="h-4 w-4" />
               </button>
             </div>
           </div>
         </div>
       )}
-
-      {/* ── HEADER ───────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-40 border-b border-purple-900/40 bg-black/80 backdrop-blur-md px-4 py-4">
-        <div className="mx-auto max-w-5xl flex items-center justify-between">
-          <Link href="/bathsheba" className="text-purple-400 hover:text-purple-200 transition-colors font-mono text-xs uppercase tracking-widest">
-            ← Bathsheba
-          </Link>
-          <span className="font-mono text-xs uppercase tracking-[0.3em] text-purple-500">
-            Listening Experience
-          </span>
-          <Link href="/" className="text-zinc-500 hover:text-zinc-300 transition-colors font-mono text-xs uppercase tracking-widest">
-            Home
-          </Link>
-        </div>
-      </header>
 
       {/* ── HERO PLAYER ──────────────────────────────────────────── */}
       <section className="relative px-4 pt-12 pb-16 sm:pt-20 sm:pb-24">
@@ -309,6 +295,7 @@ export default function BathshebaListen() {
                   />
                   <input
                     type="range"
+                    aria-label="Track progress"
                     min="0"
                     max={duration || 0}
                     value={currentTime}
@@ -327,7 +314,8 @@ export default function BathshebaListen() {
                 <button
                   onClick={handlePrevious}
                   disabled={currentTrackIndex === 0 && currentTime < 3}
-                  className="p-2.5 rounded-full bg-purple-900/40 hover:bg-purple-800/60 disabled:opacity-25 disabled:cursor-not-allowed transition-all hover:scale-105"
+                  aria-label="Previous track"
+                  className="flex h-11 w-11 items-center justify-center rounded-full bg-purple-900/40 hover:bg-purple-800/60 disabled:opacity-25 disabled:cursor-not-allowed transition-all hover:scale-105"
                   title="Previous"
                 >
                   <SkipBack className="h-5 w-5" />
@@ -335,6 +323,7 @@ export default function BathshebaListen() {
 
                 <button
                   onClick={handlePlayPause}
+                  aria-label={isPlaying ? 'Pause' : 'Play'}
                   className="p-4 rounded-full bg-purple-600 hover:bg-purple-500 transition-all shadow-xl shadow-purple-600/40 hover:scale-105 hover:shadow-purple-500/60"
                   title={isPlaying ? 'Pause' : 'Play'}
                 >
@@ -347,7 +336,8 @@ export default function BathshebaListen() {
                 <button
                   onClick={handleNext}
                   disabled={currentTrackIndex === bathshebaTrackList.length - 1}
-                  className="p-2.5 rounded-full bg-purple-900/40 hover:bg-purple-800/60 disabled:opacity-25 disabled:cursor-not-allowed transition-all hover:scale-105"
+                  aria-label="Next track"
+                  className="flex h-11 w-11 items-center justify-center rounded-full bg-purple-900/40 hover:bg-purple-800/60 disabled:opacity-25 disabled:cursor-not-allowed transition-all hover:scale-105"
                   title="Next"
                 >
                   <SkipForward className="h-5 w-5" />
@@ -356,7 +346,7 @@ export default function BathshebaListen() {
 
               {/* Volume */}
               <div className="flex items-center gap-3 mb-6 px-4 py-3 rounded-lg bg-purple-950/40 border border-purple-900/40">
-                <button onClick={toggleMute} className="text-purple-400 hover:text-white transition-colors flex-shrink-0">
+                <button onClick={toggleMute} className="flex h-11 min-w-11 items-center justify-center text-purple-400 hover:text-white transition-colors flex-shrink-0" aria-label={isMuted || volume === 0 ? 'Unmute' : 'Mute'}>
                   {isMuted || volume === 0
                     ? <VolumeX className="h-4 w-4" />
                     : <Volume2 className="h-4 w-4" />
@@ -364,6 +354,7 @@ export default function BathshebaListen() {
                 </button>
                 <input
                   type="range"
+                  aria-label="Volume"
                   min="0"
                   max="1"
                   step="0.05"
@@ -513,8 +504,8 @@ export default function BathshebaListen() {
                 12-track full album. Faith, discipline, and transformation. Own the complete project.
               </p>
               <Link
-                href="/store"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-green-600 hover:bg-green-500 transition-colors font-bebas text-sm tracking-wide text-black"
+                href="/clarity-sales"
+                className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-green-600 px-4 py-2.5 font-bebas text-sm tracking-wide text-black transition-colors hover:bg-green-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-300"
               >
                 Own CLARITY <ArrowRight className="h-3.5 w-3.5" />
               </Link>
@@ -523,11 +514,11 @@ export default function BathshebaListen() {
 
           {/* Nav footer */}
           <div className="mt-12 pt-8 border-t border-zinc-900 flex flex-wrap justify-center gap-6 font-mono text-xs uppercase tracking-widest text-zinc-600">
-            <Link href="/" className="hover:text-zinc-300 transition-colors">Home</Link>
-            <Link href="/dedication" className="hover:text-zinc-300 transition-colors">Dedication</Link>
-            <Link href="/listen" className="hover:text-zinc-300 transition-colors">CLARITY</Link>
-            <Link href="/store" className="hover:text-zinc-300 transition-colors">Store</Link>
-            <Link href="/connect" className="hover:text-zinc-300 transition-colors">Connect</Link>
+            <Link href="/" className="inline-flex min-h-11 min-w-11 items-center justify-center px-1 hover:text-zinc-300 transition-colors">Home</Link>
+            <Link href="/dedication" className="inline-flex min-h-11 min-w-11 items-center justify-center px-1 hover:text-zinc-300 transition-colors">Dedication</Link>
+            <Link href="/listen" className="inline-flex min-h-11 min-w-11 items-center justify-center px-1 hover:text-zinc-300 transition-colors">CLARITY</Link>
+            <Link href="/store" className="inline-flex min-h-11 min-w-11 items-center justify-center px-1 hover:text-zinc-300 transition-colors">Store</Link>
+            <Link href="/connect" className="inline-flex min-h-11 min-w-11 items-center justify-center px-1 hover:text-zinc-300 transition-colors">Connect</Link>
           </div>
         </div>
       </section>

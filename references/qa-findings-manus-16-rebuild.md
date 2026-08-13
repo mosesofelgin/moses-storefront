@@ -37,3 +37,17 @@ All four EPK delivery endpoints returned HTTP 200: One-Sheet, Short Bio, Long Bi
 Chrome device emulation at 390 × 844 reported no horizontal overflow on the homepage, CLARITY sales, listening gate, link tree, checkout, event, or Projects archive routes. The review surfaced an undersized mobile brand link, which was corrected to a 44px minimum-height target. Hidden desktop navigation elements and the intentionally visually-hidden skip link were excluded from the final tap-target assessment.
 
 The final rerun also identified undersized footer destinations on the homepage; these were upgraded to 44px minimum-height targets. TypeScript validation and the full 45-test regression suite passed after that repair.
+
+## Cross-device listening review
+
+All twelve public routes, including every listening page, were reviewed through Chrome device emulation at iPhone SE (375 × 667), iPhone 14 Pro (393 × 852), and Android-standard (412 × 915) dimensions. All 36 route-and-device checks reported **no horizontal overflow**. During the pass, redundant listen-page headers were removed in favor of the shared `ListenNavigation` component, visible playback/download/footer targets were raised to 44px, and retryable audio-load feedback was verified across the six listening experiences.
+
+The final target audit reported no undersized visible interactive elements across those 36 checks. A browser-level mobile download harness also triggered the actual fetch-to-blob download of `01-Genesis (The Source).mp3` in both iPhone SE and Android-standard emulation; Chrome reported `downloadWillBegin` and a final `completed` event in both cases. The test artifacts and event records are preserved in `references/download-qa-results.json`.
+
+## Keyboard entry review
+
+On the focused CLARITY checkout route, the first `Tab` action exposed the visually hidden **Skip to main content** control with a highly visible focus treatment. The full verified focusable order is **Skip to main content → Back to CLARITY → Full name → Email address → Continue to payment**. The active name field exposed a visible amber ring, and there is no focus trap in the conversion path.
+
+## Semantic accessibility review
+
+The semantic audit covered 14 public routes and found **no visible unnamed controls**. Every audited route has a valid `h1`-first outline with no skipped heading levels; the only missing page-level heading, on the ABCs listening room, was added as an accessible screen-reader heading. The raw audit record is retained in `references/a11y-qa-results.json`.

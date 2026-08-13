@@ -32,9 +32,9 @@ export default function DownloadButton({
   };
 
   const sizeClasses = {
-    sm: "px-3 py-1.5 text-sm",
-    md: "px-4 py-2 text-base",
-    lg: "px-6 py-3 text-lg",
+    sm: "min-h-11 min-w-11 px-3 py-2 text-sm",
+    md: "min-h-11 px-4 py-2 text-base",
+    lg: "min-h-12 px-6 py-3 text-lg",
   };
 
   const handleDownload = async () => {

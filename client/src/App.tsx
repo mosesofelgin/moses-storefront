@@ -49,17 +49,17 @@ function Router() {
       <Route path={"/downloads"} component={Downloads} />
       <Route path={"/clarity"} component={ClarityProject} />
       <Route path={"/links"} component={Links} />
-      <Route path={"/listen"} component={Listen} />
+      <Route path={"/listen"} component={() => <ErrorBoundary><Listen /></ErrorBoundary>} />
       <Route path={"/store"} component={Store} />
       <Route path={"/connect"} component={Connect} />
-      <Route path={"/bathsheba/listen"} component={BathshebaListen} />
+      <Route path={"/bathsheba/listen"} component={() => <ErrorBoundary><BathshebaListen /></ErrorBoundary>} />
       <Route path={"/bathsheba"} component={Bathsheba} />
-      <Route path={"/dedication"} component={Dedication} />
-      <Route path={"/abcs/listen"} component={AbcsListen} />
+      <Route path={"/dedication"} component={() => <ErrorBoundary><Dedication /></ErrorBoundary>} />
+      <Route path={"/abcs/listen"} component={() => <ErrorBoundary><AbcsListen /></ErrorBoundary>} />
       <Route path={"/abcs"} component={Abcs} />
-      <Route path={"/mixtape/listen"} component={MixtapeListen} />
+      <Route path={"/mixtape/listen"} component={() => <ErrorBoundary><MixtapeListen /></ErrorBoundary>} />
       <Route path={"/mixtape"} component={IfIWroteAMixtape} />
-      <Route path={"/new-genesis/listen"} component={NewGenesisListen} />
+      <Route path={"/new-genesis/listen"} component={() => <ErrorBoundary><NewGenesisListen /></ErrorBoundary>} />
       <Route path={"/new-genesis"} component={NewGenesis} />
       <Route path={"/artist"} component={Artist} />
       <Route path={"/projects"} component={Projects} />

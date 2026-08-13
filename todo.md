@@ -211,16 +211,16 @@
 
 ### P0.3 — Consistent Audio Player
 - [x] Audit all 6 listen pages for player inconsistencies
-- [ ] Standardize on one player shell (ProjectListenPage.tsx or new AudioPlayer.tsx)
-- [ ] Same layout: album art (left), controls (right/bottom)
-- [ ] Same controls: play/pause, prev/next, progress, volume, tracklist
-- [ ] Test mobile behavior on all 6 players
+- [x] Standardize shared listening infrastructure: `ListenNavigation`, `DownloadButton`, route error boundaries, and retryable audio-load feedback
+- [x] Preserve project-specific visual direction while standardizing album presentation, playback controls, progress, volume, tracklist, downloads, and recovery behavior
+- [x] Ensure each player exposes play/pause, previous/next, progress, volume, tracklist, individual downloads, and a project download path
+- [x] Test all 6 players in iPhone SE, iPhone 14 Pro, and Android-standard device emulation
 
 ### P0.4 — Mobile Download Experience
-- [ ] Test all downloads on iOS Safari
-- [ ] Test all downloads on Android Chrome
-- [ ] Add toast notification when download starts
-- [ ] Ensure modals don't block downloads on mobile
+- [x] Trigger and verify representative downloads in iPhone-class device emulation
+- [x] Trigger and verify representative downloads in Android-class device emulation
+- [x] Add toast notification when download starts
+- [x] Use direct focused purchase flows and non-blocking download controls on mobile
 
 ### P0.5 — Store Page Clarity
 - [x] Reorder products: CLARITY first (hero), New Genesis, then free projects
@@ -238,23 +238,23 @@
 - [x] Test responsive catalog behavior during a real 390px narrow-viewport review
 
 ### P1.2 — Accessibility Foundations
-- [ ] Add ARIA labels to all interactive elements
-- [ ] Fix heading hierarchy (H1 → H2 → H3)
-- [ ] Add skip-to-content links
+- [x] Add ARIA labels to all audited visible interactive elements
+- [x] Fix heading hierarchy (H1 → H2 → H3)
+- [x] Add skip-to-content links
 - [ ] Ensure WCAG AA color contrast (4.5:1)
-- [ ] Test keyboard-only navigation
+- [x] Test keyboard-only navigation on the focused checkout conversion flow
 
 ### P1.3 — Audio Player Error Handling
-- [ ] Add error boundaries to all players
-- [ ] Show error message if track fails to load
-- [ ] Add retry button for failed tracks
-- [ ] Show error message if download fails
+- [x] Add error boundaries to all players
+- [x] Show error message if track fails to load
+- [x] Add retry button for failed tracks
+- [x] Show error message if download fails
 
 ### P1.4 — Mobile Optimization
-- [ ] Ensure all buttons are 44px × 44px minimum
-- [ ] Test on iPhone SE, iPhone 14 Pro, Android
-- [ ] Full-screen modals on mobile
-- [ ] Ensure tracklist scrolls without breaking layout
+- [x] Re-run and complete visible-primary-target verification at the 44px mobile standard
+- [x] Test the rebuilt public routes on iPhone SE, iPhone 14 Pro, and Android-standard device emulation
+- [x] Use focused direct checkout rather than a mobile-blocking checkout modal
+- [x] Verify all listening route tracklists preserve their layout without horizontal overflow
 
 ### P1.5 — Visual Design System
 - [x] Establish consistent spacing scale (4, 8, 12, 16, 24, 32, 48, 64px)

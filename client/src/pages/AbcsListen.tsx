@@ -7,6 +7,7 @@ import {
 import { ABCS_COVER, ABCS_META, ABCS_TRACKS, type AbcsTrack } from '@/data/abcs-bundle';
 import ListenNavigation from '@/components/ListenNavigation';
 import DownloadButton from '@/components/DownloadButton';
+import AudioErrorNotice from '@/components/AudioErrorNotice';
 
 function formatTime(secs: number): string {
   if (!isFinite(secs) || secs < 0) return '0:00';
@@ -23,6 +24,7 @@ export default function AbcsListen() {
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
   const [showTracklist, setShowTracklist] = useState(true);
+  const [audioError, setAudioError] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const currentTrack: AbcsTrack = ABCS_TRACKS[currentIndex];
 
@@ -39,13 +41,19 @@ export default function AbcsListen() {
         setIsPlaying(false);
       }
     };
+    const onError = () => {
+      setAudioError(true);
+      setIsPlaying(false);
+    };
     audio.addEventListener('timeupdate', onTimeUpdate);
     audio.addEventListener('durationchange', onDurationChange);
     audio.addEventListener('ended', onEnded);
+    audio.addEventListener('error', onError);
     return () => {
       audio.removeEventListener('timeupdate', onTimeUpdate);
       audio.removeEventListener('durationchange', onDurationChange);
       audio.removeEventListener('ended', onEnded);
+      audio.removeEventListener('error', onError);
     };
   }, [currentIndex]);
 
@@ -103,6 +111,7 @@ export default function AbcsListen() {
   const handleNext = () => setCurrentIndex(prev => Math.min(ABCS_TRACKS.length - 1, prev + 1));
 
   const handleTrackClick = (index: number) => {
+    setAudioError(false);
     if (index === currentIndex) {
       togglePlay();
     } else {
@@ -113,6 +122,14 @@ export default function AbcsListen() {
 
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+
+  const retryAudio = useCallback(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    setAudioError(false);
+    audio.load();
+    audio.play().then(() => setIsPlaying(true)).catch(() => setAudioError(true));
+  }, []);
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
@@ -125,6 +142,7 @@ export default function AbcsListen() {
       {/* ── PLAYER ── */}
       <section className="px-4 py-10 md:py-16" style={{ background: 'linear-gradient(to bottom, rgba(120,60,10,0.12), transparent 60%)' }}>
         <div className="mx-auto max-w-3xl">
+          <h1 className="sr-only">Back to Basics: ABCs listening experience</h1>
 
           {/* Now playing header */}
           <div className="mb-8 flex flex-col items-center text-center sm:flex-row sm:items-start sm:text-left sm:gap-8">
@@ -162,6 +180,7 @@ export default function AbcsListen() {
                   type="range"
                   min={0}
                   max={duration || 100}
+                  aria-label="Track progress"
                   value={currentTime}
                   onChange={handleSeek}
                   className="w-full cursor-pointer accent-amber-500"
@@ -172,6 +191,7 @@ export default function AbcsListen() {
                 <span>{formatTime(currentTime)}</span>
                 <span>{formatTime(duration)}</span>
               </div>
+              {audioError && <AudioErrorNotice onRetry={retryAudio} tone="amber" />}
             </div>
           </div>
 
@@ -179,7 +199,7 @@ export default function AbcsListen() {
           <div className="mb-6 flex items-center justify-center gap-6">
             <button
               onClick={handlePrev}
-              className="rounded-full p-2 text-zinc-400 transition-colors hover:text-zinc-100"
+              className="flex h-11 w-11 items-center justify-center rounded-full text-zinc-400 transition-colors hover:text-zinc-100"
               aria-label="Previous track"
             >
               <SkipBack className="h-6 w-6" />
@@ -193,7 +213,7 @@ export default function AbcsListen() {
             </button>
             <button
               onClick={handleNext}
-              className="rounded-full p-2 text-zinc-400 transition-colors hover:text-zinc-100"
+              className="flex h-11 w-11 items-center justify-center rounded-full text-zinc-400 transition-colors hover:text-zinc-100"
               aria-label="Next track"
             >
               <SkipForward className="h-6 w-6" />
@@ -205,7 +225,7 @@ export default function AbcsListen() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsMuted(m => !m)}
-                className="text-zinc-500 hover:text-zinc-300 transition-colors"
+                className="flex h-11 min-w-11 items-center justify-center text-zinc-500 hover:text-zinc-300 transition-colors"
                 aria-label={isMuted ? 'Unmute' : 'Mute'}
               >
                 {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
@@ -214,6 +234,7 @@ export default function AbcsListen() {
                 type="range"
                 min={0}
                 max={1}
+                aria-label="Volume"
                 step={0.05}
                 value={isMuted ? 0 : volume}
                 onChange={e => { setVolume(parseFloat(e.target.value)); setIsMuted(false); }}
@@ -237,7 +258,7 @@ export default function AbcsListen() {
         <div className="mx-auto max-w-3xl">
           <button
             onClick={() => setShowTracklist(v => !v)}
-            className="mb-6 flex w-full items-center justify-between font-bebas text-2xl tracking-wider text-zinc-300 hover:text-zinc-100 transition-colors"
+            className="mb-6 flex min-h-11 w-full items-center justify-between font-bebas text-2xl tracking-wider text-zinc-300 hover:text-zinc-100 transition-colors"
           >
             <span>Tracklist ({ABCS_TRACKS.length})</span>
             {showTracklist ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
@@ -310,13 +331,13 @@ export default function AbcsListen() {
       <footer className="border-t border-zinc-800 px-4 py-12">
         <div className="mx-auto max-w-4xl">
           <div className="flex flex-wrap justify-center gap-6 font-mono text-xs uppercase tracking-widest text-zinc-600">
-            <Link href="/" className="hover:text-zinc-300 transition-colors">Home</Link>
-            <Link href="/abcs" className="hover:text-amber-500 transition-colors">ABCs</Link>
-            <Link href="/bathsheba/listen" className="hover:text-zinc-300 transition-colors">Bathsheba</Link>
-            <Link href="/new-genesis/listen" className="hover:text-zinc-300 transition-colors">New Genesis</Link>
-            <Link href="/mixtape/listen" className="hover:text-zinc-300 transition-colors">Mixtape</Link>
-            <Link href="/listen" className="hover:text-zinc-300 transition-colors">CLARITY</Link>
-            <Link href="/store" className="hover:text-zinc-300 transition-colors">Store</Link>
+            <Link href="/" className="inline-flex min-h-11 min-w-11 items-center justify-center px-1 hover:text-zinc-300 transition-colors">Home</Link>
+            <Link href="/abcs" className="inline-flex min-h-11 min-w-11 items-center justify-center px-1 hover:text-amber-500 transition-colors">ABCs</Link>
+            <Link href="/bathsheba/listen" className="inline-flex min-h-11 min-w-11 items-center justify-center px-1 hover:text-zinc-300 transition-colors">Bathsheba</Link>
+            <Link href="/new-genesis/listen" className="inline-flex min-h-11 min-w-11 items-center justify-center px-1 hover:text-zinc-300 transition-colors">New Genesis</Link>
+            <Link href="/mixtape/listen" className="inline-flex min-h-11 min-w-11 items-center justify-center px-1 hover:text-zinc-300 transition-colors">Mixtape</Link>
+            <Link href="/listen" className="inline-flex min-h-11 min-w-11 items-center justify-center px-1 hover:text-zinc-300 transition-colors">CLARITY</Link>
+            <Link href="/store" className="inline-flex min-h-11 min-w-11 items-center justify-center px-1 hover:text-zinc-300 transition-colors">Store</Link>
           </div>
           <p className="mt-8 text-center font-mono text-xs text-zinc-700">
             © {new Date().getFullYear()} MOSES SOG — Moses Enterprises

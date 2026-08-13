@@ -7,6 +7,7 @@ import {
 import { NEW_GENESIS_COVER, NEW_GENESIS_TRACKS, NEW_GENESIS_META, type NewGenesisTrack } from '../data/new-genesis-bundle';
 import ListenNavigation from '@/components/ListenNavigation';
 import DownloadButton from '@/components/DownloadButton';
+import AudioErrorNotice from '@/components/AudioErrorNotice';
 
 export default function NewGenesisListen() {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -19,6 +20,7 @@ export default function NewGenesisListen() {
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
+  const [audioError, setAudioError] = useState(false);
 
   const currentTrack = NEW_GENESIS_TRACKS[currentTrackIndex];
 
@@ -59,17 +61,23 @@ export default function NewGenesisListen() {
         setIsPlaying(false);
       }
     };
+    const handleError = () => {
+      setAudioError(true);
+      setIsPlaying(false);
+    };
 
     audio.addEventListener('timeupdate', updateTime);
     audio.addEventListener('loadedmetadata', updateDuration);
     audio.addEventListener('durationchange', updateDuration);
     audio.addEventListener('ended', handleEnded);
+    audio.addEventListener('error', handleError);
 
     return () => {
       audio.removeEventListener('timeupdate', updateTime);
       audio.removeEventListener('loadedmetadata', updateDuration);
       audio.removeEventListener('durationchange', updateDuration);
       audio.removeEventListener('ended', handleEnded);
+      audio.removeEventListener('error', handleError);
     };
   }, [currentTrackIndex]);
 
@@ -101,6 +109,7 @@ export default function NewGenesisListen() {
   }, [currentTrackIndex]);
 
   const handleTrackClick = useCallback((index: number) => {
+    setAudioError(false);
     setCurrentTrackIndex(index);
     setIsPlaying(true);
     setHasStarted(true);
@@ -119,6 +128,14 @@ export default function NewGenesisListen() {
   };
 
   const toggleMute = () => setIsMuted(prev => !prev);
+
+  const retryAudio = useCallback(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    setAudioError(false);
+    audio.load();
+    audio.play().then(() => setIsPlaying(true)).catch(() => setAudioError(true));
+  }, []);
 
   const formatTime = (time: number) => {
     if (!time || isNaN(time)) return '0:00';
@@ -170,37 +187,23 @@ export default function NewGenesisListen() {
               </div>
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
-              <button onClick={handlePrevious} disabled={currentTrackIndex === 0} className="p-1.5 text-indigo-400 hover:text-white disabled:opacity-30 transition-colors">
+              <button onClick={handlePrevious} disabled={currentTrackIndex === 0} aria-label="Previous track" className="flex h-11 w-11 items-center justify-center text-indigo-400 hover:text-white disabled:opacity-30 transition-colors">
                 <SkipBack className="h-4 w-4" />
               </button>
               <button
                 onClick={handlePlayPause}
-                className="p-2 rounded-full bg-indigo-700 hover:bg-indigo-600 transition-colors"
+                aria-label={isPlaying ? 'Pause' : 'Play'}
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-indigo-700 hover:bg-indigo-600 transition-colors"
               >
                 {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 ml-0.5" />}
               </button>
-              <button onClick={handleNext} disabled={currentTrackIndex === NEW_GENESIS_TRACKS.length - 1} className="p-1.5 text-indigo-400 hover:text-white disabled:opacity-30 transition-colors">
+              <button onClick={handleNext} disabled={currentTrackIndex === NEW_GENESIS_TRACKS.length - 1} aria-label="Next track" className="flex h-11 w-11 items-center justify-center text-indigo-400 hover:text-white disabled:opacity-30 transition-colors">
                 <SkipForward className="h-4 w-4" />
               </button>
             </div>
           </div>
         </div>
       )}
-
-      {/* ── HEADER ─────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-40 border-b border-indigo-900/30 bg-black/80 backdrop-blur-md px-4 py-4">
-        <div className="mx-auto max-w-5xl flex items-center justify-between">
-          <Link href="/new-genesis" className="text-indigo-400 hover:text-indigo-200 transition-colors font-mono text-xs uppercase tracking-widest">
-            ← New Genesis
-          </Link>
-          <span className="font-mono text-xs uppercase tracking-[0.3em] text-indigo-500">
-            Listening Experience
-          </span>
-          <Link href="/" className="text-zinc-500 hover:text-zinc-300 transition-colors font-mono text-xs uppercase tracking-widest">
-            Home
-          </Link>
-        </div>
-      </header>
 
       {/* ── HERO PLAYER ────────────────────────────────────────── */}
       <section className="relative px-4 pt-12 pb-16 sm:pt-20 sm:pb-24">
@@ -239,6 +242,7 @@ export default function NewGenesisListen() {
               type="range"
               min={0}
               max={duration || 0}
+              aria-label="Track progress"
               step={0.1}
               value={currentTime}
               onChange={handleProgressChange}
@@ -253,17 +257,21 @@ export default function NewGenesisListen() {
             </div>
           </div>
 
+          {audioError && <AudioErrorNotice onRetry={retryAudio} tone="indigo" />}
+
           {/* Controls */}
           <div className="flex items-center justify-center gap-4 sm:gap-6 mb-6">
             <button
               onClick={handlePrevious}
               disabled={currentTrackIndex === 0}
-              className="p-2 text-indigo-400 hover:text-white disabled:opacity-30 transition-colors"
+              aria-label="Previous track"
+              className="flex h-11 w-11 items-center justify-center text-indigo-400 hover:text-white disabled:opacity-30 transition-colors"
             >
               <SkipBack className="h-5 w-5 sm:h-6 sm:w-6" />
             </button>
             <button
               onClick={handlePlayPause}
+              aria-label={isPlaying ? 'Pause' : 'Play'}
               className="p-4 rounded-full bg-indigo-700 hover:bg-indigo-600 active:bg-indigo-800 transition-colors shadow-lg"
             >
               {isPlaying
@@ -274,7 +282,8 @@ export default function NewGenesisListen() {
             <button
               onClick={handleNext}
               disabled={currentTrackIndex === NEW_GENESIS_TRACKS.length - 1}
-              className="p-2 text-indigo-400 hover:text-white disabled:opacity-30 transition-colors"
+              aria-label="Next track"
+              className="flex h-11 w-11 items-center justify-center text-indigo-400 hover:text-white disabled:opacity-30 transition-colors"
             >
               <SkipForward className="h-5 w-5 sm:h-6 sm:w-6" />
             </button>
@@ -282,7 +291,7 @@ export default function NewGenesisListen() {
 
           {/* Volume */}
           <div className="flex items-center gap-3 justify-center mb-8">
-            <button onClick={toggleMute} className="text-indigo-600 hover:text-indigo-300 transition-colors">
+            <button onClick={toggleMute} aria-label={isMuted || volume === 0 ? 'Unmute' : 'Mute'} className="flex h-11 w-11 items-center justify-center text-indigo-600 hover:text-indigo-300 transition-colors">
               {isMuted || volume === 0
                 ? <VolumeX className="h-4 w-4" />
                 : <Volume2 className="h-4 w-4" />
@@ -292,6 +301,7 @@ export default function NewGenesisListen() {
               type="range"
               min={0}
               max={1}
+              aria-label="Volume"
               step={0.01}
               value={isMuted ? 0 : volume}
               onChange={handleVolumeChange}

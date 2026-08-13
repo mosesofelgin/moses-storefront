@@ -1,10 +1,10 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Music, ArrowRight, Play, Pause, SkipBack, SkipForward, Volume2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { dedicationBundle } from '@/data/dedication-bundle';
 import { Link } from 'wouter';
 import ListenNavigation from '@/components/ListenNavigation';
 import DownloadButton from '@/components/DownloadButton';
+import AudioErrorNotice from '@/components/AudioErrorNotice';
 
 export default function Mixtape() {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
@@ -12,6 +12,7 @@ export default function Mixtape() {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
+  const [audioError, setAudioError] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const currentTrack = dedicationBundle.tracks[currentTrackIndex];
@@ -48,6 +49,7 @@ export default function Mixtape() {
 
   // Handle track selection
   const selectTrack = (index: number) => {
+    setAudioError(false);
     setCurrentTrackIndex(index);
     setCurrentTime(0);
     setIsPlaying(true);
@@ -60,15 +62,21 @@ export default function Mixtape() {
 
     const updateTime = () => setCurrentTime(audio.currentTime);
     const updateDuration = () => setDuration(audio.duration);
+    const onError = () => {
+      setAudioError(true);
+      setIsPlaying(false);
+    };
 
     audio.addEventListener('timeupdate', updateTime);
     audio.addEventListener('loadedmetadata', updateDuration);
     audio.addEventListener('ended', playNext);
+    audio.addEventListener('error', onError);
 
     return () => {
       audio.removeEventListener('timeupdate', updateTime);
       audio.removeEventListener('loadedmetadata', updateDuration);
       audio.removeEventListener('ended', playNext);
+      audio.removeEventListener('error', onError);
     };
   }, [currentTrackIndex]);
 
@@ -85,6 +93,14 @@ export default function Mixtape() {
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
+
+  const retryAudio = useCallback(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    setAudioError(false);
+    audio.load();
+    audio.play().then(() => setIsPlaying(true)).catch(() => setAudioError(true));
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
@@ -160,6 +176,7 @@ export default function Mixtape() {
                     type="range"
                     min="0"
                     max={duration || 0}
+                    aria-label="Track progress"
                     value={currentTime}
                     onChange={(e) => {
                       if (audioRef.current) {
@@ -175,18 +192,22 @@ export default function Mixtape() {
                   </div>
                 </div>
 
+                {audioError && <AudioErrorNotice onRetry={retryAudio} tone="green" />}
+
                 {/* Control Buttons */}
                 <div className="flex items-center justify-center gap-4 mb-6">
                   <button
                     onClick={playPrevious}
                     disabled={currentTrackIndex === 0}
-                    className="p-2 rounded-full hover:bg-zinc-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    aria-label="Previous track"
+                    className="flex h-11 w-11 items-center justify-center rounded-full hover:bg-zinc-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <SkipBack className="w-5 h-5" />
                   </button>
 
                   <button
                     onClick={togglePlayPause}
+                    aria-label={isPlaying ? 'Pause' : 'Play'}
                     className="p-3 rounded-full bg-[#00ff00] text-black hover:bg-[#00dd00] transition"
                   >
                     {isPlaying ? (
@@ -199,7 +220,8 @@ export default function Mixtape() {
                   <button
                     onClick={playNext}
                     disabled={currentTrackIndex === dedicationBundle.tracks.length - 1}
-                    className="p-2 rounded-full hover:bg-zinc-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    aria-label="Next track"
+                    className="flex h-11 w-11 items-center justify-center rounded-full hover:bg-zinc-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <SkipForward className="w-5 h-5" />
                   </button>
@@ -212,6 +234,7 @@ export default function Mixtape() {
                     type="range"
                     min="0"
                     max="1"
+                    aria-label="Volume"
                     step="0.1"
                     value={volume}
                     onChange={(e) => {
@@ -311,11 +334,9 @@ export default function Mixtape() {
             Love this mixtape? Experience the full CLARITY album — a 12-track journey of faith, discipline, and transformation.
           </p>
 
-          <Link href="/store">
-            <Button className="bg-zinc-800 hover:bg-zinc-700 text-white border border-[#00ff00] text-lg px-8 py-6 font-bold">
-              Explore CLARITY
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
+          <Link href="/clarity-sales" className="inline-flex min-h-12 items-center justify-center rounded-xl border border-[#00ff00] bg-zinc-800 px-8 py-3 text-lg font-bold text-white transition hover:bg-zinc-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00ff00]">
+            Explore CLARITY
+            <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
           </Link>
         </div>
       </section>
@@ -324,10 +345,10 @@ export default function Mixtape() {
       <footer className="border-t border-zinc-800 px-4 py-12">
         <div className="max-w-4xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
-            <Link href="/" className="text-zinc-400 hover:text-[#00ff00] transition-colors">HOME</Link>
-            <Link href="/listen" className="text-zinc-400 hover:text-[#00ff00] transition-colors">LISTEN</Link>
-            <Link href="/store" className="text-zinc-400 hover:text-[#00ff00] transition-colors">STORE</Link>
-            <Link href="/connect" className="text-zinc-400 hover:text-[#00ff00] transition-colors">CONNECT</Link>
+            <Link href="/" className="inline-flex min-h-11 items-center px-1 text-zinc-400 hover:text-[#00ff00] transition-colors">HOME</Link>
+            <Link href="/listen" className="inline-flex min-h-11 items-center px-1 text-zinc-400 hover:text-[#00ff00] transition-colors">LISTEN</Link>
+            <Link href="/store" className="inline-flex min-h-11 items-center px-1 text-zinc-400 hover:text-[#00ff00] transition-colors">STORE</Link>
+            <Link href="/connect" className="inline-flex min-h-11 items-center px-1 text-zinc-400 hover:text-[#00ff00] transition-colors">CONNECT</Link>
           </div>
 
           <div className="border-t border-zinc-800 pt-8 text-center text-sm text-zinc-600">

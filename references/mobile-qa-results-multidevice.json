@@ -1,0 +1,326 @@
+[
+  {
+    "device": "iPhone SE",
+    "path": "/",
+    "viewport": 375,
+    "scrollWidth": 375,
+    "horizontalOverflow": false,
+    "interactiveCount": 39,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "iPhone SE",
+    "path": "/clarity-sales",
+    "viewport": 375,
+    "scrollWidth": 375,
+    "horizontalOverflow": false,
+    "interactiveCount": 5,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "iPhone SE",
+    "path": "/listen",
+    "viewport": 375,
+    "scrollWidth": 375,
+    "horizontalOverflow": false,
+    "interactiveCount": 3,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "iPhone SE",
+    "path": "/bathsheba/listen",
+    "viewport": 375,
+    "scrollWidth": 375,
+    "horizontalOverflow": false,
+    "interactiveCount": 30,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "iPhone SE",
+    "path": "/dedication",
+    "viewport": 375,
+    "scrollWidth": 375,
+    "horizontalOverflow": false,
+    "interactiveCount": 44,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "iPhone SE",
+    "path": "/mixtape/listen",
+    "viewport": 375,
+    "scrollWidth": 375,
+    "horizontalOverflow": false,
+    "interactiveCount": 42,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "iPhone SE",
+    "path": "/new-genesis/listen",
+    "viewport": 375,
+    "scrollWidth": 375,
+    "horizontalOverflow": false,
+    "interactiveCount": 28,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "iPhone SE",
+    "path": "/abcs/listen",
+    "viewport": 375,
+    "scrollWidth": 375,
+    "horizontalOverflow": false,
+    "interactiveCount": 31,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "iPhone SE",
+    "path": "/links",
+    "viewport": 375,
+    "scrollWidth": 375,
+    "horizontalOverflow": false,
+    "interactiveCount": 12,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "iPhone SE",
+    "path": "/checkout",
+    "viewport": 375,
+    "scrollWidth": 375,
+    "horizontalOverflow": false,
+    "interactiveCount": 5,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "iPhone SE",
+    "path": "/event",
+    "viewport": 375,
+    "scrollWidth": 375,
+    "horizontalOverflow": false,
+    "interactiveCount": 10,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "iPhone SE",
+    "path": "/projects",
+    "viewport": 375,
+    "scrollWidth": 375,
+    "horizontalOverflow": false,
+    "interactiveCount": 30,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "iPhone 14 Pro",
+    "path": "/",
+    "viewport": 393,
+    "scrollWidth": 393,
+    "horizontalOverflow": false,
+    "interactiveCount": 39,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "iPhone 14 Pro",
+    "path": "/clarity-sales",
+    "viewport": 393,
+    "scrollWidth": 393,
+    "horizontalOverflow": false,
+    "interactiveCount": 5,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "iPhone 14 Pro",
+    "path": "/listen",
+    "viewport": 393,
+    "scrollWidth": 393,
+    "horizontalOverflow": false,
+    "interactiveCount": 3,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "iPhone 14 Pro",
+    "path": "/bathsheba/listen",
+    "viewport": 393,
+    "scrollWidth": 393,
+    "horizontalOverflow": false,
+    "interactiveCount": 30,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "iPhone 14 Pro",
+    "path": "/dedication",
+    "viewport": 393,
+    "scrollWidth": 393,
+    "horizontalOverflow": false,
+    "interactiveCount": 44,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "iPhone 14 Pro",
+    "path": "/mixtape/listen",
+    "viewport": 393,
+    "scrollWidth": 393,
+    "horizontalOverflow": false,
+    "interactiveCount": 42,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "iPhone 14 Pro",
+    "path": "/new-genesis/listen",
+    "viewport": 393,
+    "scrollWidth": 393,
+    "horizontalOverflow": false,
+    "interactiveCount": 28,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "iPhone 14 Pro",
+    "path": "/abcs/listen",
+    "viewport": 393,
+    "scrollWidth": 393,
+    "horizontalOverflow": false,
+    "interactiveCount": 31,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "iPhone 14 Pro",
+    "path": "/links",
+    "viewport": 393,
+    "scrollWidth": 393,
+    "horizontalOverflow": false,
+    "interactiveCount": 12,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "iPhone 14 Pro",
+    "path": "/checkout",
+    "viewport": 393,
+    "scrollWidth": 393,
+    "horizontalOverflow": false,
+    "interactiveCount": 5,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "iPhone 14 Pro",
+    "path": "/event",
+    "viewport": 393,
+    "scrollWidth": 393,
+    "horizontalOverflow": false,
+    "interactiveCount": 10,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "iPhone 14 Pro",
+    "path": "/projects",
+    "viewport": 393,
+    "scrollWidth": 393,
+    "horizontalOverflow": false,
+    "interactiveCount": 30,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "Android standard",
+    "path": "/",
+    "viewport": 412,
+    "scrollWidth": 412,
+    "horizontalOverflow": false,
+    "interactiveCount": 39,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "Android standard",
+    "path": "/clarity-sales",
+    "viewport": 412,
+    "scrollWidth": 412,
+    "horizontalOverflow": false,
+    "interactiveCount": 5,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "Android standard",
+    "path": "/listen",
+    "viewport": 412,
+    "scrollWidth": 412,
+    "horizontalOverflow": false,
+    "interactiveCount": 3,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "Android standard",
+    "path": "/bathsheba/listen",
+    "viewport": 412,
+    "scrollWidth": 412,
+    "horizontalOverflow": false,
+    "interactiveCount": 30,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "Android standard",
+    "path": "/dedication",
+    "viewport": 412,
+    "scrollWidth": 412,
+    "horizontalOverflow": false,
+    "interactiveCount": 44,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "Android standard",
+    "path": "/mixtape/listen",
+    "viewport": 412,
+    "scrollWidth": 412,
+    "horizontalOverflow": false,
+    "interactiveCount": 42,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "Android standard",
+    "path": "/new-genesis/listen",
+    "viewport": 412,
+    "scrollWidth": 412,
+    "horizontalOverflow": false,
+    "interactiveCount": 28,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "Android standard",
+    "path": "/abcs/listen",
+    "viewport": 412,
+    "scrollWidth": 412,
+    "horizontalOverflow": false,
+    "interactiveCount": 31,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "Android standard",
+    "path": "/links",
+    "viewport": 412,
+    "scrollWidth": 412,
+    "horizontalOverflow": false,
+    "interactiveCount": 12,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "Android standard",
+    "path": "/checkout",
+    "viewport": 412,
+    "scrollWidth": 412,
+    "horizontalOverflow": false,
+    "interactiveCount": 5,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "Android standard",
+    "path": "/event",
+    "viewport": 412,
+    "scrollWidth": 412,
+    "horizontalOverflow": false,
+    "interactiveCount": 10,
+    "undersizedInteractive": []
+  },
+  {
+    "device": "Android standard",
+    "path": "/projects",
+    "viewport": 412,
+    "scrollWidth": 412,
+    "horizontalOverflow": false,
+    "interactiveCount": 30,
+    "undersizedInteractive": []
+  }
+]

@@ -1,0 +1,83 @@
+[
+  {
+    "device": "iPhone SE",
+    "click": {
+      "clicked": true,
+      "label": "Download 01-Genesis (The Source).mp3"
+    },
+    "files": [
+      "71e5a53e-21e3-4bdb-8774-e40a6451dd9e"
+    ],
+    "events": [
+      {
+        "method": "Browser.downloadWillBegin",
+        "suggestedFilename": "01-Genesis (The Source).mp3"
+      },
+      {
+        "method": "Browser.downloadProgress",
+        "state": "inProgress"
+      },
+      {
+        "method": "Browser.downloadProgress",
+        "state": "inProgress"
+      },
+      {
+        "method": "Browser.downloadProgress",
+        "state": "inProgress"
+      },
+      {
+        "method": "Browser.downloadProgress",
+        "state": "inProgress"
+      },
+      {
+        "method": "Browser.downloadProgress",
+        "state": "inProgress"
+      },
+      {
+        "method": "Browser.downloadProgress",
+        "state": "completed"
+      }
+    ]
+  },
+  {
+    "device": "Android standard",
+    "click": {
+      "clicked": true,
+      "label": "Download 01-Genesis (The Source).mp3"
+    },
+    "files": [
+      "328b62f2-b04d-4110-8bd4-fc597b9d5b0d",
+      "71e5a53e-21e3-4bdb-8774-e40a6451dd9e"
+    ],
+    "events": [
+      {
+        "method": "Browser.downloadWillBegin",
+        "suggestedFilename": "01-Genesis (The Source).mp3"
+      },
+      {
+        "method": "Browser.downloadProgress",
+        "state": "inProgress"
+      },
+      {
+        "method": "Browser.downloadProgress",
+        "state": "inProgress"
+      },
+      {
+        "method": "Browser.downloadProgress",
+        "state": "inProgress"
+      },
+      {
+        "method": "Browser.downloadProgress",
+        "state": "inProgress"
+      },
+      {
+        "method": "Browser.downloadProgress",
+        "state": "inProgress"
+      },
+      {
+        "method": "Browser.downloadProgress",
+        "state": "completed"
+      }
+    ]
+  }
+]
