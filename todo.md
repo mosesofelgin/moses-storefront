@@ -328,7 +328,7 @@
 - [x] All implementation must preserve the multi-project catalog and existing Stripe integration.
 - [x] Do not fabricate reviews, ratings, testimonials, or other user-generated proof.
 - [x] Do not add physical merchandise assumptions; prioritize digital projects, listening, EPK, booking, and email access.
-- [x] Keep `/clarity-sales` free of email capture; gate only `/listen` as requested.
+- [x] Keep `/clarity-sales`, `/checkout`, and all listening routes free of duplicate capture; gate only the homepage Vault entry as finalized.
 - [x] Keep `/links` free of email capture as requested.
 - [x] All media must remain in S3/CDN or storage proxy, never committed as local deployment assets.
 - [x] Use the existing Sacred Noir / Bronzeville visual language while improving hierarchy and conversion clarity.
@@ -351,3 +351,9 @@ Read me and proceed to build.
 - [x] Add or revise Vitest coverage for all new route-policy, catalog, and conversion decisions.
 - [x] Run pnpm check, pnpm test, and pnpm build after final QA passes; save the completed rebuild checkpoint next.
 - [x] Reduce the initial JavaScript bundle by lazy-loading non-home public routes after the production-build review.
+
+## Single Vault Entry Revision
+- [x] Keep the Vault Gate as the homepage-only mandatory email capture.
+- [x] Remove duplicate email capture from CLARITY listening and any other post-entry music route.
+- [x] Preserve the existing unlock state so a captured visitor is never prompted again during sales, checkout, listening, or downloads.
+- [x] Add regression coverage for the one-email-entry policy and verify the full fan journey.

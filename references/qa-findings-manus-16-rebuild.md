@@ -55,3 +55,7 @@ The semantic audit covered 14 public routes and found **no visible unnamed contr
 ## WCAG AA audit
 
 An automated axe-core audit was run against the homepage, flagship sales and listen routes, all five archive listening rooms, the link tree, checkout, event gateway, archive, Artist/EPK, and Store. After lifting low-emphasis text colors, repairing download-button foreground color, restoring mobile zoom, and strengthening Artist metadata, the final audit returned **zero WCAG 2 A/AA/2.1 AA violations across all 14 routes**. The final route-by-route results are retained in `references/axe-qa-results.json`.
+
+## Single Vault-entry review
+
+After clearing local storage, the homepage displayed **THE VAULT** and exposed only its email field and entry action. After setting the stored Vault unlock state, the CLARITY listening room opened directly to playback with no secondary email prompt, the CLARITY checkout remained a focused order form, and the BATHSHEBA free listening/download route remained capture-free. This keeps the approved “email first, then full access” rule while eliminating duplicate collection during a single visitor journey.

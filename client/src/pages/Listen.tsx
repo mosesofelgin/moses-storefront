@@ -1,13 +1,11 @@
 import { Link, useLocation } from 'wouter';
 import { CLARITY_BUNDLE } from '@/data/clarity-bundle';
 import { useMemo, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight, Pause, Play, Mail, ArrowRight, Loader2, Check } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import TrackContext from '@/components/TrackContext';
 import PersistentCTA from '@/components/PersistentCTA';
 import ListenNavigation from '@/components/ListenNavigation';
 import AudioErrorNotice from '@/components/AudioErrorNotice';
-import { trpc } from '@/lib/trpc';
-import { toast } from 'sonner';
 
 function formatTime(seconds: number) {
   if (!Number.isFinite(seconds) || seconds < 0) return '0:00';
@@ -23,14 +21,9 @@ export default function Listen() {
   const [duration, setDuration] = useState(0);
   const [hasSeenTrackSevenModal, setHasSeenTrackSevenModal] = useState(false);
   const [isTrackSevenModalOpen, setIsTrackSevenModalOpen] = useState(false);
-  const [emailCapture, setEmailCapture] = useState('');
-  const [isEmailSubmitting, setIsEmailSubmitting] = useState(false);
-  const [emailSubmitted, setEmailSubmitted] = useState(false);
-  const [emailUnlocked, setEmailUnlocked] = useState(false);
   const [audioError, setAudioError] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [, navigate] = useLocation();
-  const subscribeEmailMutation = trpc.subscribe.addEmail.useMutation();
   const albumCover = CLARITY_BUNDLE.images.find((img) => img.title === 'CLARITY Album Cover');
 
   const activeTrackIndex = tracks.findIndex((track) => track.id === playingTrackId);
@@ -84,32 +77,6 @@ export default function Listen() {
     playTrack(tracks[activeTrackIndex + 1].id);
   };
 
-
-  const handleEmailSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!emailCapture) {
-      toast.error('Please enter your email');
-      return;
-    }
-
-    setIsEmailSubmitting(true);
-    try {
-      await subscribeEmailMutation.mutateAsync({ email: emailCapture });
-      setEmailUnlocked(true);
-      setEmailSubmitted(true);
-      toast.success('You\'re in! Enjoy CLARITY.');
-      setTimeout(() => {
-        setEmailCapture('');
-        setEmailSubmitted(false);
-      }, 2000);
-    } catch (error) {
-      toast.error('Failed to subscribe');
-      console.error(error);
-    } finally {
-      setIsEmailSubmitting(false);
-    }
-  };
-
   const handleTrackEnd = () => {
     const endedTrackId = playingTrackId;
 
@@ -126,48 +93,6 @@ export default function Listen() {
     setPlayingTrackId(null);
     setCurrentTime(0);
   };
-
-
-  // Email gate
-  if (!emailUnlocked) {
-    return (
-      <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_76%_18%,rgba(184,134,11,0.16),transparent_25%),#090909] px-4 py-10 text-zinc-100">
-        <div className="pointer-events-none absolute left-1/2 top-1/2 h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-amber-100/5" />
-        <div className="relative mx-auto w-full max-w-lg rounded-3xl border border-amber-100/15 bg-zinc-950/80 p-7 text-center shadow-[0_30px_100px_rgba(0,0,0,0.5)] backdrop-blur-xl sm:p-10">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-amber-100/20 bg-amber-300/10"><Mail className="h-6 w-6 text-amber-200" aria-hidden="true" /></div>
-          <p className="mt-7 text-[10px] uppercase tracking-[0.3em] text-amber-200">CLARITY · Full listening access</p>
-          <h1 className="mt-4 font-display text-5xl tracking-[0.1em] text-zinc-50 sm:text-6xl">UNLOCK THE ALBUM</h1>
-          <p className="mx-auto mt-5 max-w-sm font-serif text-2xl italic leading-snug text-amber-50/80">Enter your email, then step into the full CLARITY listening experience.</p>
-          <p className="mx-auto mt-4 max-w-sm text-sm leading-6 text-zinc-500">This unlocks the record and opens a direct line for future transmissions from the vault.</p>
-          <form onSubmit={handleEmailSubmit} className="mt-8 space-y-3">
-            <input
-              type="email"
-              aria-label="Email address"
-              autoComplete="email"
-              placeholder="your@email.com"
-              value={emailCapture}
-              onChange={(e) => setEmailCapture(e.target.value)}
-              disabled={isEmailSubmitting}
-              className="min-h-12 w-full rounded-xl border border-amber-100/15 bg-zinc-900/80 px-5 text-zinc-100 outline-none placeholder:text-zinc-600 focus:border-amber-200 focus:ring-2 focus:ring-amber-200/20 disabled:opacity-50"
-            />
-            <button
-              type="submit"
-              disabled={isEmailSubmitting}
-              className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-amber-300 px-5 font-display text-lg tracking-[0.14em] text-zinc-950 transition hover:bg-amber-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {isEmailSubmitting ? (
-                <><Loader2 className="w-4 h-4 animate-spin" /> Unlocking...</>
-              ) : (
-                <><ArrowRight className="w-4 h-4" /> Unlock Album</>
-              )}
-            </button>
-          </form>
-          <p className="mt-5 text-[10px] uppercase tracking-[0.14em] text-zinc-600">No noise · Direct from MOSES · Unsubscribe anytime</p>
-        </div>
-      </main>
-    );
-  }
-
 
   return (
     <main className="min-h-screen bg-zinc-950 px-4 py-6 text-zinc-100 sm:py-10">

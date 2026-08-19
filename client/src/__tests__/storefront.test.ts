@@ -194,6 +194,13 @@ describe('MOSES route policy', () => {
     expect(shouldShowVaultGate('/', true)).toBe(false);
   });
 
+  it('does not create an additional listening-route capture after Vault entry', () => {
+    const source = readFileSync(resolve(process.cwd(), 'client/src/pages/Listen.tsx'), 'utf8');
+    expect(source).not.toContain('UNLOCK THE ALBUM');
+    expect(source).not.toContain('emailUnlocked');
+    expect(source).not.toContain('subscribe.addEmail');
+  });
+
   it('keeps sales, checkout, event, artist, and links routes directly accessible', async () => {
     const { shouldShowVaultGate } = await import('@/lib/routePolicy');
     ['/clarity-sales', '/checkout', '/event', '/artist', '/links'].forEach((path) => {
