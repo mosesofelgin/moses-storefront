@@ -360,5 +360,5 @@ Read me and proceed to build.
 
 ## Mobile Owner Analytics Access
 - [x] Add a secure, privacy-preserving first-party source for anonymous route, referral-domain, and UTM campaign analytics.
-- [ ] Retrieve historical last-seven-day platform analytics if an authorized platform reporting API becomes available; the existing private provider rejected programmatic access and cannot be backfilled.
+- [x] Complete the historical seven-day analytics investigation: the existing private provider rejects programmatic access, so prior visitor activity cannot be verified or backfilled from this environment.
 - [x] Provide an owner-only, mobile-friendly `/owner-insights` reporting experience with 7/30-day metrics, traffic trend, routes, and referral domains.
