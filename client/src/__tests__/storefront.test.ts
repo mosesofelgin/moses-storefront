@@ -216,6 +216,14 @@ describe('MOSES route policy', () => {
     expect(isFocusedRoutePath('/artist')).toBe(false);
   });
 
+  it('keeps the owner insights route private to the app shell and outside the Vault flow', async () => {
+    const { shouldShowVaultGate } = await import('@/lib/routePolicy');
+    const appSource = readFileSync(resolve(process.cwd(), 'client/src/App.tsx'), 'utf8');
+    expect(shouldShowVaultGate('/owner-insights', false)).toBe(false);
+    expect(appSource).toContain('OwnerInsights');
+    expect(appSource).toContain('trackPageview');
+  });
+
   it('keeps the catalog archive available after a visitor has entered the vault', async () => {
     const { shouldShowVaultGate } = await import('@/lib/routePolicy');
     expect(shouldShowVaultGate('/projects', true)).toBe(false);

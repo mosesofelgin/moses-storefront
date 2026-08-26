@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { index, int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -76,3 +76,28 @@ export const subscribers = mysqlTable("subscribers", {
 
 export type Subscriber = typeof subscribers.$inferSelect;
 export type InsertSubscriber = typeof subscribers.$inferInsert;
+
+/**
+ * Anonymous first-party traffic events for the owner-only insights screen.
+ * This deliberately stores no IP address, device fingerprint, or customer identity.
+ */
+export const analyticsEvents = mysqlTable(
+  "analytics_events",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    visitorId: varchar("visitorId", { length: 64 }).notNull(),
+    path: varchar("path", { length: 512 }).notNull(),
+    referrer: varchar("referrer", { length: 255 }).default("direct").notNull(),
+    campaignSource: varchar("campaignSource", { length: 128 }),
+    campaignMedium: varchar("campaignMedium", { length: 128 }),
+    campaignName: varchar("campaignName", { length: 128 }),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("analytics_events_created_at_idx").on(table.createdAt),
+    index("analytics_events_visitor_created_idx").on(table.visitorId, table.createdAt),
+  ],
+);
+
+export type AnalyticsEvent = typeof analyticsEvents.$inferSelect;
+export type InsertAnalyticsEvent = typeof analyticsEvents.$inferInsert;

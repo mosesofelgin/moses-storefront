@@ -1,5 +1,5 @@
-export const VAULT_BYPASS_PATHS = ['/clarity-sales', '/event', '/links', '/checkout', '/artist'] as const;
-export const FOCUS_ROUTE_PATHS = ['/clarity-sales', '/listen', '/links', '/event', '/checkout'] as const;
+export const VAULT_BYPASS_PATHS = ['/clarity-sales', '/event', '/links', '/checkout', '/artist', '/owner-insights'] as const;
+export const FOCUS_ROUTE_PATHS = ['/clarity-sales', '/listen', '/links', '/event', '/checkout', '/owner-insights'] as const;
 
 function matchesPath(pathname: string, route: string) {
   return pathname === route || pathname.startsWith(`${route}/`);

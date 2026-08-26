@@ -357,3 +357,8 @@ Read me and proceed to build.
 - [x] Remove duplicate email capture from CLARITY listening and any other post-entry music route.
 - [x] Preserve the existing unlock state so a captured visitor is never prompted again during sales, checkout, listening, or downloads.
 - [x] Add regression coverage for the one-email-entry policy and verify the full fan journey.
+
+## Mobile Owner Analytics Access
+- [x] Add a secure, privacy-preserving first-party source for anonymous route, referral-domain, and UTM campaign analytics.
+- [ ] Retrieve historical last-seven-day platform analytics if an authorized platform reporting API becomes available; the existing private provider rejected programmatic access and cannot be backfilled.
+- [x] Provide an owner-only, mobile-friendly `/owner-insights` reporting experience with 7/30-day metrics, traffic trend, routes, and referral domains.

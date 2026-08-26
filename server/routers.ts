@@ -1,7 +1,7 @@
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, router } from "./_core/trpc";
+import { adminProcedure, publicProcedure, router } from "./_core/trpc";
 import { ENV } from "./_core/env";
 import { z } from "zod";
 import Stripe from "stripe";
@@ -10,6 +10,7 @@ import { generateDownloadToken, verifyDownloadToken } from "./downloads";
 import { subscribeEmail, getSubscriberCount } from "./subscribers";
 import { verifyStripeSession } from "./session-verification";
 import { sendPurchaseConfirmationEmail } from "./email";
+import { getAnalyticsOverview, recordPageView } from "./analytics";
 
 export const appRouter = router({
   system: systemRouter,
@@ -175,6 +176,23 @@ export const appRouter = router({
       const count = await getSubscriberCount();
       return { count };
     }),
+  }),
+
+  analytics: router({
+    trackPageview: publicProcedure
+      .input(z.object({
+        visitorId: z.string().min(16).max(64),
+        path: z.string().min(1).max(512),
+        referrer: z.string().max(2048).nullable().optional(),
+        campaignSource: z.string().max(128).nullable().optional(),
+        campaignMedium: z.string().max(128).nullable().optional(),
+        campaignName: z.string().max(128).nullable().optional(),
+      }))
+      .mutation(async ({ input }) => ({ recorded: await recordPageView(input) })),
+
+    overview: adminProcedure
+      .input(z.object({ days: z.union([z.literal(7), z.literal(30)]).default(7) }))
+      .query(async ({ input }) => getAnalyticsOverview(input.days)),
   }),
 });
 

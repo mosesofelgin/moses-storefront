@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
@@ -9,6 +9,8 @@ import { isFocusedRoutePath, shouldShowVaultGate } from "./lib/routePolicy";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import VaultGate, { isVaultUnlocked } from "./components/VaultGate";
+import { createPageViewPayload } from "./lib/siteAnalytics";
+import { trpc } from "./lib/trpc";
 
 const Links = lazy(() => import("./pages/Links"));
 const ClarityProject = lazy(() => import("./pages/ClarityProject"));
@@ -31,6 +33,7 @@ const Checkout = lazy(() => import("./pages/Checkout"));
 const Event = lazy(() => import("./pages/Event"));
 const Projects = lazy(() => import("./pages/Projects"));
 const ClaritySales = lazy(() => import("./pages/ClaritySales"));
+const OwnerInsights = lazy(() => import("./pages/OwnerInsights"));
 
 function RouteFallback() {
   return (
@@ -45,6 +48,7 @@ function Router() {
   return (
     <Suspense fallback={<RouteFallback />}>
       <Switch>
+      <Route path={"/owner-insights"} component={OwnerInsights} />
       <Route path={"/success"} component={Success} />
       <Route path={"/downloads"} component={Downloads} />
       <Route path={"/clarity"} component={ClarityProject} />
@@ -83,9 +87,16 @@ function Router() {
 function App() {
   const [vaultOpen, setVaultOpen] = useState(() => isVaultUnlocked());
   const [currentPath] = useLocation();
+  const { mutate: trackPageview } = trpc.analytics.trackPageview.useMutation();
 
   const shouldShowGate = shouldShowVaultGate(currentPath, vaultOpen);
   const isFocusedRoute = isFocusedRoutePath(currentPath);
+
+  useEffect(() => {
+    if (currentPath === "/owner-insights") return;
+
+    trackPageview(createPageViewPayload(currentPath, window.location.search, document.referrer));
+  }, [currentPath, trackPageview]);
 
   return (
     <ErrorBoundary>
