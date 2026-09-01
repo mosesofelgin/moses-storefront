@@ -231,6 +231,10 @@ describe('MOSES route policy', () => {
     expect(isFocusedRoutePath('/onmyown')).toBe(true);
     expect(source).toContain('THEPRINCE_ec280adc.mp3');
     expect(source).toContain('YOUTUBE_VIDEO_ID');
+    expect(source).toContain('bq44Ga7xovw');
+    expect(source).toContain('youtube.com/embed');
+    expect(source).toContain('WATCH ON YOUTUBE');
+    expect(source).toContain('strict-origin-when-cross-origin');
     expect(source).toContain('subscribe.addEmail');
     expect(source).toContain('FREE MP3 DOWNLOAD');
     const linksSource = readFileSync(resolve(process.cwd(), 'client/src/pages/Links.tsx'), 'utf8');

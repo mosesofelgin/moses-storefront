@@ -7,12 +7,11 @@ import { trpc } from "@/lib/trpc";
 
 const MP3_URL = "/manus-storage/THEPRINCE_ec280adc.mp3";
 
-// Paste the YouTube video ID here after THEPRINCE is published.
-// Example: "dQw4w9WgXcQ". The page intentionally shows a finished placeholder until then.
-const YOUTUBE_VIDEO_ID = "";
+// Supplied YouTube URL: https://youtu.be/bq44Ga7xovw
+const YOUTUBE_VIDEO_ID = "bq44Ga7xovw";
 
 function youtubeEmbedUrl(videoId: string) {
-  return videoId ? `https://www.youtube-nocookie.com/embed/${videoId}?rel=0` : null;
+  return videoId ? `https://www.youtube.com/embed/${videoId}?rel=0` : null;
 }
 
 export default function ThePrince() {
@@ -87,6 +86,7 @@ export default function ThePrince() {
               title="THEPRINCE by MOSES SOG"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
+              referrerPolicy="strict-origin-when-cross-origin"
             />
           ) : (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-[radial-gradient(circle_at_center,rgba(184,134,11,0.15),transparent_45%)] px-6 text-center">
@@ -99,6 +99,14 @@ export default function ThePrince() {
             </div>
           )}
         </div>
+        {embedUrl && (
+          <div className="mt-4 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+            <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-[#776d60]">If the player is restricted in your browser, watch directly on YouTube.</p>
+            <a href={`https://youtu.be/${YOUTUBE_VIDEO_ID}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 border border-[#b8860b]/35 px-4 font-display text-sm tracking-[0.12em] text-[#d5a21a] transition hover:border-[#d5a21a] hover:text-[#f0e8d7] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f0e8d7]">
+              WATCH ON YOUTUBE <Youtube className="h-4 w-4" aria-hidden="true" />
+            </a>
+          </div>
+        )}
       </section>
 
       <section className="border-y border-[#b8860b]/20 bg-[#110e0b]">

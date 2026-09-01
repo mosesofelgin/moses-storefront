@@ -378,3 +378,10 @@ Implementation note: delivery destination is the MOSES storefront at the confirm
 - [x] Move the THEPRINCE page from `/theprince` to the exact public path `/onmyown`.
 - [x] Update homepage, link-tree, route-policy, and regression references to `/onmyown`.
 - [x] Verify the renamed route and save a new checkpoint.
+
+## THEPRINCE YouTube Activation
+- [x] Activate YouTube video ID `bq44Ga7xovw` in the `/onmyown` embed slot.
+- [x] Verify the supplied YouTube URL and embedded `/onmyown` route alongside the free MP3 and mailing-list actions.
+- [x] Run final validation and save a checkpoint for the activated video.
+
+- [x] Add a resilient direct-watch fallback and explicit referrer policy for THEPRINCE because sandbox QA returned YouTube Error 153 inside the iframe while the watch URL remains available.

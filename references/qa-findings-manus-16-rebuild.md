@@ -59,3 +59,9 @@ An automated axe-core audit was run against the homepage, flagship sales and lis
 ## Single Vault-entry review
 
 After clearing local storage, the homepage displayed **THE VAULT** and exposed only its email field and entry action. After setting the stored Vault unlock state, the CLARITY listening room opened directly to playback with no secondary email prompt, the CLARITY checkout remained a focused order form, and the BATHSHEBA free listening/download route remained capture-free. This keeps the approved “email first, then full access” rule while eliminating duplicate collection during a single visitor journey.
+
+## THEPRINCE YouTube activation review
+
+The supplied URL `https://youtu.be/bq44Ga7xovw` resolved to the YouTube video titled **“on my own homage to lil Wayne”** by Moses SOG in browser QA. The first `/onmyown` iframe run used the privacy host and surfaced “This video is unavailable”; a direct standard YouTube embed test returned YouTube Error 153 with a request for an HTTP referrer. The page was updated to the standard `www.youtube.com/embed/bq44Ga7xovw` host with `referrerPolicy="strict-origin-when-cross-origin"`, plus a visible **Watch on YouTube** fallback link, so the release remains usable if an embed is restricted by the browser or YouTube settings.
+
+The repaired `/onmyown` page was rechecked at phone width. The YouTube frame loads the supplied video card but the sandbox preview still reports **“This video is unavailable”**; a direct YouTube embed test reports Error 153, indicating a YouTube/browser referrer restriction rather than a missing video. The page therefore keeps a prominent **WATCH ON YOUTUBE** fallback immediately below the frame, while the MP3 player, free-download button, and mailing-list form remain visible and usable.
