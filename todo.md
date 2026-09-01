@@ -364,12 +364,12 @@ Read me and proceed to build.
 - [x] Provide an owner-only, mobile-friendly `/owner-insights` reporting experience with 7/30-day metrics, traffic trend, routes, and referral domains.
 
 ## THEPRINCE Free Download
-- [ ] Add the supplied THEPRINCE.mp3 as a public, free MP3 download using project storage conventions.
-- [ ] Create a branded public THEPRINCE page with a clear download action and mailing-list signup.
-- [ ] Register the route and preserve the homepage Vault / no-duplicate-capture policy.
-- [ ] Verify audio delivery, signup states, mobile presentation, accessibility, tests, and production build.
-- [ ] Save a checkpoint for the completed THEPRINCE release.
+- [x] Add the supplied THEPRINCE.mp3 as a public, free MP3 download using project storage conventions.
+- [x] Create a branded public THEPRINCE page with a clear download action and mailing-list signup.
+- [x] Register the route and preserve the homepage Vault / no-duplicate-capture policy.
+- [x] Verify audio delivery, signup states, mobile presentation, accessibility, tests, and production build.
+- [x] Save a checkpoint for the completed THEPRINCE release.
 
 Implementation note: delivery destination is the MOSES storefront; no separate Backslash platform has been specified yet.
 
-- [ ] Add a dedicated responsive YouTube embed/HTML media space to the THEPRINCE page, with a safe placeholder until the final YouTube URL is supplied.
+- [x] Add a dedicated responsive YouTube embed/HTML media space to the THEPRINCE page, with a safe placeholder until the final YouTube URL is supplied.

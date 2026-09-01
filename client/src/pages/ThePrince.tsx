@@ -95,7 +95,7 @@ export default function ThePrince() {
               </div>
               <p className="mt-6 font-display text-3xl tracking-[0.1em] text-[#f0e8d7] sm:text-4xl">YOUTUBE SPACE RESERVED</p>
               <p className="mt-3 max-w-md font-serif text-lg italic leading-relaxed text-[#a99c89]">The embedded THEPRINCE visual will live here as soon as the YouTube upload is ready.</p>
-              <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.18em] text-[#776d60]">Paste the YouTube video ID into the release page</p>
+              <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.18em] text-[#776d60]">The visual will appear here after the YouTube upload is live</p>
             </div>
           )}
         </div>
