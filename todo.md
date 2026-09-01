@@ -362,3 +362,14 @@ Read me and proceed to build.
 - [x] Add a secure, privacy-preserving first-party source for anonymous route, referral-domain, and UTM campaign analytics.
 - [x] Complete the historical seven-day analytics investigation: the existing private provider rejects programmatic access, so prior visitor activity cannot be verified or backfilled from this environment.
 - [x] Provide an owner-only, mobile-friendly `/owner-insights` reporting experience with 7/30-day metrics, traffic trend, routes, and referral domains.
+
+## THEPRINCE Free Download
+- [ ] Add the supplied THEPRINCE.mp3 as a public, free MP3 download using project storage conventions.
+- [ ] Create a branded public THEPRINCE page with a clear download action and mailing-list signup.
+- [ ] Register the route and preserve the homepage Vault / no-duplicate-capture policy.
+- [ ] Verify audio delivery, signup states, mobile presentation, accessibility, tests, and production build.
+- [ ] Save a checkpoint for the completed THEPRINCE release.
+
+Implementation note: delivery destination is the MOSES storefront; no separate Backslash platform has been specified yet.
+
+- [ ] Add a dedicated responsive YouTube embed/HTML media space to the THEPRINCE page, with a safe placeholder until the final YouTube URL is supplied.
