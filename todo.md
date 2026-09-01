@@ -370,6 +370,11 @@ Read me and proceed to build.
 - [x] Verify audio delivery, signup states, mobile presentation, accessibility, tests, and production build.
 - [x] Save a checkpoint for the completed THEPRINCE release.
 
-Implementation note: delivery destination is the MOSES storefront; no separate Backslash platform has been specified yet.
+Implementation note: delivery destination is the MOSES storefront at the confirmed public path `/onmyown`.
 
 - [x] Add a dedicated responsive YouTube embed/HTML media space to the THEPRINCE page, with a safe placeholder until the final YouTube URL is supplied.
+
+## THEPRINCE Route Rename
+- [x] Move the THEPRINCE page from `/theprince` to the exact public path `/onmyown`.
+- [x] Update homepage, link-tree, route-policy, and regression references to `/onmyown`.
+- [x] Verify the renamed route and save a new checkpoint.

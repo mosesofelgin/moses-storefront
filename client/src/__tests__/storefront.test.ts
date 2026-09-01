@@ -227,14 +227,14 @@ describe('MOSES route policy', () => {
   it('keeps THEPRINCE direct-access and outside the homepage Vault gate', async () => {
     const { shouldShowVaultGate, isFocusedRoutePath } = await import('@/lib/routePolicy');
     const source = readFileSync(resolve(process.cwd(), 'client/src/pages/ThePrince.tsx'), 'utf8');
-    expect(shouldShowVaultGate('/theprince', false)).toBe(false);
-    expect(isFocusedRoutePath('/theprince')).toBe(true);
+    expect(shouldShowVaultGate('/onmyown', false)).toBe(false);
+    expect(isFocusedRoutePath('/onmyown')).toBe(true);
     expect(source).toContain('THEPRINCE_ec280adc.mp3');
     expect(source).toContain('YOUTUBE_VIDEO_ID');
     expect(source).toContain('subscribe.addEmail');
     expect(source).toContain('FREE MP3 DOWNLOAD');
     const linksSource = readFileSync(resolve(process.cwd(), 'client/src/pages/Links.tsx'), 'utf8');
-    expect(linksSource).toContain('href="/theprince"');
+    expect(linksSource).toContain('href="/onmyown"');
   });
 
   it('keeps the catalog archive available after a visitor has entered the vault', async () => {

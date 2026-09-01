@@ -50,7 +50,7 @@ function Router() {
     <Suspense fallback={<RouteFallback />}>
       <Switch>
       <Route path={"/owner-insights"} component={OwnerInsights} />
-      <Route path={"/theprince"} component={ThePrince} />
+      <Route path={"/onmyown"} component={ThePrince} />
       <Route path={"/success"} component={Success} />
       <Route path={"/downloads"} component={Downloads} />
       <Route path={"/clarity"} component={ClarityProject} />
