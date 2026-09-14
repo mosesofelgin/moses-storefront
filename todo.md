@@ -385,3 +385,21 @@ Implementation note: delivery destination is the MOSES storefront at the confirm
 - [x] Run final validation and save a checkpoint for the activated video.
 
 - [x] Add a resilient direct-watch fallback and explicit referrer policy for THEPRINCE because sandbox QA returned YouTube Error 153 inside the iframe while the watch URL remains available.
+
+## DEDICATION Track 5 Addition
+- [x] Upload the supplied onmyownhomagetolilWayne.mp3 using project storage conventions.
+- [x] Add it as DEDICATION track 5 without disturbing the existing track order or metadata.
+- [x] Include the new track in the DEDICATION player and downloadable ZIP bundle.
+- [x] Verify the track source, playback, download endpoint, tests, and production build; save a checkpoint.
+
+## DEDICATION Track 6 Addition
+- [x] Upload the supplied Dear Mama (Shine Flip) MP3 using project storage conventions.
+- [x] Insert it as DEDICATION track 6 and shift later tracks without disturbing earlier order.
+- [x] Include the new track in the DEDICATION player and downloadable ZIP bundle.
+- [x] Verify the full sequence, audio source, download delivery, tests, build, and checkpoint.
+
+## DEDICATION Track 7 Addition
+- [x] Upload the supplied Expedite This Letter (Rough Draft) MP3 using project storage conventions.
+- [x] Insert it as DEDICATION track 7 and shift later tracks without disturbing earlier order.
+- [x] Include the new track in the DEDICATION player and downloadable ZIP bundle.
+- [x] Verify the full sequence, audio source, download delivery, tests, build, and checkpoint.

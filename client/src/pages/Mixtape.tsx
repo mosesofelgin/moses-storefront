@@ -152,7 +152,7 @@ export default function Mixtape() {
               </h1>
 
               <p className="font-cormorant text-2xl italic text-zinc-300 mb-6">
-                A 14-track homage to Lil Wayne
+                A 17-track homage to Lil Wayne
               </p>
 
               <p className="text-lg text-zinc-400 mb-8 leading-relaxed">

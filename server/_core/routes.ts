@@ -149,7 +149,11 @@ export function registerRoutes(app: Express) {
   app.get("/api/download/dedication", async (req: Request, res: Response) => {
     try {
       console.log("[Dedication Download] Request received");
-      const { stream } = await createDedicationBundle();
+      const host = req.get("host");
+      if (!host) throw new Error("Missing request host");
+      const forwardedProto = req.get("x-forwarded-proto")?.split(",")[0]?.trim();
+      const origin = `${forwardedProto || req.protocol}://${host}`;
+      const { stream } = await createDedicationBundle(origin);
 
       // Set response headers
       res.setHeader("Content-Type", "application/zip");

@@ -241,6 +241,19 @@ describe('MOSES route policy', () => {
     expect(linksSource).toContain('href="/onmyown"');
   });
 
+  it('keeps DEDICATION track order synchronized across the player and ZIP bundle', async () => {
+    const { dedicationBundle } = await import('@/data/dedication-bundle');
+    expect(dedicationBundle.trackCount).toBe(17);
+    expect(dedicationBundle.tracks).toHaveLength(17);
+    expect(dedicationBundle.tracks[4].title).toBe('On My Own (Homage to Lil Wayne)');
+    expect(dedicationBundle.tracks[5].title).toBe('[Explicit] Dear Mama (Shine Flip)');
+    expect(dedicationBundle.tracks[6].title).toBe('Expedite This Letter (Rough Draft) (Lil Durk Flip)');
+    expect(dedicationBundle.tracks[6].url).toContain('expeditethisletterroughdraftlildurkflip_7672c194.mp3');
+    const zipSource = readFileSync(resolve(process.cwd(), 'server/zip-dedication.ts'), 'utf8');
+    expect(zipSource).toContain('07-Expedite-This-Letter-Rough-Draft-Lil-Durk-Flip.mp3');
+    expect(zipSource).toContain('expeditethisletterroughdraftlildurkflip_7672c194.mp3');
+  });
+
   it('keeps the catalog archive available after a visitor has entered the vault', async () => {
     const { shouldShowVaultGate } = await import('@/lib/routePolicy');
     expect(shouldShowVaultGate('/projects', true)).toBe(false);
