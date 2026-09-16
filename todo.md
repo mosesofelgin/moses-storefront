@@ -411,3 +411,14 @@ Implementation note: delivery destination is the MOSES storefront at the confirm
 - [x] Connect first-name and email signup to the existing mailing-list mutation and immediate PDF delivery with an on-page success state.
 - [x] Add regression coverage for route isolation, offer copy, asset delivery, signup behavior, and download handling.
 - [x] Verify mobile/desktop presentation, accessibility, signup/download behavior, type checks, tests, and production build; save a checkpoint.
+
+## AI Without the Fear Route Rename
+- [x] Move the landing page from `/ai-without-the-fear` to `/airisks`.
+- [x] Update direct-access policy and route regression coverage for `/airisks`.
+- [x] Verify the renamed route and save a new checkpoint.
+
+## AI Without the Fear Asset Replacement
+- [x] Replace the original guide PDF with `AI_Without_the_Fear_—_New_Covenant_Enterprises.pdf`.
+- [x] Remove old cover/PDF references and upload a stylish, clean replacement cover.
+- [x] Update `/airisks`, email delivery, regression tests, and asset checks to the new files.
+- [x] Re-run responsive, signup/download, type, test, and production-build QA; save a checkpoint.

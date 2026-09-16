@@ -52,7 +52,7 @@ function Router() {
       <Switch>
       <Route path={"/owner-insights"} component={OwnerInsights} />
       <Route path={"/onmyown"} component={ThePrince} />
-      <Route path={"/ai-without-the-fear"} component={AiWithoutFear} />
+      <Route path={"/airisks"} component={AiWithoutFear} />
       <Route path={"/success"} component={Success} />
       <Route path={"/downloads"} component={Downloads} />
       <Route path={"/clarity"} component={ClarityProject} />

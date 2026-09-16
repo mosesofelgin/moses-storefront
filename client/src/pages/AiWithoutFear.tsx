@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 
-const GUIDE_PDF = "/manus-storage/ai-without-the-fear_7d7e0e65.pdf";
-const GUIDE_COVER = "/manus-storage/ebook-cover_fa7f9393.jpg";
+const GUIDE_PDF = "/manus-storage/AI_Without_the_Fear_New_Covenant_Enterprises_d62bbca0.pdf";
+const GUIDE_COVER = "/manus-storage/ai-without-the-fear-cover-new_23de119b.jpg";
 
 const benefits = [
   "Whether AI is actually coming for your job — and which parts of it",

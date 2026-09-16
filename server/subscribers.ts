@@ -59,7 +59,7 @@ export async function subscribeEmail(
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2>${options.source === "ai_without_fear" ? `Your AI Without the Fear guide is here${options.firstName ? `, ${options.firstName}` : ""}` : "Welcome to the MOSES Community"}</h2>
-          ${options.source === "ai_without_fear" ? `<p>Thanks for requesting the guide. You can download it immediately here:</p><p><a href="https://mosessog.com/manus-storage/ai-without-the-fear_7d7e0e65.pdf">Download AI Without the Fear</a></p>` : "<p>You're now connected to direct updates on:</p>"}
+          ${options.source === "ai_without_fear" ? `<p>Thanks for requesting the guide. You can download it immediately here:</p><p><a href="https://mosessog.com/manus-storage/AI_Without_the_Fear_New_Covenant_Enterprises_d62bbca0.pdf">Download AI Without the Fear</a></p>` : "<p>You're now connected to direct updates on:</p>"}
           <ul>
             <li>New music releases</li>
             <li>Weekly livestreams (Sundays 7 PM CDT)</li>
