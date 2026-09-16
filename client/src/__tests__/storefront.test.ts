@@ -238,7 +238,11 @@ describe('MOSES route policy', () => {
     expect(source).toContain('subscribe.addEmail');
     expect(source).toContain('FREE MP3 DOWNLOAD');
     const linksSource = readFileSync(resolve(process.cwd(), 'client/src/pages/Links.tsx'), 'utf8');
-    expect(linksSource).toContain('href="/onmyown"');
+    expect(linksSource).toContain('href="/airisks"');
+    expect(linksSource).toContain('FINAL PRAYER');
+    expect(linksSource).toContain('xn0KdOotyTI');
+    expect(linksSource).toContain('youtube.com/@MosesSOG');
+    expect(linksSource).toContain('MOSES ON YOUTUBE');
   });
 
   it('keeps DEDICATION track order synchronized across the player and ZIP bundle', async () => {

@@ -422,3 +422,14 @@ Implementation note: delivery destination is the MOSES storefront at the confirm
 - [x] Remove old cover/PDF references and upload a stylish, clean replacement cover.
 - [x] Update `/airisks`, email delivery, regression tests, and asset checks to the new files.
 - [x] Re-run responsive, signup/download, type, test, and production-build QA; save a checkpoint.
+
+## Link Tree AI Guide
+- [x] Add a prominent AI Without the Fear destination linking to `/airisks` on `/links`.
+- [x] Verify the link-tree presentation, route target, tests, and build; save a checkpoint.
+
+## Link Tree Refinement
+- [x] Make Final Prayer the first visual destination on `/links`.
+- [x] Add a dedicated YouTube channel link to `/links` using the verified @MosesSOG destination.
+- [x] Preserve the prominent AI Without the Fear `/airisks` card and verify link-tree routes, tests, build, and checkpoint.
+
+- [x] Replace the YouTube channel card destination with the exact supplied URL `https://www.youtube.com/@MosesSOG/` and verify it in regression coverage.
