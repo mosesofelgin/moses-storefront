@@ -403,3 +403,11 @@ Implementation note: delivery destination is the MOSES storefront at the confirm
 - [x] Insert it as DEDICATION track 7 and shift later tracks without disturbing earlier order.
 - [x] Include the new track in the DEDICATION player and downloadable ZIP bundle.
 - [x] Verify the full sequence, audio source, download delivery, tests, build, and checkpoint.
+
+## AI Without the Fear Landing Page
+- [x] Upload the supplied ebook PDF and cover image using project-managed storage conventions.
+- [x] Add a public distraction-free New Covenant Enterprises landing route with no global navigation or unrelated links.
+- [x] Implement the AI Without the Fear offer copy, credibility block, topic benefits, responsive design, and ebook cover presentation from the supplied brief.
+- [x] Connect first-name and email signup to the existing mailing-list mutation and immediate PDF delivery with an on-page success state.
+- [x] Add regression coverage for route isolation, offer copy, asset delivery, signup behavior, and download handling.
+- [x] Verify mobile/desktop presentation, accessibility, signup/download behavior, type checks, tests, and production build; save a checkpoint.

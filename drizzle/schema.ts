@@ -68,6 +68,7 @@ export type InsertDownload = typeof downloads.$inferInsert;
 export const subscribers = mysqlTable("subscribers", {
   id: int("id").autoincrement().primaryKey(),
   email: varchar("email", { length: 320 }).notNull().unique(),
+  firstName: varchar("firstName", { length: 120 }),
   source: varchar("source", { length: 64 }).default("connect_page").notNull(),
   status: mysqlEnum("status", ["active", "unsubscribed"]).default("active").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),

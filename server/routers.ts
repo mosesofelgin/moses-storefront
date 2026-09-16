@@ -166,9 +166,9 @@ export const appRouter = router({
 
   subscribe: router({
     addEmail: publicProcedure
-      .input(z.object({ email: z.string().email() }))
+      .input(z.object({ email: z.string().email(), firstName: z.string().trim().max(120).optional(), source: z.string().trim().max(64).optional() }))
       .mutation(async ({ input }) => {
-        const result = await subscribeEmail(input.email);
+        const result = await subscribeEmail(input.email, { firstName: input.firstName, source: input.source });
         return result;
       }),
 

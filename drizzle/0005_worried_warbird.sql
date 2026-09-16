@@ -1,0 +1,1 @@
+ALTER TABLE `subscribers` ADD `firstName` varchar(120);

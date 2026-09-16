@@ -11,7 +11,10 @@ const resend = new Resend(process.env.RESEND_API_KEY);
  * - Sends welcome email via Resend
  * - Handles duplicates gracefully
  */
-export async function subscribeEmail(email: string): Promise<{ success: boolean; message: string }> {
+export async function subscribeEmail(
+  email: string,
+  options: { firstName?: string; source?: string } = {},
+): Promise<{ success: boolean; message: string }> {
   try {
     const db = await getDb();
     if (!db) {
@@ -29,14 +32,15 @@ export async function subscribeEmail(email: string): Promise<{ success: boolean;
         // Reactivate unsubscribed email
         await db
           .update(subscribers)
-          .set({ status: "active", updatedAt: new Date() })
+          .set({ firstName: options.firstName || existingRecord.firstName || null, source: options.source || existingRecord.source, status: "active", updatedAt: new Date() })
           .where(eq(subscribers.email, email));
       }
     } else {
       // Insert new subscriber
       await db.insert(subscribers).values({
         email,
-        source: "connect_page",
+        firstName: options.firstName || null,
+        source: options.source || "connect_page",
         status: "active",
       });
     }
@@ -51,11 +55,11 @@ export async function subscribeEmail(email: string): Promise<{ success: boolean;
     await resend.emails.send({
       from: "noreply@manus.space",
       to: email,
-      subject: "Welcome to MOSES — Direct Access to Truth-Driven Music",
+      subject: options.source === "ai_without_fear" ? "Your AI Without the Fear guide is here" : "Welcome to MOSES — Direct Access to Truth-Driven Music",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2>Welcome to the MOSES Community</h2>
-          <p>You're now connected to direct updates on:</p>
+          <h2>${options.source === "ai_without_fear" ? `Your AI Without the Fear guide is here${options.firstName ? `, ${options.firstName}` : ""}` : "Welcome to the MOSES Community"}</h2>
+          ${options.source === "ai_without_fear" ? `<p>Thanks for requesting the guide. You can download it immediately here:</p><p><a href="https://mosessog.com/manus-storage/ai-without-the-fear_7d7e0e65.pdf">Download AI Without the Fear</a></p>` : "<p>You're now connected to direct updates on:</p>"}
           <ul>
             <li>New music releases</li>
             <li>Weekly livestreams (Sundays 7 PM CDT)</li>

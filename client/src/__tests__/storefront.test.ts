@@ -254,6 +254,23 @@ describe('MOSES route policy', () => {
     expect(zipSource).toContain('expeditethisletterroughdraftlildurkflip_7672c194.mp3');
   });
 
+  it('keeps AI Without the Fear as a focused, direct-access lead page with real guide delivery', async () => {
+    const { shouldShowVaultGate, isFocusedRoutePath } = await import('@/lib/routePolicy');
+    const source = readFileSync(resolve(process.cwd(), 'client/src/pages/AiWithoutFear.tsx'), 'utf8');
+    const appSource = readFileSync(resolve(process.cwd(), 'client/src/App.tsx'), 'utf8');
+    expect(shouldShowVaultGate('/ai-without-the-fear', false)).toBe(false);
+    expect(isFocusedRoutePath('/ai-without-the-fear')).toBe(true);
+    expect(appSource).toContain('path={"/ai-without-the-fear"}');
+    expect(source).toContain('AI isn&apos;t going away');
+    expect(source).toContain('New Covenant Enterprises');
+    expect(source).toContain('firstName');
+    expect(source).toContain('ai_without_fear');
+    expect(source).toContain('ai-without-the-fear_7d7e0e65.pdf');
+    expect(source).toContain('Send Me the Free Guide');
+    expect(source).toContain('No spam. Just the guide');
+    expect(source).not.toContain('<GlobalNav');
+  });
+
   it('keeps the catalog archive available after a visitor has entered the vault', async () => {
     const { shouldShowVaultGate } = await import('@/lib/routePolicy');
     expect(shouldShowVaultGate('/projects', true)).toBe(false);

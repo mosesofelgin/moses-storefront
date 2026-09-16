@@ -35,6 +35,7 @@ const Projects = lazy(() => import("./pages/Projects"));
 const ClaritySales = lazy(() => import("./pages/ClaritySales"));
 const OwnerInsights = lazy(() => import("./pages/OwnerInsights"));
 const ThePrince = lazy(() => import("./pages/ThePrince"));
+const AiWithoutFear = lazy(() => import("./pages/AiWithoutFear"));
 
 function RouteFallback() {
   return (
@@ -51,6 +52,7 @@ function Router() {
       <Switch>
       <Route path={"/owner-insights"} component={OwnerInsights} />
       <Route path={"/onmyown"} component={ThePrince} />
+      <Route path={"/ai-without-the-fear"} component={AiWithoutFear} />
       <Route path={"/success"} component={Success} />
       <Route path={"/downloads"} component={Downloads} />
       <Route path={"/clarity"} component={ClarityProject} />
