@@ -1,3 +1,5 @@
+/** Temporarily hide the full-screen email capture without deleting the VaultGate flow. */
+export const VAULT_GATE_ENABLED = false;
 export const VAULT_BYPASS_PATHS = ['/clarity-sales', '/event', '/links', '/checkout', '/artist', '/owner-insights', '/onmyown', '/airisks'] as const;
 export const FOCUS_ROUTE_PATHS = ['/clarity-sales', '/listen', '/links', '/event', '/checkout', '/owner-insights', '/onmyown', '/airisks'] as const;
 
@@ -14,5 +16,5 @@ export function isFocusedRoutePath(pathname: string) {
 }
 
 export function shouldShowVaultGate(pathname: string, vaultUnlocked: boolean) {
-  return !vaultUnlocked && !isVaultBypassPath(pathname);
+  return VAULT_GATE_ENABLED && !vaultUnlocked && !isVaultBypassPath(pathname);
 }

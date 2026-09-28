@@ -188,9 +188,10 @@ describe('MOSES project catalog', () => {
 
 
 describe('MOSES route policy', () => {
-  it('keeps the homepage gated for first-time visitors', async () => {
-    const { shouldShowVaultGate } = await import('@/lib/routePolicy');
-    expect(shouldShowVaultGate('/', false)).toBe(true);
+  it('keeps the full-screen homepage gate disabled while preserving the reversible policy hook', async () => {
+    const { VAULT_GATE_ENABLED, shouldShowVaultGate } = await import('@/lib/routePolicy');
+    expect(VAULT_GATE_ENABLED).toBe(false);
+    expect(shouldShowVaultGate('/', false)).toBe(false);
     expect(shouldShowVaultGate('/', true)).toBe(false);
   });
 
