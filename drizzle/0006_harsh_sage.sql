@@ -1,0 +1,1 @@
+ALTER TABLE `orders` ADD `productId` varchar(64) DEFAULT 'clarity' NOT NULL;

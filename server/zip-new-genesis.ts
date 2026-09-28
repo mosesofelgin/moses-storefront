@@ -1,30 +1,31 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// New Genesis — ZIP Bundle Builder
-// Streams all 15 tracks as a single ZIP archive for free download.
-// ─────────────────────────────────────────────────────────────────────────────
+// New Genesis — paid ZIP bundle builder
+// The archive is streamed only from the purchase delivery flow.
 
 import archiver from 'archiver';
 import { PassThrough } from 'stream';
 import type { Response } from 'express';
+import { ENV } from './_core/env';
 
-const CDN = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk';
+const STORAGE = `${ENV.publicSiteUrl}/manus-storage`;
 
-const NEW_GENESIS_TRACKS = [
-  { filename: '01-Genesis (The Source).mp3',    url: `${CDN}/01-genesis-the-source_f4613f44.mp3` },
-  { filename: '02-Exodus (The Flame).mp3',       url: `${CDN}/02-exodus-the-flame_3773dd6e.mp3` },
-  { filename: '03-Leviticus (The Return).mp3',   url: `${CDN}/03-leviticus-the-return_032aa199.mp3` },
-  { filename: '04-Numbers (The Rose).mp3',       url: `${CDN}/04-numbers-the-rose_6d85fb5f.mp3` },
-  { filename: '05-Deuteronomy (The Pen).mp3',    url: `${CDN}/05-deuteronomy-the-pen_75f41f5c.mp3` },
-  { filename: '06-Moses Crown.mp3',              url: `${CDN}/06-moses-crown_d038626e.mp3` },
-  { filename: '07-Moses Just Right.mp3',         url: `${CDN}/07-moses-just-right_bded9d45.mp3` },
-  { filename: '08-Picasso.mp3',                  url: `${CDN}/08-picasso_5c1180be.mp3` },
-  { filename: '09-The Legend of Durag Mo.mp3',   url: `${CDN}/09-legend-of-durag-mo_8be8d460.mp3` },
-  { filename: '10-Angels.mp3',                   url: `${CDN}/10-angels_e0a3610a.mp3` },
-  { filename: '11-Badu.mp3',                     url: `${CDN}/11-badu_cbebdb1e.mp3` },
-  { filename: '12-Bank Roll.mp3',                url: `${CDN}/12-bankroll_66eb4b50.mp3` },
-  { filename: '13-Blessings of Youth.mp3',       url: `${CDN}/13-blessings-of-youth_fa9a6c88.mp3` },
-  { filename: '14-Blood Moon.mp3',               url: `${CDN}/14-blood-moon_f4283371.mp3` },
-  { filename: '15-First Flight Book 1.mp3',      url: `${CDN}/15-first-flight-book-1_cbb968fb.mp3` },
+const NEW_GENESIS_FILES = [
+  { filename: 'New-Genesis-Cover.webp', path: `${STORAGE}/download_aefbd102.webp` },
+  { filename: '01-Genesis (The Source).mp3', path: `${STORAGE}/Moses-NewGenesis-01Genesis_dca8906c.mp3` },
+  { filename: '02-Exodus (The Flame).mp3', path: `${STORAGE}/Moses-NewGenesis-02Exodus_0e754ab3.mp3` },
+  { filename: '03-Leviticus (The Return).mp3', path: `${STORAGE}/Moses-NewGenesis-03Leviticus_54ce7862.mp3` },
+  { filename: '04-Numbers (The Rose).mp3', path: `${STORAGE}/Moses-NewGenesis-04Numbers_a8340b55.mp3` },
+  { filename: '05-Deuteronomy (The Pen).mp3', path: `${STORAGE}/Moses-NewGenesis-05Deuternomy_ca7b5fe1.mp3` },
+  { filename: '06-First Flight Book 1.mp3', path: `${STORAGE}/Moses-NewGenesis-06FirstFlightBook1_8ce045ab.mp3` },
+  { filename: '07-Angels.mp3', path: `${STORAGE}/Moses-NewGenesis-07Angels_22662fc0.mp3` },
+  { filename: '08-Crown.mp3', path: `${STORAGE}/Moses-NewGenesis-08Crown_530945b4.mp3` },
+  { filename: '09-Blood Moon.mp3', path: `${STORAGE}/Moses-NewGenesis-09BloodMoon_e04622b0.mp3` },
+  { filename: '10-Suburban Picasso.mp3', path: `${STORAGE}/Moses-NewGenesis-10SuburbanPicasso_4af9deb9.mp3` },
+  { filename: '11-The Legend of Durag Mo.mp3', path: `${STORAGE}/Moses-NewGenesis-11TheLegendofDu-RagMo_ed277ca4.mp3` },
+  { filename: '12-Rock With Me.mp3', path: `${STORAGE}/Moses-NewGenesis-12RockWithMe_0edec750.mp3` },
+  { filename: '13-Just Right.mp3', path: `${STORAGE}/Moses-NewGenesis-13JustRight_ea56d8a8.mp3` },
+  { filename: '14-The Blessing of Youth.mp3', path: `${STORAGE}/Moses-NewGenesis-14TheBlessingofYouth_bab7b0df.mp3` },
+  { filename: '15-Bank Roll.mp3', path: `${STORAGE}/Moses-NewGenesis-15BankRoll_96995ec6.mp3` },
+  { filename: '16-First Flight Book 2.mp3', path: `${STORAGE}/Moses-NewGenesis-16FirstFlightbook2_90b911a4.mp3` },
 ];
 
 export async function streamNewGenesisZip(res: Response) {
@@ -35,12 +36,10 @@ export async function streamNewGenesisZip(res: Response) {
   const archive = archiver('zip', { zlib: { level: 0 } });
   archive.pipe(res);
 
-  for (const track of NEW_GENESIS_TRACKS) {
-    console.log(`[New Genesis ZIP] Adding ${track.filename}`);
-    const response = await fetch(track.url);
+  for (const file of NEW_GENESIS_FILES) {
+    const response = await fetch(file.path);
     if (!response.ok || !response.body) {
-      console.error(`[New Genesis ZIP] Failed to fetch ${track.filename}: ${response.status}`);
-      continue;
+      throw new Error(`Failed to fetch ${file.filename}: ${response.status}`);
     }
     const pass = new PassThrough();
     const reader = (response.body as any).getReader();
@@ -51,8 +50,11 @@ export async function streamNewGenesisZip(res: Response) {
         pass.write(value);
       }
     })();
-    archive.append(pass, { name: track.filename });
-    await new Promise<void>((resolve) => pass.on('end', resolve));
+    archive.append(pass, { name: file.filename });
+    await new Promise<void>((resolve, reject) => {
+      pass.on('end', resolve);
+      pass.on('error', reject);
+    });
   }
 
   await archive.finalize();

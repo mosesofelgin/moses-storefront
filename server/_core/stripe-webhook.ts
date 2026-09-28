@@ -42,6 +42,7 @@ async function handlePaymentIntentSucceeded(
     // Extract customer info from payment intent metadata
     const customerEmail = paymentIntent.receipt_email || paymentIntent.metadata?.customer_email || "";
     const customerName = paymentIntent.metadata?.customer_name || "Customer";
+    const product = paymentIntent.metadata?.product_id === 'new-genesis' ? 'new-genesis' : 'clarity';
 
     if (!customerEmail) {
       console.error("[Stripe Webhook] No customer email found in payment intent");
@@ -54,6 +55,7 @@ async function handlePaymentIntentSucceeded(
       stripeCustomerId: paymentIntent.customer as string,
       customerEmail,
       customerName,
+      productId: product,
       amount: paymentIntent.amount,
       currency: (paymentIntent.currency || "usd").toLowerCase(),
       status: "succeeded",
@@ -69,14 +71,17 @@ async function handlePaymentIntentSucceeded(
     }
 
     const downloadToken = await generateDownloadToken(orderId, customerEmail);
-    const downloadUrl = `${ENV.publicSiteUrl}/downloads?token=${downloadToken}`;
+    const downloadUrl = product === 'new-genesis'
+      ? `${ENV.publicSiteUrl}/success?token=${downloadToken}`
+      : `${ENV.publicSiteUrl}/downloads?token=${downloadToken}`;
 
     // Send confirmation email
     const emailSent = await sendPurchaseConfirmationEmail(
       customerEmail,
       customerName,
       downloadToken,
-      downloadUrl
+      downloadUrl,
+      product
     );
 
     if (emailSent) {

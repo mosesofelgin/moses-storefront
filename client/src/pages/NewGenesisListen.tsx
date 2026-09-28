@@ -6,7 +6,6 @@ import {
 } from 'lucide-react';
 import { NEW_GENESIS_COVER, NEW_GENESIS_TRACKS, NEW_GENESIS_META, type NewGenesisTrack } from '../data/new-genesis-bundle';
 import ListenNavigation from '@/components/ListenNavigation';
-import DownloadButton from '@/components/DownloadButton';
 import AudioErrorNotice from '@/components/AudioErrorNotice';
 
 export default function NewGenesisListen() {
@@ -312,16 +311,9 @@ export default function NewGenesisListen() {
             />
           </div>
 
-          {/* Download full project */}
+          {/* Paid ownership CTA; streaming remains free and full-length. */}
           <div className="flex justify-center">
-            <DownloadButton
-              endpoint={NEW_GENESIS_META.downloadEndpoint}
-              filename={NEW_GENESIS_META.zipFilename}
-              label="Download Full Project"
-              variant="outline"
-              size="md"
-              className="rounded-lg border-indigo-700 font-bebas text-base tracking-wide text-indigo-200 hover:border-indigo-400 hover:text-white"
-            />
+            <Link href="/checkout?product=new-genesis" className="inline-flex items-center justify-center gap-2 rounded-lg border border-yellow-700/60 px-8 py-3 font-bebas text-base tracking-wide text-yellow-300 transition-colors hover:border-yellow-400 hover:text-yellow-100"><ShoppingBag className="h-4 w-4" /> Own New Genesis — $10</Link>
           </div>
         </div>
       </section>
@@ -345,6 +337,15 @@ export default function NewGenesisListen() {
                 <div
                   key={track.id}
                   onClick={() => handleTrackClick(index)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault();
+                      handleTrackClick(index);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Play ${track.title}`}
                   className={`flex items-center gap-3 rounded px-3 py-2.5 cursor-pointer transition-colors group ${
                     isActive
                       ? 'bg-indigo-900/30 border border-indigo-800/40'
@@ -381,17 +382,6 @@ export default function NewGenesisListen() {
                     {track.duration}
                   </span>
 
-                  {/* Download button */}
-                  <div onClick={(event) => event.stopPropagation()}>
-                    <DownloadButton
-                      href={track.url}
-                      filename={track.filename}
-                      variant="outline"
-                      size="sm"
-                      iconOnly
-                      className="border-transparent bg-transparent p-2 text-indigo-600 hover:border-indigo-900/50 hover:bg-indigo-900/20 hover:text-indigo-300"
-                    />
-                  </div>
                 </div>
               );
             })}
@@ -399,16 +389,15 @@ export default function NewGenesisListen() {
 
           {/* Store CTA banner */}
           <div className="mt-12 rounded-lg border border-yellow-700/30 bg-yellow-900/10 px-6 py-6 text-center">
-            <p className="text-sm text-indigo-300 mb-1">Love New Genesis?</p>
             <p className="font-cormorant text-xl italic text-yellow-300/80 mb-4">
-              Support the project — available in the store for $12.
+              Love New Genesis? Own it for $10 — every purchase goes directly to the artist.
             </p>
             <Link
-              href="/store"
+              href="/checkout?product=new-genesis"
               className="inline-flex items-center gap-2 rounded-lg border border-yellow-700/60 px-6 py-3 font-bebas text-base tracking-wide text-yellow-300 transition-colors hover:border-yellow-400 hover:text-yellow-100"
             >
               <ShoppingBag className="h-4 w-4" />
-              Get it in the Store — $12
+              Own New Genesis — $10
             </Link>
           </div>
         </div>

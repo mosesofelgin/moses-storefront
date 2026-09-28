@@ -7,7 +7,7 @@ export const BATHSHEBA_COVER =
 export const MIXTAPE_COVER =
   'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/if-i-wrote-a-mixtape-cover_6a183be2.jpg';
 export const NEW_GENESIS_COVER =
-  'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/new-genesis-cover_23ac8f82.png';
+  '/manus-storage/download_aefbd102.webp';
 export const ABCS_COVER =
   'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/abcs-cover_be82498d.png';
 
@@ -20,7 +20,7 @@ export const PROJECTS = [
     alt: 'CLARITY album cover',
     tracks: '12 tracks',
     duration: '45m',
-    access: '$12 digital album',
+    access: 'Listen free.',
     route: '/clarity-sales',
     listenRoute: '/listen',
     download: null,
@@ -71,15 +71,16 @@ export const PROJECTS = [
   {
     title: 'NEW GENESIS',
     eyebrow: 'PROJECT 03',
-    descriptor: 'A return to the source, built from the ground up.',
+    descriptor: 'The debut album from Moses — seven years in the making.',
     cover: NEW_GENESIS_COVER,
     alt: 'New Genesis cover',
-    tracks: '15 tracks',
-    duration: '52m',
-    access: 'Free to download · Support this project — $12',
+    tracks: '16 tracks',
+    duration: '46m 12s',
+    access: '$10 digital album',
     route: '/new-genesis',
     listenRoute: '/new-genesis/listen',
-    download: { endpoint: '/api/download/new-genesis', filename: 'New-Genesis.zip' },
+    download: null,
+    checkoutProductId: 'new-genesis',
     accent: 'indigo',
   },
   {

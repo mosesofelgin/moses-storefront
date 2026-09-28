@@ -13,6 +13,11 @@ export async function verifyStripeSession(
   email?: string;
   amount?: number;
   status?: string;
+  paymentIntentId?: string;
+  productId?: string;
+  token?: string;
+  pending?: boolean;
+  product?: 'clarity' | 'new-genesis';
   error?: string;
 }> {
   try {
@@ -41,6 +46,8 @@ export async function verifyStripeSession(
       email: session.customer_email || undefined,
       amount: session.amount_total || undefined,
       status: session.payment_status,
+      paymentIntentId: typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id,
+      productId: session.metadata?.product_id || (session.amount_total === 1000 ? 'new-genesis' : 'clarity'),
     };
   } catch (error) {
     console.error("[Session Verification] Error verifying session:", error);

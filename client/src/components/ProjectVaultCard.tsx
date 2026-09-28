@@ -41,7 +41,7 @@ export function ProjectArtwork({ project, priority = false }: { project: Project
 
 export default function ProjectVaultCard({ project, featured = false }: { project: Project; featured?: boolean }) {
   const accent = accents[project.accent];
-  const isPaid = project.download === null;
+  const isPaid = 'checkoutProductId' in project;
 
   return (
     <article className={`group overflow-hidden rounded-2xl border border-amber-100/10 bg-zinc-950/80 transition duration-300 hover:-translate-y-1 hover:border-amber-200/45 hover:shadow-[0_20px_70px_rgba(0,0,0,0.36)] ${featured ? 'md:col-span-2 md:grid md:grid-cols-[minmax(0,1.03fr)_minmax(0,0.97fr)]' : ''}`}>
@@ -68,17 +68,17 @@ export default function ProjectVaultCard({ project, featured = false }: { projec
         </div>
 
         <div className="mt-6 flex flex-col gap-2 sm:flex-row">
-          <Link href={isPaid ? '/checkout' : project.listenRoute} className={`inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl px-4 py-3 font-display text-sm tracking-[0.14em] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 ${accent.action}`}>
-            {isPaid ? 'Buy CLARITY' : 'Listen / Download'}
+          <Link href={isPaid ? `/checkout?product=${project.checkoutProductId}` : project.listenRoute} className={`inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl px-4 py-3 font-display text-sm tracking-[0.14em] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 ${accent.action}`}>
+            {isPaid ? `Buy ${project.title}` : project.download ? 'Listen / Download' : 'Listen now'}
             {isPaid ? <ShoppingBag className="h-4 w-4" aria-hidden="true" /> : <Play className="h-4 w-4 fill-current" aria-hidden="true" />}
           </Link>
           {project.download ? (
             <DownloadButton endpoint={project.download.endpoint} filename={project.download.filename} label="ZIP" variant="outline" size="md" className="min-h-12 rounded-xl border-zinc-700 px-4 text-zinc-200 hover:border-amber-200 hover:bg-zinc-900" />
-          ) : (
+          ) : isPaid ? (
             <Link href={project.listenRoute} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-amber-200/25 px-4 py-3 text-[10px] uppercase tracking-[0.16em] text-amber-100 transition hover:border-amber-200/60 hover:bg-amber-200/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300">
               Listen first <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
-          )}
+          ) : null}
         </div>
       </div>
     </article>

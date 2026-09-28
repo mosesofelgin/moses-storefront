@@ -47,9 +47,12 @@ export async function sendPurchaseConfirmationEmail(
   customerEmail: string,
   customerName: string,
   downloadToken: string,
-  downloadUrl: string
+  downloadUrl: string,
+  product: 'clarity' | 'new-genesis' = 'clarity'
 ): Promise<boolean> {
-  const subject = "🎵 Your CLARITY Album is Ready to Download";
+  const isNewGenesis = product === 'new-genesis';
+  const albumTitle = isNewGenesis ? 'NEW GENESIS' : 'CLARITY';
+  const subject = `🎵 Your ${albumTitle} Album is Ready to Download`;
   const html = `
     <!DOCTYPE html>
     <html>
@@ -73,14 +76,14 @@ export async function sendPurchaseConfirmationEmail(
       <body>
         <div class="container">
           <div class="header">
-            <h1>🎵 CLARITY</h1>
+            <h1>🎵 ${albumTitle}</h1>
             <p style="margin: 10px 0 0 0; color: #666;">Thank you for your purchase!</p>
           </div>
 
           <div class="content">
             <p>Hi ${escapeHtml(customerName)},</p>
             
-            <p>Thank you for purchasing <strong>CLARITY</strong>! Your album is ready to download.</p>
+            <p>Thank you for purchasing <strong>${albumTitle}</strong>! Your album is ready to download.</p>
 
             <p style="text-align: center;">
               <a href="${downloadUrl}" class="button">📥 Download Your Album</a>
@@ -90,15 +93,13 @@ export async function sendPurchaseConfirmationEmail(
 
             <div class="track-list">
               <h3>📀 What You're Getting:</h3>
-              <div class="track-item">✓ 12 Premium Tracks (MP3)</div>
-              <div class="track-item">✓ 4 Brand Images (High Resolution)</div>
-              <div class="track-item">✓ Complete Lyric Book (PDF)</div>
+              ${isNewGenesis ? '<div class="track-item">✓ 16 Premium Tracks (MP3)</div><div class="track-item">✓ New Genesis Cover Art</div>' : '<div class="track-item">✓ 12 Premium Tracks (MP3)</div><div class="track-item">✓ 4 Brand Images (High Resolution)</div><div class="track-item">✓ Complete Lyric Book (PDF)</div>'}
             </div>
 
             <p><strong>Stream Everywhere:</strong></p>
-            <p>Listen to CLARITY on all major platforms:</p>
+            <p>Listen to ${albumTitle} on all major platforms:</p>
             <p style="text-align: center;">
-              <a href="https://distrokid.com/hyperfollow/mosesofelgin/clarity?ref=release" style="color: #dc2626; text-decoration: none; font-weight: bold;">🎧 Apple Music • Spotify • YouTube Music & More</a>
+              <a href="https://mosessog.com" style="color: #dc2626; text-decoration: none; font-weight: bold;">🎧 Visit mosessog.com for more from MOSES</a>
             </p>
           </div>
 

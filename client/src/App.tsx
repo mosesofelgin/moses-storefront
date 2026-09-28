@@ -12,6 +12,34 @@ import VaultGate, { isVaultUnlocked } from "./components/VaultGate";
 import { createPageViewPayload } from "./lib/siteAnalytics";
 import { trpc } from "./lib/trpc";
 
+const ROUTE_METADATA = {
+  home: {
+    title: 'MOSES SOG — Music for the Work',
+    description: 'MOSES SOG — prophetic hip-hop from Chicago. Explore the music vault, projects, visuals, and artist story.',
+    image: undefined,
+  },
+  newGenesis: {
+    title: 'New Genesis — Moses',
+    description: 'The debut album from Moses — seven years in the making, recorded at Mount Pisgah Baptist Church in Chicago. Listen free or own it for $10.',
+    image: '/manus-storage/download_aefbd102.webp',
+  },
+  store: { title: 'Store — MOSES SOG', description: 'Own New Genesis directly from MOSES, then explore the free listening archive.', image: undefined },
+  artist: { title: 'Artist / EPK — MOSES SOG', description: 'The artist story, press materials, and booking information for MOSES SOG.', image: undefined },
+  clarity: { title: 'CLARITY — MOSES SOG', description: 'Listen to CLARITY, a twelve-track project of faith, discipline, and transformation.', image: undefined },
+};
+
+function updateMeta(selector: string, content: string) {
+  let element = document.head.querySelector<HTMLMetaElement>(selector);
+  if (!element) {
+    element = document.createElement('meta');
+    const [, attribute, value] = selector.match(/^meta\[(name|property)="(.+)"\]$/) || [];
+    if (!attribute || !value) return;
+    element.setAttribute(attribute, value);
+    document.head.appendChild(element);
+  }
+  element.content = content;
+}
+
 const Links = lazy(() => import("./pages/Links"));
 const ClarityProject = lazy(() => import("./pages/ClarityProject"));
 const Success = lazy(() => import("./pages/Success"));
@@ -95,6 +123,23 @@ function App() {
 
   const shouldShowGate = shouldShowVaultGate(currentPath, vaultOpen);
   const isFocusedRoute = isFocusedRoutePath(currentPath);
+
+  useEffect(() => {
+    const metadata = currentPath.startsWith('/new-genesis')
+      ? ROUTE_METADATA.newGenesis
+      : currentPath.startsWith('/store')
+        ? ROUTE_METADATA.store
+        : currentPath.startsWith('/artist')
+          ? ROUTE_METADATA.artist
+          : currentPath.startsWith('/clarity') || currentPath === '/listen'
+            ? ROUTE_METADATA.clarity
+            : ROUTE_METADATA.home;
+    document.title = metadata.title;
+    updateMeta('meta[name="description"]', metadata.description);
+    updateMeta('meta[property="og:title"]', metadata.title);
+    updateMeta('meta[property="og:description"]', metadata.description);
+    if (metadata.image) updateMeta('meta[property="og:image"]', `${window.location.origin}${metadata.image}`);
+  }, [currentPath]);
 
   useEffect(() => {
     if (currentPath === "/owner-insights") return;

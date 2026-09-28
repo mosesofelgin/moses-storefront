@@ -55,6 +55,20 @@ export async function verifyDownloadToken(
   };
 }
 
+/** Retrieve the already-issued delivery token for a verified order. */
+export async function getDownloadTokenByOrderId(orderId: number): Promise<string | null> {
+  const db = await getDb();
+  if (!db) return null;
+
+  const result = await db
+    .select({ downloadToken: downloads.downloadToken })
+    .from(downloads)
+    .where(eq(downloads.orderId, orderId))
+    .limit(1);
+
+  return result[0]?.downloadToken ?? null;
+}
+
 /**
  * Get all download tokens for a customer email
  */

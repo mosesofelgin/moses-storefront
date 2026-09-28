@@ -35,6 +35,7 @@ export const orders = mysqlTable("orders", {
   stripeCustomerId: varchar("stripeCustomerId", { length: 255 }),
   customerEmail: varchar("customerEmail", { length: 320 }).notNull(),
   customerName: varchar("customerName", { length: 255 }),
+  productId: varchar("productId", { length: 64 }).default("clarity").notNull(),
   amount: int("amount").notNull(),
   currency: varchar("currency", { length: 3 }).default("usd").notNull(),
   status: mysqlEnum("status", ["pending", "succeeded", "failed", "canceled"]).default("pending").notNull(),

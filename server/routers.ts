@@ -5,8 +5,8 @@ import { adminProcedure, publicProcedure, router } from "./_core/trpc";
 import { ENV } from "./_core/env";
 import { z } from "zod";
 import Stripe from "stripe";
-import { createOrder, getOrdersByEmail } from "./orders";
-import { generateDownloadToken, verifyDownloadToken } from "./downloads";
+import { createOrder, getOrderByStripePaymentIntentId, getOrdersByEmail } from "./orders";
+import { generateDownloadToken, getDownloadTokenByOrderId, getOrderByToken, verifyDownloadToken } from "./downloads";
 import { subscribeEmail, getSubscriberCount } from "./subscribers";
 import { verifyStripeSession } from "./session-verification";
 import { sendPurchaseConfirmationEmail } from "./email";
@@ -32,7 +32,7 @@ export const appRouter = router({
           customerEmail: z.string().email(),
           customerName: z.string().min(1),
           amountInCents: z.number().int().min(0).optional(),
-          productId: z.string().optional(),
+          productId: z.enum(["clarity", "new-genesis", "brand-images"]).optional(),
         })
       )
       .mutation(async ({ input, ctx }) => {
@@ -44,14 +44,16 @@ export const appRouter = router({
         let productDescription = "Full digital album — 12 tracks + 5 photos (instant download)";
         let unitAmount = 1200; // Default to $12 for CLARITY
 
-        if (input.productId === "brand-images") {
+        const productId = input.productId || "clarity";
+
+        if (productId === "brand-images") {
           productName = "Brand Images + Lyric PDF";
           productDescription = "4 high-res brand images + CLARITY lyric book PDF";
           unitAmount = input.amountInCents || 0;
-        } else if (input.productId === "new-genesis") {
+        } else if (productId === "new-genesis") {
           productName = "New Genesis by Moses";
-          productDescription = "Full project — 15 tracks (instant download)";
-          unitAmount = input.amountInCents || 1200;
+          productDescription = "Full digital album — 16 tracks + cover art (instant delivery)";
+          unitAmount = Math.max(input.amountInCents || 1000, 1000);
         } else if (input.amountInCents) {
           unitAmount = input.amountInCents;
         }
@@ -79,7 +81,14 @@ export const appRouter = router({
             metadata: {
               customer_email: input.customerEmail,
               customer_name: input.customerName,
-              product_id: input.productId || "clarity",
+              product_id: productId,
+            },
+            payment_intent_data: {
+              metadata: {
+                customer_email: input.customerEmail,
+                customer_name: input.customerName,
+                product_id: productId,
+              },
             },
           });
 
@@ -109,6 +118,7 @@ export const appRouter = router({
             stripePaymentIntentId,
             customerEmail: input.customerEmail,
             customerName: input.customerName,
+            productId: input.productId,
             amount: 0,
             currency: "usd",
             status: "succeeded",
@@ -151,7 +161,13 @@ export const appRouter = router({
       .input(z.object({ token: z.string() }))
       .query(async ({ input }) => {
         const result = await verifyDownloadToken(input.token);
-        return result ? { valid: true, email: result.customerEmail } : { valid: false };
+        if (!result) return { valid: false };
+        const order = await getOrderByToken(input.token);
+        return {
+          valid: true,
+          email: result.customerEmail,
+          product: order?.productId === 'new-genesis' ? 'new-genesis' : 'clarity',
+        };
       }),
   }),
 
@@ -161,6 +177,21 @@ export const appRouter = router({
       .query(async ({ input }) => {
         const result = await verifyStripeSession(input.sessionId);
         return result;
+      }),
+    delivery: publicProcedure
+      .input(z.object({ sessionId: z.string() }))
+      .query(async ({ input }) => {
+        const session = await verifyStripeSession(input.sessionId);
+        if (!session.valid || !session.paymentIntentId) return session;
+        const order = await getOrderByStripePaymentIntentId(session.paymentIntentId);
+        if (!order?.id) return { ...session, pending: true };
+        const token = await getDownloadTokenByOrderId(order.id);
+        return {
+          ...session,
+          pending: !token,
+          token,
+          product: order.productId === 'new-genesis' ? 'new-genesis' : 'clarity',
+        };
       }),
   }),
 

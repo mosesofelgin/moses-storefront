@@ -196,18 +196,10 @@ export function registerRoutes(app: Express) {
 
   /**
    * GET /api/download/new-genesis
-   * Download New Genesis project as ZIP (no token required — free download)
+   * Retired public endpoint: New Genesis is now delivered through paid order access.
    */
   app.get("/api/download/new-genesis", async (req: Request, res: Response) => {
-    try {
-      console.log("[New Genesis Download] Request received");
-      await streamNewGenesisZip(res);
-    } catch (error) {
-      console.error("[New Genesis Download] Error:", error);
-      if (!res.headersSent) {
-        res.status(500).json({ error: "Failed to download ZIP" });
-      }
-    }
+    res.status(410).json({ error: "New Genesis downloads are available after purchase." });
   });
 
   /**
@@ -262,6 +254,12 @@ export function registerRoutes(app: Express) {
       const order = await getOrderByToken(token);
       if (!order) {
         return res.status(401).json({ error: "Order not found" });
+      }
+
+      // Select the private bundle by the persisted paid product, never by price.
+      if (order.productId === "new-genesis") {
+        await streamNewGenesisZip(res);
+        return;
       }
 
       // Create ZIP archive

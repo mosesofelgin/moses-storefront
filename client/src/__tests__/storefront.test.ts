@@ -168,7 +168,7 @@ describe('MOSES project catalog', () => {
     expect(PROJECTS).toHaveLength(6);
     expect(new Set(PROJECTS.map((project) => project.title)).size).toBe(PROJECTS.length);
     PROJECTS.forEach((project) => {
-      expect(project.cover).toMatch(/^https?:\/\//);
+      expect(project.cover).toMatch(/^(https?:\/\/|\/manus-storage\/)/);
       expect(project.alt.length).toBeGreaterThan(0);
       expect(project.tracks).toMatch(/tracks/);
       expect(project.route).toMatch(/^\//);
@@ -178,7 +178,7 @@ describe('MOSES project catalog', () => {
 
   it('keeps free-project downloads mapped to server endpoints', async () => {
     const { PROJECTS } = await import('@/data/project-catalog');
-    PROJECTS.slice(1).forEach((project) => {
+    PROJECTS.filter((project) => project.title !== 'CLARITY' && project.title !== 'NEW GENESIS').forEach((project) => {
       expect(project.download).not.toBeNull();
       expect(project.download?.endpoint).toMatch(/^\/api\/download\//);
       expect(project.download?.filename).toMatch(/\.zip$/);
@@ -275,6 +275,52 @@ describe('MOSES route policy', () => {
     expect(source).toContain('Send Me the Free Guide');
     expect(source).toContain('No spam. Just the guide');
     expect(source).not.toContain('<GlobalNav');
+  });
+
+  it('keeps New Genesis aligned to the confirmed 16-track paid release bundle', async () => {
+    const { NEW_GENESIS_TRACKS, NEW_GENESIS_META, NEW_GENESIS_COVER } = await import('@/data/new-genesis-bundle');
+    const source = readFileSync(resolve(process.cwd(), 'client/src/pages/NewGenesis.tsx'), 'utf8');
+    const listenSource = readFileSync(resolve(process.cwd(), 'client/src/pages/NewGenesisListen.tsx'), 'utf8');
+    const successSource = readFileSync(resolve(process.cwd(), 'client/src/pages/Success.tsx'), 'utf8');
+    const appSource = readFileSync(resolve(process.cwd(), 'client/src/App.tsx'), 'utf8');
+    const storeSource = readFileSync(resolve(process.cwd(), 'client/src/pages/Store.tsx'), 'utf8');
+    const zipSource = readFileSync(resolve(process.cwd(), 'server/zip-new-genesis.ts'), 'utf8');
+    const routesSource = readFileSync(resolve(process.cwd(), 'server/_core/routes.ts'), 'utf8');
+    const routerSource = readFileSync(resolve(process.cwd(), 'server/routers.ts'), 'utf8');
+    const webhookSource = readFileSync(resolve(process.cwd(), 'server/_core/stripe-webhook.ts'), 'utf8');
+    expect(NEW_GENESIS_COVER).toContain('/manus-storage/download_aefbd102.webp');
+    expect(NEW_GENESIS_META.trackCount).toBe(16);
+    expect(NEW_GENESIS_META.totalDuration).toBe('46:12');
+    expect(NEW_GENESIS_META.price).toBe('$10');
+    expect(NEW_GENESIS_TRACKS.map((track) => track.title)).toEqual([
+      'Genesis (The Source)', 'Exodus (The Flame)', 'Leviticus (The Return)', 'Numbers (The Rose)',
+      'Deuteronomy (The Pen)', 'First Flight Book 1', 'Angels', 'Crown', 'Blood Moon',
+      'Suburban Picasso', 'The Legend of Durag Mo', 'Rock With Me', 'Just Right', 'The Blessing of Youth', 'Bank Roll', 'First Flight Book 2',
+    ]);
+    expect(NEW_GENESIS_TRACKS.find((track) => track.title === 'Genesis (The Source)')?.duration).toBe('0:52');
+    expect(NEW_GENESIS_TRACKS.find((track) => track.title === 'The Legend of Durag Mo')?.duration).toBe('3:22');
+    expect(NEW_GENESIS_TRACKS.find((track) => track.title === 'Rock With Me')?.description).toBe('[DESCRIPTION]');
+    expect(source).toContain('Own It — $10');
+    expect(source).not.toContain('Free Download');
+    expect(listenSource).toContain('Own New Genesis — $10');
+    expect(listenSource).not.toContain('Download Full Project');
+    expect(listenSource).toContain("event.key === 'Enter'");
+    expect(source).toContain('The Five Books');
+    expect(successSource).toContain("YOU&apos;RE ON THE ROLL.");
+    expect(successSource).toContain('Welcome to the army.');
+    expect(successSource).toContain('/api/download/all/${activeToken}');
+    expect(appSource).toContain('New Genesis — Moses');
+    expect(appSource).toContain('download_aefbd102.webp');
+    expect(storeSource).toContain("project.title === 'NEW GENESIS'");
+    expect(zipSource).toContain('New-Genesis-Cover.webp');
+    expect(zipSource).toContain('11-The Legend of Durag Mo.mp3');
+    expect(zipSource).toContain('16-First Flight Book 2.mp3');
+    expect(zipSource).toContain('Moses-NewGenesis-11TheLegendofDu-RagMo_ed277ca4.mp3');
+    expect(routesSource).toContain('order.productId === "new-genesis"');
+    expect(routesSource).toContain('New Genesis downloads are available after purchase.');
+    expect(routerSource).toContain('payment_intent_data');
+    expect(routerSource).toContain("product: order?.productId === 'new-genesis'");
+    expect(webhookSource).toContain("productId: product");
   });
 
   it('keeps the catalog archive available after a visitor has entered the vault', async () => {
