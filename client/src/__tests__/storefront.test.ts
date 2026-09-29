@@ -363,8 +363,12 @@ describe('MOSES direct-to-fan rebuild contracts', () => {
     expect(listenSource).toContain('13 tracks · {CLARITY_WEBSITE_EDITION.runtime}');
     expect(salesSource).toContain('WHAT BECAME CLEAR.');
     expect(salesSource).toContain('Production: [PRODUCTION CREDITS]');
-    expect(salesSource).toContain('[BANDCAMP URL]');
-    expect(salesSource).toContain('[SOUNDCLOUD URL]');
+    expect(salesSource).toContain('https://mosessog.bandcamp.com/album/clarity-2');
+    expect(salesSource).toContain('https://soundcloud.com/mosessog/sets/clarity-1?si=16f0f5af5c5041be915be8599d18afe7&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing');
+    expect(salesSource).toContain('https://distrokid.com/hyperfollow/mosesofelgin/clarity-2');
+    expect(salesSource).toContain('https://www.youtube.com/playlist?list=PLTt1W4MaPgT3799Kyqr9oAV62pPsOAxS0');
+    expect(salesSource).not.toContain('[BANDCAMP URL]');
+    expect(salesSource).not.toContain('[SOUNDCLOUD URL]');
     expect(salesSource).toContain('Streaming edition: 12 tracks. Wish I Had You is exclusive to this site.');
     expect(salesSource).not.toContain('released without a middleman');
     expect(zipSource).toContain('07-Falling for You.mp3');
