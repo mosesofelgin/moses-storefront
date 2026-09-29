@@ -10,7 +10,7 @@ export default function PersistentCTA() {
         This is more than music. This is a journey of faith, discipline, and transformation.
       </p>
       <ul className="mt-4 space-y-2 text-sm text-zinc-200">
-        <li>• Full 12-track album</li>
+        <li>• Full 13-track Website Edition (includes the exclusive <em>Wish I Had You</em>)</li>
         <li>• High-quality audio</li>
         <li>• Lifetime access</li>
         <li>• Direct support to the artist</li>

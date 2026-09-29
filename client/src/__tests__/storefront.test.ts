@@ -338,6 +338,43 @@ describe('MOSES direct-to-fan rebuild contracts', () => {
     expect(clarity.download).toBeNull();
   });
 
+  it('keeps CLARITY aligned to the 13-track Website Edition without leaking its exclusive track into streaming copy', async () => {
+    const { CLARITY_WEBSITE_EDITION, CLARITY_WEBSITE_EDITION_TRACKS } = await import('@/data/clarity-website-edition');
+    const listenSource = readFileSync(resolve(process.cwd(), 'client/src/pages/Listen.tsx'), 'utf8');
+    const salesSource = readFileSync(resolve(process.cwd(), 'client/src/pages/ClaritySales.tsx'), 'utf8');
+    const zipSource = readFileSync(resolve(process.cwd(), 'server/zip-service.ts'), 'utf8');
+    const publicZipSource = readFileSync(resolve(process.cwd(), 'server/_core/zip-download.ts'), 'utf8');
+    const routesSource = readFileSync(resolve(process.cwd(), 'server/_core/routes.ts'), 'utf8');
+    const checkoutSource = readFileSync(resolve(process.cwd(), 'client/src/pages/Checkout.tsx'), 'utf8');
+    const appSource = readFileSync(resolve(process.cwd(), 'client/src/App.tsx'), 'utf8');
+
+    expect(CLARITY_WEBSITE_EDITION.trackCount).toBe(13);
+    expect(CLARITY_WEBSITE_EDITION.runtime).toBe('39:19');
+    expect(CLARITY_WEBSITE_EDITION.streamingTrackCount).toBe(12);
+    expect(CLARITY_WEBSITE_EDITION.streamingRuntime).toBe('35:36');
+    expect(CLARITY_WEBSITE_EDITION.cover).toContain('ChatGPTImageSep28,2026,07_34_57PM_14c05d91.png');
+    expect(CLARITY_WEBSITE_EDITION_TRACKS.map((track) => track.title)).toEqual([
+      'Final Prayer', 'Soulja', 'Get to the Studio', 'Over', 'Refined', 'King', 'Falling for You',
+      'Dear Kobe', 'Look at All These Blessings', 'Platform', 'Sweet Dreams', 'Fade Away', 'Wish I Had You',
+    ]);
+    expect(CLARITY_WEBSITE_EDITION_TRACKS[6]).toMatchObject({ title: 'Falling for You', description: '[DESCRIPTION]', duration: '3:44' });
+    expect(CLARITY_WEBSITE_EDITION_TRACKS[12]).toMatchObject({ title: 'Wish I Had You', isWebsiteExclusive: true, duration: '3:43' });
+    expect(listenSource).toContain('Website Exclusive');
+    expect(listenSource).toContain('13 tracks · {CLARITY_WEBSITE_EDITION.runtime}');
+    expect(salesSource).toContain('WHAT BECAME CLEAR.');
+    expect(salesSource).toContain('Production: [PRODUCTION CREDITS]');
+    expect(salesSource).toContain('[BANDCAMP URL]');
+    expect(salesSource).toContain('[SOUNDCLOUD URL]');
+    expect(salesSource).toContain('Streaming edition: 12 tracks. Wish I Had You is exclusive to this site.');
+    expect(salesSource).not.toContain('released without a middleman');
+    expect(zipSource).toContain('07-Falling for You.mp3');
+    expect(zipSource).toContain('13-Wish I Had You (Website Exclusive).mp3');
+    expect(publicZipSource).toContain('13-Wish I Had You (Website Exclusive).mp3');
+    expect(routesSource).toContain('"track-13"');
+    expect(checkoutSource).toContain('13 tracks · ${CLARITY_WEBSITE_EDITION.runtime}');
+    expect(appSource).toContain('CLARITY — MOSES SOG');
+  });
+
   it('keeps every free archive project equipped with both a listening route and ZIP delivery', async () => {
     const { PROJECTS } = await import('@/data/project-catalog');
     PROJECTS.filter((project) => project.download).forEach((project) => {

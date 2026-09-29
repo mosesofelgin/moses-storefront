@@ -25,7 +25,7 @@ const ROUTE_METADATA = {
   },
   store: { title: 'Store — MOSES SOG', description: 'Own New Genesis directly from MOSES, then explore the free listening archive.', image: undefined },
   artist: { title: 'Artist / EPK — MOSES SOG', description: 'The artist story, press materials, and booking information for MOSES SOG.', image: undefined },
-  clarity: { title: 'CLARITY — MOSES SOG', description: 'Listen to CLARITY, a twelve-track project of faith, discipline, and transformation.', image: undefined },
+  clarity: { title: 'CLARITY — MOSES SOG', description: 'Listen to the 13-track CLARITY Website Edition from MOSES, including the exclusive Wish I Had You.', image: '/manus-storage/ChatGPTImageSep28,2026,07_34_57PM_14c05d91.png' },
 };
 
 function updateMeta(selector: string, content: string) {

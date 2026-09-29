@@ -3,7 +3,7 @@ import { ArrowLeft, LockKeyhole, Loader2, ShoppingBag } from 'lucide-react';
 import { Link } from 'wouter';
 import { trpc } from '@/lib/trpc';
 import { toast } from 'sonner';
-import { CLARITY_COVER } from '@/data/project-catalog';
+import { CLARITY_WEBSITE_EDITION } from '@/data/clarity-website-edition';
 import { NEW_GENESIS_COVER, NEW_GENESIS_META } from '@/data/new-genesis-bundle';
 
 type CheckoutProduct = {
@@ -31,9 +31,9 @@ export default function Checkout() {
   } : {
     id: 'clarity',
     title: 'CLARITY',
-    cover: CLARITY_COVER,
-    description: 'Twelve movements of faith, discipline, and transformation.',
-    details: '12 tracks · 45m',
+    cover: CLARITY_WEBSITE_EDITION.cover,
+    description: 'Thirteen movements of faith, discipline, and transformation — including an exclusive track.',
+    details: `13 tracks · ${CLARITY_WEBSITE_EDITION.runtime}`,
     price: '$12',
     backHref: '/clarity-sales',
   };

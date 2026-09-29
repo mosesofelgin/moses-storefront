@@ -93,7 +93,7 @@ export async function sendPurchaseConfirmationEmail(
 
             <div class="track-list">
               <h3>📀 What You're Getting:</h3>
-              ${isNewGenesis ? '<div class="track-item">✓ 16 Premium Tracks (MP3)</div><div class="track-item">✓ New Genesis Cover Art</div>' : '<div class="track-item">✓ 12 Premium Tracks (MP3)</div><div class="track-item">✓ 4 Brand Images (High Resolution)</div><div class="track-item">✓ Complete Lyric Book (PDF)</div>'}
+              ${isNewGenesis ? '<div class="track-item">✓ 16 Premium Tracks (MP3)</div><div class="track-item">✓ New Genesis Cover Art</div>' : '<div class="track-item">✓ 13-Track CLARITY Website Edition (MP3)</div><div class="track-item">✓ Website Exclusive: Wish I Had You</div><div class="track-item">✓ CLARITY Cover Art</div>'}
             </div>
 
             <p><strong>Stream Everywhere:</strong></p>

@@ -2,8 +2,10 @@ import archiver from "archiver";
 import { Readable } from "stream";
 import https from "https";
 import http from "http";
+import { ENV } from './_core/env';
 
 const CDN = "https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk";
+const STORAGE = `${ENV.publicSiteUrl}/manus-storage`;
 
 export interface AssetFile {
   url: string;
@@ -19,6 +21,10 @@ async function downloadFile(url: string): Promise<Buffer> {
 
     protocol
       .get(url, (response) => {
+        if (response.statusCode && response.statusCode >= 300 && response.statusCode < 400 && response.headers.location) {
+          downloadFile(new URL(response.headers.location, url).toString()).then(resolve).catch(reject);
+          return;
+        }
         if (response.statusCode && response.statusCode >= 400) {
           reject(new Error(`Failed to download file: ${response.statusCode}`));
           return;
@@ -111,14 +117,14 @@ export async function createBrandImagesBundle(): Promise<{ stream: Readable; siz
  */
 export async function createClarityBundle(): Promise<{ stream: Readable; size: number }> {
   const files: AssetFile[] = [
-    // Tracks (all MP3, new CDN)
+    // Website Edition tracks (13 total, in website order)
     {
       url: `${CDN}/1-Moses-FinalPrayerByMoses_11c2ba3f.mp3`,
-      filename: "01-Final Prayer by Moses.mp3",
+      filename: "01-Final Prayer.mp3",
     },
     {
-      url: `${CDN}/02-Moses-WishIhadyou_16091eff.mp3`,
-      filename: "02-Wish I Had You.mp3",
+      url: `${CDN}/07-Moses-Soulja_7ba0876c.mp3`,
+      filename: "02-Soulja.mp3",
     },
     {
       url: `${CDN}/03-Moses-GetToTheStu_fdbb7ebb.mp3`,
@@ -129,41 +135,45 @@ export async function createClarityBundle(): Promise<{ stream: Readable; size: n
       filename: "04-Over.mp3",
     },
     {
-      url: `${CDN}/05-Moses-FadeAway_5363cc88.mp3`,
-      filename: "05-Fade Away.mp3",
+      url: `${CDN}/09-Moses-Refined_ba82d395.mp3`,
+      filename: "05-Refined.mp3",
     },
     {
       url: `${CDN}/06-Moses-King_e592ea70.mp3`,
       filename: "06-King.mp3",
     },
     {
-      url: `${CDN}/07-Moses-Soulja_7ba0876c.mp3`,
-      filename: "07-Soulja.mp3",
+      url: `${STORAGE}/MosesofElgin-FallingforYoubyMoses_880840fa.mp3`,
+      filename: "07-Falling for You.mp3",
     },
     {
       url: `${CDN}/08-Moses-DearKobe_bfa7dc5b.mp3`,
       filename: "08-Dear Kobe.mp3",
     },
     {
-      url: `${CDN}/09-Moses-Refined_ba82d395.mp3`,
-      filename: "09-Refined.mp3",
-    },
-    {
       url: `${CDN}/10-Moses-LookAtAllTheseBlessings_4b5725ec.mp3`,
-      filename: "10-Look at All These Blessings.mp3",
+      filename: "09-Look at All These Blessings.mp3",
     },
     {
       url: `${CDN}/11-Moses-Platform_cf321b03.mp3`,
-      filename: "11-Platform.mp3",
+      filename: "10-Platform.mp3",
     },
     {
       url: `${CDN}/12-Moses-SweetDreams_37d7f3ad.mp3`,
-      filename: "12-Sweet Dreams.mp3",
+      filename: "11-Sweet Dreams.mp3",
+    },
+    {
+      url: `${CDN}/05-Moses-FadeAway_5363cc88.mp3`,
+      filename: "12-Fade Away.mp3",
+    },
+    {
+      url: `${CDN}/02-Moses-WishIhadyou_16091eff.mp3`,
+      filename: "13-Wish I Had You (Website Exclusive).mp3",
     },
 
     // Images (new CDN)
     {
-      url: `${CDN}/album-cover_2118610e.png`,
+      url: `${STORAGE}/ChatGPTImageSep28,2026,07_34_57PM_14c05d91.png`,
       filename: "album-cover.png",
     },
     {

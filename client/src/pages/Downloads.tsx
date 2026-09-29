@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
 import { CLARITY_BUNDLE } from '@/data/clarity-bundle';
+import { CLARITY_WEBSITE_EDITION, type ClarityWebsiteTrack } from '@/data/clarity-website-edition';
 import {
   Download,
   CheckCircle,
@@ -16,7 +17,7 @@ import {
 } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 
-const ALBUM_ART = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk/album-cover_2118610e.png';
+const ALBUM_ART = CLARITY_WEBSITE_EDITION.cover;
 
 export default function Downloads() {
   const [, navigate] = useLocation();
@@ -51,7 +52,7 @@ export default function Downloads() {
     }
   }, [verifyTokenQuery.data, verifyTokenQuery.isLoading]);
 
-  const playTrack = (track: (typeof CLARITY_BUNDLE.tracks)[0]) => {
+  const playTrack = (track: ClarityWebsiteTrack) => {
     if (audioEl) {
       audioEl.pause();
     }
@@ -151,7 +152,7 @@ export default function Downloads() {
           </h1>
           <p className="text-xl text-gray-300 mb-1 font-mono">CLARITY — Full Album Bundle</p>
           <p className="text-gray-500 text-sm font-mono">
-            12 tracks · 5 photos · lyric book — download anytime with this link.
+            13-track Website Edition · 5 photos · lyric book — download anytime with this link.
           </p>
         </div>
       </div>
@@ -163,7 +164,7 @@ export default function Downloads() {
           <PackageOpen className="w-10 h-10 mx-auto mb-3 text-[#00ff00]" />
           <h2 className="text-xl font-display font-bold tracking-wider mb-1">DOWNLOAD EVERYTHING</h2>
           <p className="text-gray-400 text-sm mb-5 font-mono">
-            One ZIP file — all 12 tracks + 5 photos + lyric book bundled together.
+            One ZIP file — all 13 Website Edition tracks + 5 photos + lyric book bundled together.
           </p>
           <button
             onClick={handleDownloadAll}
@@ -171,7 +172,7 @@ export default function Downloads() {
             className="flex items-center justify-center gap-2 w-full bg-[#00ff00] hover:bg-[#00dd00] text-black font-bold py-4 text-base rounded-md transition disabled:opacity-60 disabled:cursor-not-allowed"
           >
             <Download className="w-5 h-5" />
-            {downloadingZip ? 'Starting Download...' : 'Download CLARITY.zip (18 files)'}
+            {downloadingZip ? 'Starting Download...' : 'Download CLARITY.zip (19 files)'}
           </button>
           <p className="text-gray-600 text-xs mt-3 font-mono">
             ~130MB — your browser will start downloading automatically.
@@ -181,10 +182,10 @@ export default function Downloads() {
         {/* Tracks */}
         <section>
           <h2 className="text-xs font-bold tracking-widest text-gray-500 uppercase mb-4 flex items-center gap-2 font-mono">
-            <Music className="w-4 h-4" /> 12 Tracks — individual downloads
+            <Music className="w-4 h-4" /> 13 Tracks — Website Edition downloads
           </h2>
           <div className="space-y-2">
-            {CLARITY_BUNDLE.tracks.map((track) => (
+            {CLARITY_WEBSITE_EDITION.tracks.map((track) => (
               <div
                 key={track.id}
                 className="flex items-center gap-3 bg-[#111] hover:bg-[#1a1a1a] transition rounded-lg px-4 py-3 border border-zinc-900 hover:border-zinc-700"
@@ -227,7 +228,7 @@ export default function Downloads() {
             <ImageIcon className="w-4 h-4" /> 5 Photos
           </h2>
           <div className="grid grid-cols-2 gap-4">
-            {CLARITY_BUNDLE.images.map((image, idx) => (
+            {[{ ...CLARITY_BUNDLE.images[0], url: CLARITY_WEBSITE_EDITION.cover }, ...CLARITY_BUNDLE.images.slice(1)].map((image, idx) => (
               <div key={idx} className="relative group">
                 <img
                   src={image.url}

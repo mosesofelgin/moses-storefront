@@ -8,6 +8,7 @@ import { streamNewGenesisZip } from "../zip-new-genesis";
 import { streamMixtapeZip } from "../zip-mixtape";
 import { verifyWebhookSignature, processWebhookEvent } from "./stripe-webhook";
 import { streamZipDownload, getClarityAlbumFiles } from "./zip-download";
+import { ENV } from "./env";
 import https from "https";
 import http from "http";
 
@@ -25,6 +26,10 @@ async function streamFileFromUrl(
 
     protocol
       .get(url, (response) => {
+        if (response.statusCode && response.statusCode >= 300 && response.statusCode < 400 && response.headers.location) {
+          streamFileFromUrl(new URL(response.headers.location, url).toString(), res, overrideHeaders).then(resolve).catch(reject);
+          return;
+        }
         if (response.statusCode && response.statusCode >= 400) {
           res.status(404).send("File not found");
           reject(new Error(`Failed to download file: ${response.statusCode}`));
@@ -309,25 +314,27 @@ export function registerRoutes(app: Express) {
       }
 
       const CDN = "https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk";
+      const STORAGE = `${ENV.publicSiteUrl}/manus-storage`;
 
-      // Map file IDs to URLs (new CDN, all MP3)
+      // Map Website Edition file IDs to their verified source URLs.
       const fileMap: Record<string, string> = {
-        // Tracks
+        // Website Edition tracks
         "track-01": `${CDN}/1-Moses-FinalPrayerByMoses_11c2ba3f.mp3`,
-        "track-02": `${CDN}/02-Moses-WishIhadyou_16091eff.mp3`,
+        "track-02": `${CDN}/07-Moses-Soulja_7ba0876c.mp3`,
         "track-03": `${CDN}/03-Moses-GetToTheStu_fdbb7ebb.mp3`,
         "track-04": `${CDN}/over_3b8e9f0f.mp3`,
-        "track-05": `${CDN}/05-Moses-FadeAway_5363cc88.mp3`,
+        "track-05": `${CDN}/09-Moses-Refined_ba82d395.mp3`,
         "track-06": `${CDN}/06-Moses-King_e592ea70.mp3`,
-        "track-07": `${CDN}/07-Moses-Soulja_7ba0876c.mp3`,
+        "track-07": `${STORAGE}/MosesofElgin-FallingforYoubyMoses_880840fa.mp3`,
         "track-08": `${CDN}/08-Moses-DearKobe_bfa7dc5b.mp3`,
-        "track-09": `${CDN}/09-Moses-Refined_ba82d395.mp3`,
-        "track-10": `${CDN}/10-Moses-LookAtAllTheseBlessings_4b5725ec.mp3`,
-        "track-11": `${CDN}/11-Moses-Platform_cf321b03.mp3`,
-        "track-12": `${CDN}/12-Moses-SweetDreams_37d7f3ad.mp3`,
+        "track-09": `${CDN}/10-Moses-LookAtAllTheseBlessings_4b5725ec.mp3`,
+        "track-10": `${CDN}/11-Moses-Platform_cf321b03.mp3`,
+        "track-11": `${CDN}/12-Moses-SweetDreams_37d7f3ad.mp3`,
+        "track-12": `${CDN}/05-Moses-FadeAway_5363cc88.mp3`,
+        "track-13": `${CDN}/02-Moses-WishIhadyou_16091eff.mp3`,
 
         // Images
-        "image-01": `${CDN}/album-cover_2118610e.png`,
+        "image-01": `${STORAGE}/ChatGPTImageSep28,2026,07_34_57PM_14c05d91.png`,
         "image-02": `${CDN}/TOP_01_aaeff941.jpg`,
         "image-03": `${CDN}/TOP_04_edae7ba8.jpg`,
         "image-04": `${CDN}/TOP_05_b7f42eb5.jpg`,

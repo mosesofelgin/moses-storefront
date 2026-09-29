@@ -41,7 +41,7 @@ export const appRouter = router({
 
         // Determine product details based on productId
         let productName = "CLARITY by Moses";
-        let productDescription = "Full digital album — 12 tracks + 5 photos (instant download)";
+        let productDescription = "CLARITY Website Edition — 13 tracks including Website Exclusive Wish I Had You (instant download)";
         let unitAmount = 1200; // Default to $12 for CLARITY
 
         const productId = input.productId || "clarity";

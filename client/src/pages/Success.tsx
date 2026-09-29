@@ -3,12 +3,12 @@ import { Link } from 'wouter';
 import { AlertCircle, CheckCircle2, Download, Loader2, PackageOpen } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { NEW_GENESIS_COVER, NEW_GENESIS_META } from '@/data/new-genesis-bundle';
-import { CLARITY_COVER } from '@/data/project-catalog';
+import { CLARITY_WEBSITE_EDITION } from '@/data/clarity-website-edition';
 
 type Product = 'clarity' | 'new-genesis';
 
 const productDetails: Record<Product, { title: string; cover: string; details: string; filename: string }> = {
-  clarity: { title: 'CLARITY', cover: CLARITY_COVER, details: '12 tracks and the full CLARITY visual bundle.', filename: 'CLARITY-Album-Bundle.zip' },
+  clarity: { title: 'CLARITY', cover: CLARITY_WEBSITE_EDITION.cover, details: `13-track Website Edition, including the exclusive Wish I Had You.`, filename: 'CLARITY-Album-Bundle.zip' },
   'new-genesis': { title: 'NEW GENESIS', cover: NEW_GENESIS_COVER, details: `${NEW_GENESIS_META.trackCount} tracks and New Genesis cover art.`, filename: 'New-Genesis.zip' },
 };
 

@@ -2,6 +2,7 @@ import { Response } from "express";
 import archiver from "archiver";
 import https from "https";
 import http from "http";
+import { ENV } from "./env";
 
 interface FileToZip {
   url: string;
@@ -87,19 +88,20 @@ export async function streamZipDownload(
 
 const CDN =
   "https://d2xsxph8kpxj0f.cloudfront.net/310519663298995484/RyuYxqyoXrjSTTrJPDd5xk";
+const STORAGE = `${ENV.publicSiteUrl}/manus-storage`;
 
 /**
- * CLARITY album files — URLs match clarity-bundle.ts exactly
+ * CLARITY Website Edition — 13 tracks, with Wish I Had You reserved as the website exclusive.
  */
 export function getClarityAlbumFiles(): FileToZip[] {
   return [
     {
       url: `${CDN}/1-Moses-FinalPrayerByMoses_11c2ba3f.mp3`,
-      filename: "01-Final Prayer by Moses.mp3",
+      filename: "01-Final Prayer.mp3",
     },
     {
-      url: `${CDN}/02-Moses-WishIhadyou_16091eff.mp3`,
-      filename: "02-Wish I Had You.mp3",
+      url: `${CDN}/07-Moses-Soulja_7ba0876c.mp3`,
+      filename: "02-Soulja.mp3",
     },
     {
       url: `${CDN}/03-Moses-GetToTheStu_fdbb7ebb.mp3`,
@@ -110,39 +112,43 @@ export function getClarityAlbumFiles(): FileToZip[] {
       filename: "04-Over.mp3",
     },
     {
-      url: `${CDN}/05-Moses-FadeAway_5363cc88.mp3`,
-      filename: "05-Fade Away.mp3",
+      url: `${CDN}/09-Moses-Refined_ba82d395.mp3`,
+      filename: "05-Refined.mp3",
     },
     {
       url: `${CDN}/06-Moses-King_e592ea70.mp3`,
       filename: "06-King.mp3",
     },
     {
-      url: `${CDN}/07-Moses-Soulja_7ba0876c.mp3`,
-      filename: "07-Soulja.mp3",
+      url: `${STORAGE}/MosesofElgin-FallingforYoubyMoses_880840fa.mp3`,
+      filename: "07-Falling for You.mp3",
     },
     {
       url: `${CDN}/08-Moses-DearKobe_bfa7dc5b.mp3`,
       filename: "08-Dear Kobe.mp3",
     },
     {
-      url: `${CDN}/09-Moses-Refined_ba82d395.mp3`,
-      filename: "09-Refined.mp3",
-    },
-    {
       url: `${CDN}/10-Moses-LookAtAllTheseBlessings_4b5725ec.mp3`,
-      filename: "10-Look at All These Blessings.mp3",
+      filename: "09-Look at All These Blessings.mp3",
     },
     {
       url: `${CDN}/11-Moses-Platform_cf321b03.mp3`,
-      filename: "11-Platform.mp3",
+      filename: "10-Platform.mp3",
     },
     {
       url: `${CDN}/12-Moses-SweetDreams_37d7f3ad.mp3`,
-      filename: "12-Sweet Dreams.mp3",
+      filename: "11-Sweet Dreams.mp3",
     },
     {
-      url: `${CDN}/album-cover_2118610e.png`,
+      url: `${CDN}/05-Moses-FadeAway_5363cc88.mp3`,
+      filename: "12-Fade Away.mp3",
+    },
+    {
+      url: `${CDN}/02-Moses-WishIhadyou_16091eff.mp3`,
+      filename: "13-Wish I Had You (Website Exclusive).mp3",
+    },
+    {
+      url: `${STORAGE}/ChatGPTImageSep28,2026,07_34_57PM_14c05d91.png`,
       filename: "album-cover.png",
     },
     {
