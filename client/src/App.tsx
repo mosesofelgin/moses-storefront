@@ -26,6 +26,7 @@ const ROUTE_METADATA = {
   store: { title: 'Store — MOSES SOG', description: 'Own New Genesis directly from MOSES, then explore the free listening archive.', image: undefined },
   artist: { title: 'Artist / EPK — MOSES SOG', description: 'The artist story, press materials, and booking information for MOSES SOG.', image: undefined },
   clarity: { title: 'CLARITY — MOSES SOG', description: 'Listen to the 13-track CLARITY Website Edition from MOSES, including the exclusive Wish I Had You.', image: '/manus-storage/ChatGPTImageSep28,2026,07_34_57PM_14c05d91.png' },
+  music: { title: 'MOSES SOG — Music', description: 'Listen to and own New Genesis and CLARITY, the studio albums from Moses. Stream free, buy direct, or find them on your favorite platform.', image: '/manus-storage/ChatGPTImageSep28,2026,07_34_57PM_14c05d91.png' },
 };
 
 function updateMeta(selector: string, content: string) {
@@ -64,6 +65,7 @@ const ClaritySales = lazy(() => import("./pages/ClaritySales"));
 const OwnerInsights = lazy(() => import("./pages/OwnerInsights"));
 const ThePrince = lazy(() => import("./pages/ThePrince"));
 const AiWithoutFear = lazy(() => import("./pages/AiWithoutFear"));
+const Music = lazy(() => import("./pages/Music"));
 
 function RouteFallback() {
   return (
@@ -81,6 +83,7 @@ function Router() {
       <Route path={"/owner-insights"} component={OwnerInsights} />
       <Route path={"/onmyown"} component={ThePrince} />
       <Route path={"/airisks"} component={AiWithoutFear} />
+      <Route path={"/music"} component={Music} />
       <Route path={"/success"} component={Success} />
       <Route path={"/downloads"} component={Downloads} />
       <Route path={"/clarity"} component={ClarityProject} />
@@ -127,6 +130,8 @@ function App() {
   useEffect(() => {
     const metadata = currentPath.startsWith('/new-genesis')
       ? ROUTE_METADATA.newGenesis
+      : currentPath.startsWith('/music')
+        ? ROUTE_METADATA.music
       : currentPath.startsWith('/store')
         ? ROUTE_METADATA.store
         : currentPath.startsWith('/artist')

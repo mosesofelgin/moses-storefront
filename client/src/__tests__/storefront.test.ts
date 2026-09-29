@@ -215,6 +215,34 @@ describe('MOSES route policy', () => {
     expect(isFocusedRoutePath('/listen')).toBe(true);
     expect(isFocusedRoutePath('/links')).toBe(true);
     expect(isFocusedRoutePath('/artist')).toBe(false);
+    expect(isFocusedRoutePath('/music')).toBe(true);
+  });
+
+  it('keeps the Music hub routes, links, placeholders, and album exclusivity explicit', () => {
+    const appSource = readFileSync(resolve(process.cwd(), 'client/src/App.tsx'), 'utf8');
+    const musicSource = readFileSync(resolve(process.cwd(), 'client/src/pages/Music.tsx'), 'utf8');
+    const navSource = readFileSync(resolve(process.cwd(), 'client/src/components/GlobalNav.tsx'), 'utf8');
+    const homeSource = readFileSync(resolve(process.cwd(), 'client/src/pages/Home.tsx'), 'utf8');
+    const claritySource = readFileSync(resolve(process.cwd(), 'client/src/pages/ClaritySales.tsx'), 'utf8');
+    const genesisSource = readFileSync(resolve(process.cwd(), 'client/src/pages/NewGenesis.tsx'), 'utf8');
+    const listenSource = readFileSync(resolve(process.cwd(), 'client/src/pages/Listen.tsx'), 'utf8');
+    const genesisListenSource = readFileSync(resolve(process.cwd(), 'client/src/pages/NewGenesisListen.tsx'), 'utf8');
+
+    expect(appSource).toContain('path={"/music"}');
+    expect(appSource).toContain("title: 'MOSES SOG — Music'");
+    expect(musicSource).toContain('https://mosessog.bandcamp.com/album/clarity-2');
+    expect(musicSource).toContain('https://soundcloud.com/mosessog/sets/clarity-1');
+    expect(musicSource).toContain('https://www.youtube.com/playlist?list=PLTt1W4MaPgT3799Kyqr9oAV62pPsOAxS0');
+    expect(musicSource).toContain('[NEW GENESIS DISTROKID/HYPERFOLLOW URL]');
+    expect(musicSource).toContain('[NEW GENESIS YOUTUBE URL]');
+    expect(musicSource).toContain('Wish I Had You');
+    expect(musicSource).toContain('target="_blank"');
+    expect(navSource).toContain('{ label: "Music", path: "/music" }');
+    expect(homeSource).toContain('href="/music"');
+    expect(claritySource).toContain('href="/music"');
+    expect(genesisSource).toContain('href="/music"');
+    expect(listenSource).toContain('href="/music"');
+    expect(genesisListenSource).toContain('href="/music"');
   });
 
   it('keeps the owner insights route private to the app shell and outside the Vault flow', async () => {

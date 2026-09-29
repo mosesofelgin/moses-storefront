@@ -155,6 +155,7 @@ export default function NewGenesisListen() {
       }}
     >
       <div className="mx-auto max-w-5xl px-4 pt-4">
+        <div className="mb-3"><Link href="/music" className="text-[10px] uppercase tracking-[0.22em] text-indigo-300/80 transition hover:text-indigo-100">← All Music</Link></div>
         <ListenNavigation project="NEW GENESIS" backHref="/new-genesis" backLabel="Project" />
       </div>
       <audio

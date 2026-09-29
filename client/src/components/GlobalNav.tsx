@@ -14,6 +14,7 @@ export default function GlobalNav() {
   const navLinks = [
     { label: "Home", path: "/" },
     { label: "Archive", path: "/projects" },
+    { label: "Music", path: "/music" },
     { label: "CLARITY", path: "/clarity-sales" },
     { label: "Artist / EPK", path: "/artist" },
     { label: "Store", path: "/store" },

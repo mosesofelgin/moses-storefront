@@ -83,6 +83,7 @@ export default function Listen() {
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_20%_0%,rgba(9,92,62,0.28),transparent_33%),#090b09] px-4 py-6 text-zinc-100 sm:py-10">
       <div className="mx-auto max-w-3xl">
+        <div className="mb-3"><Link href="/music" className="text-[10px] uppercase tracking-[0.22em] text-emerald-300/75 transition hover:text-emerald-100">← All Music</Link></div>
         <ListenNavigation project="CLARITY" backHref="/clarity-sales" backLabel="Buy CLARITY" actionHref="/artist" actionLabel="Artist / EPK" />
         <header className="mb-8 border-b border-emerald-100/10 pb-7 sm:mb-10">
           <p className="text-[10px] uppercase tracking-[0.26em] text-amber-200">CLARITY · Website Edition · 13 tracks · {CLARITY_WEBSITE_EDITION.runtime}</p>
