@@ -48,10 +48,11 @@ export async function sendPurchaseConfirmationEmail(
   customerName: string,
   downloadToken: string,
   downloadUrl: string,
-  product: 'clarity' | 'new-genesis' = 'clarity'
+  product: 'clarity' | 'new-genesis' | 'church' = 'clarity'
 ): Promise<boolean> {
   const isNewGenesis = product === 'new-genesis';
-  const albumTitle = isNewGenesis ? 'NEW GENESIS' : 'CLARITY';
+  const isChurch = product === 'church';
+  const albumTitle = isNewGenesis ? 'NEW GENESIS' : isChurch ? 'CHURCH' : 'CLARITY';
   const subject = `🎵 Your ${albumTitle} Album is Ready to Download`;
   const html = `
     <!DOCTYPE html>
@@ -93,7 +94,7 @@ export async function sendPurchaseConfirmationEmail(
 
             <div class="track-list">
               <h3>📀 What You're Getting:</h3>
-              ${isNewGenesis ? '<div class="track-item">✓ 16 Premium Tracks (MP3)</div><div class="track-item">✓ New Genesis Cover Art</div>' : '<div class="track-item">✓ 13-Track CLARITY Website Edition (MP3)</div><div class="track-item">✓ Website Exclusive: Wish I Had You</div><div class="track-item">✓ CLARITY Cover Art</div>'}
+              ${isNewGenesis ? '<div class="track-item">✓ 16 Premium Tracks (MP3)</div><div class="track-item">✓ New Genesis Cover Art</div>' : isChurch ? '<div class="track-item">✓ CHURCH full-resolution MP3</div><div class="track-item">✓ Private download access</div>' : '<div class="track-item">✓ 13-Track CLARITY Website Edition (MP3)</div><div class="track-item">✓ Website Exclusive: Wish I Had You</div><div class="track-item">✓ CLARITY Cover Art</div>'}
             </div>
 
             <p><strong>Stream Everywhere:</strong></p>

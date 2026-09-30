@@ -444,3 +444,30 @@ describe('MOSES accessibility regression contracts', () => {
     });
   });
 });
+
+
+describe('CHURCH release', () => {
+  it('keeps the direct-access page and delivery assets wired end to end', () => {
+    const appSource = readFileSync(resolve(process.cwd(), 'client/src/App.tsx'), 'utf8');
+    const policySource = readFileSync(resolve(process.cwd(), 'client/src/lib/routePolicy.ts'), 'utf8');
+    const churchSource = readFileSync(resolve(process.cwd(), 'client/src/pages/Church.tsx'), 'utf8');
+    const routerSource = readFileSync(resolve(process.cwd(), 'server/routers.ts'), 'utf8');
+    const webhookSource = readFileSync(resolve(process.cwd(), 'server/_core/stripe-webhook.ts'), 'utf8');
+    const routeSource = readFileSync(resolve(process.cwd(), 'server/_core/routes.ts'), 'utf8');
+    const successSource = readFileSync(resolve(process.cwd(), 'client/src/pages/Success.tsx'), 'utf8');
+
+    expect(appSource).toContain('path={"/church"}');
+    expect(appSource).toContain('title: \'CHURCH — MOSES SOG\'');
+    expect(policySource).toContain("'/church'");
+    expect(churchSource).toContain('CC3lHW_usho');
+    expect(churchSource).toContain('church-web_573306b2.mp4');
+    expect(churchSource).toContain('church_55d3de5a.mp3');
+    expect(churchSource).toContain('Name your price');
+    expect(churchSource).toContain('productId: "church"');
+    expect(routerSource).toContain('productId: z.enum(["clarity", "new-genesis", "church", "brand-images"])');
+    expect(webhookSource).toContain("product_id === 'church'");
+    expect(routeSource).toContain('order.productId === "church"');
+    expect(routeSource).toContain('CHURCH.mp3');
+    expect(successSource).toContain("church: { title: 'CHURCH'");
+  });
+});

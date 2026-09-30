@@ -5,11 +5,12 @@ import { trpc } from '@/lib/trpc';
 import { NEW_GENESIS_COVER, NEW_GENESIS_META } from '@/data/new-genesis-bundle';
 import { CLARITY_WEBSITE_EDITION } from '@/data/clarity-website-edition';
 
-type Product = 'clarity' | 'new-genesis';
+type Product = 'clarity' | 'new-genesis' | 'church';
 
 const productDetails: Record<Product, { title: string; cover: string; details: string; filename: string }> = {
   clarity: { title: 'CLARITY', cover: CLARITY_WEBSITE_EDITION.cover, details: `13-track Website Edition, including the exclusive Wish I Had You.`, filename: 'CLARITY-Album-Bundle.zip' },
   'new-genesis': { title: 'NEW GENESIS', cover: NEW_GENESIS_COVER, details: `${NEW_GENESIS_META.trackCount} tracks and New Genesis cover art.`, filename: 'New-Genesis.zip' },
+  church: { title: 'CHURCH', cover: '/manus-storage/church-poster_8642bc0c.jpg', details: 'Full-resolution CHURCH MP3 audio delivery.', filename: 'CHURCH.mp3' },
 };
 
 export default function Success() {

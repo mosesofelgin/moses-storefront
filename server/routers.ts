@@ -32,7 +32,7 @@ export const appRouter = router({
           customerEmail: z.string().email(),
           customerName: z.string().min(1),
           amountInCents: z.number().int().min(0).optional(),
-          productId: z.enum(["clarity", "new-genesis", "brand-images"]).optional(),
+          productId: z.enum(["clarity", "new-genesis", "church", "brand-images"]).optional(),
         })
       )
       .mutation(async ({ input, ctx }) => {
@@ -54,6 +54,10 @@ export const appRouter = router({
           productName = "New Genesis by Moses";
           productDescription = "Full digital album — 16 tracks + cover art (instant delivery)";
           unitAmount = Math.max(input.amountInCents || 1000, 1000);
+        } else if (productId === "church") {
+          productName = "CHURCH by Moses";
+          productDescription = "CHURCH visual audio release — name your price MP3 delivery";
+          unitAmount = Math.max(input.amountInCents || 0, 100);
         } else if (input.amountInCents) {
           unitAmount = input.amountInCents;
         }
@@ -141,7 +145,8 @@ export const appRouter = router({
             input.customerEmail,
             input.customerName,
             token,
-            downloadUrl
+            downloadUrl,
+            input.productId === "church" ? "church" : "clarity"
           );
 
           return {
@@ -166,7 +171,7 @@ export const appRouter = router({
         return {
           valid: true,
           email: result.customerEmail,
-          product: order?.productId === 'new-genesis' ? 'new-genesis' : 'clarity',
+          product: order?.productId === 'new-genesis' ? 'new-genesis' : order?.productId === 'church' ? 'church' : 'clarity',
         };
       }),
   }),
@@ -190,7 +195,7 @@ export const appRouter = router({
           ...session,
           pending: !token,
           token,
-          product: order.productId === 'new-genesis' ? 'new-genesis' : 'clarity',
+          product: order.productId === 'new-genesis' ? 'new-genesis' : order.productId === 'church' ? 'church' : 'clarity',
         };
       }),
   }),

@@ -267,6 +267,14 @@ export function registerRoutes(app: Express) {
         return;
       }
 
+      if (order.productId === "church") {
+        await streamFileFromUrl(`${ENV.publicSiteUrl}/manus-storage/church_55d3de5a.mp3`, res, {
+          contentType: "audio/mpeg",
+          filename: "CHURCH.mp3",
+        });
+        return;
+      }
+
       // Create ZIP archive
       const { stream } = await createClarityBundle();
 
