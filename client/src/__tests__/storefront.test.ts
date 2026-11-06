@@ -484,6 +484,11 @@ describe('INSTANTLY: THE PROCESS release', () => {
     expect(source).toContain('GET THE NEXT');
     expect(source).toContain('Instantly album player');
     expect(source).toContain('Auto-advances through the project');
+    expect(source).toContain('PLAY THE PROJECT NOW');
+    expect(source).toContain('const startProject');
+    expect(source).toContain("title: 'Show Me'");
+    expect(source).toContain('setCaptureVisible(true)');
+    expect(source).toContain('captureVisible &&');
     expect(source).not.toContain('download className');
     expect(source).not.toContain('> MP3</a>');
     expect(source.indexOf('<section id="tracks"')).toBeLessThan(source.indexOf('aria-labelledby="capture-title"'));
