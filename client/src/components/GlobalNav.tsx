@@ -15,6 +15,7 @@ export default function GlobalNav() {
     { label: "Home", path: "/" },
     { label: "Archive", path: "/projects" },
     { label: "Music", path: "/music" },
+    { label: "Instantly", path: "/instantly" },
     { label: "CLARITY", path: "/clarity-sales" },
     { label: "Artist / EPK", path: "/artist" },
     { label: "Store", path: "/store" },

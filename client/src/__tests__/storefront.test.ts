@@ -471,3 +471,23 @@ describe('CHURCH release', () => {
     expect(successSource).toContain("church: { title: 'CHURCH'");
   });
 });
+
+describe('INSTANTLY: THE PROCESS release', () => {
+  it('keeps the live route, ten-track media map, rollout clips, and email capture wired', () => {
+    const appSource = readFileSync(resolve(process.cwd(), 'client/src/App.tsx'), 'utf8');
+    const policySource = readFileSync(resolve(process.cwd(), 'client/src/lib/routePolicy.ts'), 'utf8');
+    const source = readFileSync(resolve(process.cwd(), 'client/src/pages/Instantly.tsx'), 'utf8');
+    expect(appSource).toContain('path={"/instantly"}');
+    expect(appSource).toContain('INSTANTLY: THE PROCESS — MOSES SOG');
+    expect(policySource).toContain("'/instantly'");
+    expect(source).toContain("source: 'instantly_the_process'");
+    expect(source).toContain('GET THE NEXT');
+    expect(source).toContain('Download');
+    expect(source).toContain('preload="none"');
+    expect(source.match(/title: '[^']+', audio:/g)?.length).toBe(10);
+    expect(source).toContain('/manus-storage/Gave My All_2a4c20a3.mp3');
+    expect(source).toContain('/manus-storage/100K Idea_bf68975d.mp3');
+    expect(source).toContain('/manus-storage/01 of 06 - Instantly Introduction_6a28ee7d.mp4');
+    expect(source).toContain('/manus-storage/10 - How 100K Idea Started_dd33ada5.mp4');
+  });
+});

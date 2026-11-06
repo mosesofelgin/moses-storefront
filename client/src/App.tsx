@@ -28,6 +28,7 @@ const ROUTE_METADATA = {
   clarity: { title: 'CLARITY — MOSES SOG', description: 'Listen to the 13-track CLARITY Website Edition from MOSES, including the exclusive Wish I Had You.', image: '/manus-storage/ChatGPTImageSep28,2026,07_34_57PM_14c05d91.png' },
   music: { title: 'MOSES SOG — Music', description: 'Listen to and own New Genesis and CLARITY, the studio albums from Moses. Stream free, buy direct, or find them on your favorite platform.', image: '/manus-storage/ChatGPTImageSep28,2026,07_34_57PM_14c05d91.png' },
   church: { title: 'CHURCH — MOSES SOG', description: 'Watch CHURCH by Moses ft Snoop, then take the full audio directly from MOSES SOG for a name-your-price contribution.', image: '/manus-storage/church-poster_8642bc0c.jpg' },
+  instantly: { title: 'INSTANTLY: THE PROCESS — MOSES SOG', description: 'Ten songs. Ten videos. From the notebook to the mic. Hear the finished tracks and see the sessions behind them.', image: undefined },
 };
 
 function updateMeta(selector: string, content: string) {
@@ -68,6 +69,7 @@ const ThePrince = lazy(() => import("./pages/ThePrince"));
 const AiWithoutFear = lazy(() => import("./pages/AiWithoutFear"));
 const Music = lazy(() => import("./pages/Music"));
 const Church = lazy(() => import("./pages/Church"));
+const Instantly = lazy(() => import("./pages/Instantly"));
 
 function RouteFallback() {
   return (
@@ -87,6 +89,7 @@ function Router() {
       <Route path={"/airisks"} component={AiWithoutFear} />
       <Route path={"/music"} component={Music} />
       <Route path={"/church"} component={Church} />
+      <Route path={"/instantly"} component={Instantly} />
       <Route path={"/success"} component={Success} />
       <Route path={"/downloads"} component={Downloads} />
       <Route path={"/clarity"} component={ClarityProject} />
@@ -135,6 +138,8 @@ function App() {
       ? ROUTE_METADATA.newGenesis
       : currentPath.startsWith('/church')
         ? ROUTE_METADATA.church
+      : currentPath.startsWith('/instantly')
+        ? ROUTE_METADATA.instantly
       : currentPath.startsWith('/music')
         ? ROUTE_METADATA.music
       : currentPath.startsWith('/store')
