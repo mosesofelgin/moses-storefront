@@ -482,7 +482,10 @@ describe('INSTANTLY: THE PROCESS release', () => {
     expect(policySource).toContain("'/instantly'");
     expect(source).toContain("source: 'instantly_the_process'");
     expect(source).toContain('GET THE NEXT');
-    expect(source).toContain('Download');
+    expect(source).toContain('Instantly album player');
+    expect(source).toContain('Auto-advances through the project');
+    expect(source).not.toContain('download className');
+    expect(source).not.toContain('> MP3</a>');
     expect(source).toContain('preload="none"');
     expect(source.match(/title: '[^']+', audio:/g)?.length).toBe(10);
     expect(source).toContain('/manus-storage/Gave My All_2a4c20a3.mp3');
