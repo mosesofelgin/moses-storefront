@@ -6,7 +6,6 @@ import { createBathshebaBundle } from "../zip-bathsheba";
 import { streamAbcsZip } from "../zip-abcs";
 import { streamNewGenesisZip } from "../zip-new-genesis";
 import { streamMixtapeZip } from "../zip-mixtape";
-import { streamInstantlyZip } from "../zip-instantly";
 import { verifyWebhookSignature, processWebhookEvent } from "./stripe-webhook";
 import { streamZipDownload, getClarityAlbumFiles } from "./zip-download";
 import { ENV } from "./env";
@@ -220,26 +219,6 @@ export function registerRoutes(app: Express) {
       console.error("[Mixtape Download] Error:", error);
       if (!res.headersSent) {
         res.status(500).json({ error: "Failed to download ZIP" });
-      }
-    }
-  });
-
-  /**
-   * GET /api/download/instantly
-   * Download the complete 11-song Instantly project as one MP3 ZIP.
-   */
-  app.get("/api/download/instantly", async (req: Request, res: Response) => {
-    try {
-      console.log("[Instantly Download] Request received");
-      const host = req.get("host");
-      if (!host) throw new Error("Missing request host");
-      const forwardedProto = req.get("x-forwarded-proto")?.split(",")[0]?.trim();
-      const origin = `${forwardedProto || req.protocol}://${host}`;
-      await streamInstantlyZip(res, origin);
-    } catch (error) {
-      console.error("[Instantly Download] Error:", error);
-      if (!res.headersSent) {
-        res.status(500).json({ error: "Failed to download Instantly project" });
       }
     }
   });
