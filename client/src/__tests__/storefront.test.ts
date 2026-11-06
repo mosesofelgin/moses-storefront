@@ -486,6 +486,7 @@ describe('INSTANTLY: THE PROCESS release', () => {
     expect(source).toContain('Auto-advances through the project');
     expect(source).not.toContain('download className');
     expect(source).not.toContain('> MP3</a>');
+    expect(source.indexOf('<section id="tracks"')).toBeLessThan(source.indexOf('aria-labelledby="capture-title"'));
     expect(source).toContain('preload="none"');
     expect(source.match(/title: '[^']+', audio:/g)?.length).toBe(10);
     expect(source).toContain('/manus-storage/Gave My All_2a4c20a3.mp3');
