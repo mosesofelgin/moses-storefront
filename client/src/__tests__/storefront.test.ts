@@ -473,7 +473,7 @@ describe('CHURCH release', () => {
 });
 
 describe('INSTANTLY: THE PROCESS release', () => {
-  it('keeps the live route, ten-track media map, rollout clips, and email capture wired', () => {
+  it('keeps the live route, eleven-track video feed, project ZIP, rollout clips, and email capture wired', () => {
     const appSource = readFileSync(resolve(process.cwd(), 'client/src/App.tsx'), 'utf8');
     const policySource = readFileSync(resolve(process.cwd(), 'client/src/lib/routePolicy.ts'), 'utf8');
     const source = readFileSync(resolve(process.cwd(), 'client/src/pages/Instantly.tsx'), 'utf8');
@@ -482,20 +482,25 @@ describe('INSTANTLY: THE PROCESS release', () => {
     expect(policySource).toContain("'/instantly'");
     expect(source).toContain("source: 'instantly_the_process'");
     expect(source).toContain('GET THE NEXT');
-    expect(source).toContain('Instantly album player');
-    expect(source).toContain('Auto-advances through the project');
-    expect(source).toContain('PLAY THE PROJECT NOW');
+    expect(source).toContain('Instagram');
+    expect(source).toContain('Swipe the project');
+    expect(source).toContain('DOWNLOAD PROJECT');
+    expect(source).toContain('/api/download/instantly');
+    expect(source).toContain('11 songs');
     expect(source).toContain('const startProject');
     expect(source).toContain("title: 'Show Me'");
     expect(source).toContain('setCaptureVisible(true)');
     expect(source).toContain('captureVisible &&');
-    expect(source).not.toContain('download className');
-    expect(source).not.toContain('> MP3</a>');
+    expect(source).toContain('setTimeout(() => selectTrack(0), 300)');
+    expect(source.indexOf('<section id="tracks"')).toBeLessThan(source.indexOf('GET THE NEXT'));
     expect(source.indexOf('<section id="tracks"')).toBeLessThan(source.indexOf('aria-labelledby="capture-title"'));
     expect(source).toContain('preload="none"');
-    expect(source.match(/title: '[^']+', audio:/g)?.length).toBe(10);
+    expect(source).toContain('videoRefs.current');
+    expect(source.match(/title: '[^']+', audio:/g)?.length).toBe(11);
     expect(source).toContain('/manus-storage/Gave My All_2a4c20a3.mp3');
     expect(source).toContain('/manus-storage/100K Idea_bf68975d.mp3');
+    expect(source).toContain('/manus-storage/Knowme_2c62facb.mp3');
+    expect(source).toContain('/manus-storage/KnowMe-SmallerPhoneCopy_11fe4399.mp4');
     expect(source).toContain('/manus-storage/01 of 06 - Instantly Introduction_6a28ee7d.mp4');
     expect(source).toContain('/manus-storage/10 - How 100K Idea Started_dd33ada5.mp4');
   });
