@@ -547,11 +547,11 @@ export default function Artist() {
                 For concerts, churches, schools, conferences, community organizations, and institutional events.
               </p>
               <a
-                href="mailto:booking@mosessog.com"
+                href="mailto:wtgexodus@gmail.com"
                 className="inline-flex items-center gap-2 px-6 py-3 border-2 border-[#b8860b] text-[#b8860b] hover:bg-[#b8860b] hover:text-[#0d0c0b] font-bold transition-colors text-sm"
               >
                 <Mail size={16} />
-                booking@mosessog.com
+                wtgexodus@gmail.com
               </a>
             </div>
 
@@ -566,11 +566,11 @@ export default function Artist() {
                 For interviews, collaborations, licensing, sponsorships, and educational initiatives.
               </p>
               <a
-                href="mailto:media@mosessog.com"
+                href="mailto:wtgexodus@gmail.com"
                 className="inline-flex items-center gap-2 px-6 py-3 border-2 border-[#b8860b] text-[#b8860b] hover:bg-[#b8860b] hover:text-[#0d0c0b] font-bold transition-colors text-sm"
               >
                 <Mail size={16} />
-                media@mosessog.com
+                wtgexodus@gmail.com
               </a>
             </div>
           </div>

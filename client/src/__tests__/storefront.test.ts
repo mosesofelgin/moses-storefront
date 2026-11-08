@@ -502,3 +502,13 @@ describe('INSTANTLY: THE PROCESS release', () => {
     expect(source).toContain('/manus-storage/10 - How 100K Idea Started_dd33ada5.mp4');
   });
 });
+
+describe('MOSES artist contact', () => {
+  it('routes booking and media inquiries to the current contact email', () => {
+    const source = readFileSync(resolve(process.cwd(), 'client/src/pages/Artist.tsx'), 'utf8');
+    expect(source).toContain('mailto:wtgexodus@gmail.com');
+    expect(source).toContain('wtgexodus@gmail.com');
+    expect(source).not.toContain('booking@mosessog.com');
+    expect(source).not.toContain('media@mosessog.com');
+  });
+});
