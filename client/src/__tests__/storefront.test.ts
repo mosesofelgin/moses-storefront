@@ -239,6 +239,13 @@ describe('MOSES route policy', () => {
     expect(musicSource).toContain('target="_blank"');
     expect(navSource).toContain('{ label: "Music", path: "/music" }');
     expect(homeSource).toContain('href="/music"');
+    expect(homeSource).toContain('id="marketplace"');
+    expect(homeSource).toContain('MOSES SOG · Direct marketplace');
+    expect(homeSource).toContain('id="marketplace-grid"');
+    expect(homeSource).toContain('BUY CLARITY');
+    expect(homeSource).toContain('href="/church"');
+    expect(homeSource).toContain('href="/instantly"');
+    expect(homeSource).toContain('No placeholder merchandise.');
     expect(claritySource).toContain('href="/music"');
     expect(genesisSource).toContain('href="/music"');
     expect(listenSource).toContain('href="/music"');
