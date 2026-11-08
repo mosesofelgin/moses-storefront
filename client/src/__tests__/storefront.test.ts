@@ -239,13 +239,6 @@ describe('MOSES route policy', () => {
     expect(musicSource).toContain('target="_blank"');
     expect(navSource).toContain('{ label: "Music", path: "/music" }');
     expect(homeSource).toContain('href="/music"');
-    expect(homeSource).toContain('id="marketplace"');
-    expect(homeSource).toContain('MOSES SOG · Direct marketplace');
-    expect(homeSource).toContain('id="marketplace-grid"');
-    expect(homeSource).toContain('BUY CLARITY');
-    expect(homeSource).toContain('href="/church"');
-    expect(homeSource).toContain('href="/instantly"');
-    expect(homeSource).toContain('No placeholder merchandise.');
     expect(claritySource).toContain('href="/music"');
     expect(genesisSource).toContain('href="/music"');
     expect(listenSource).toContain('href="/music"');
@@ -517,5 +510,21 @@ describe('MOSES artist contact', () => {
     expect(source).toContain('wtgexodus@gmail.com');
     expect(source).not.toContain('booking@mosessog.com');
     expect(source).not.toContain('media@mosessog.com');
+  });
+});
+
+describe('MOSES marketplace separation', () => {
+  it('keeps the original homepage separate from the marketplace work page', () => {
+    const appSource = readFileSync(resolve(process.cwd(), 'client/src/App.tsx'), 'utf8');
+    const navSource = readFileSync(resolve(process.cwd(), 'client/src/components/GlobalNav.tsx'), 'utf8');
+    const homeSource = readFileSync(resolve(process.cwd(), 'client/src/pages/Home.tsx'), 'utf8');
+    const marketplaceSource = readFileSync(resolve(process.cwd(), 'client/src/pages/Marketplace.tsx'), 'utf8');
+    expect(appSource).toContain('path={"/marketplace"}');
+    expect(appSource).toContain("title: 'Marketplace — MOSES SOG'");
+    expect(navSource).toContain('{ label: "Marketplace", path: "/marketplace" }');
+    expect(homeSource).toContain('MUSIC FOR THE WORK.');
+    expect(homeSource).not.toContain('MOSES SOG · Direct marketplace');
+    expect(marketplaceSource).toContain('MOSES SOG · Direct marketplace');
+    expect(marketplaceSource).toContain('id="marketplace-grid"');
   });
 });

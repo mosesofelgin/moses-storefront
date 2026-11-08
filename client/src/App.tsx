@@ -29,6 +29,7 @@ const ROUTE_METADATA = {
   music: { title: 'MOSES SOG — Music', description: 'Listen to and own New Genesis and CLARITY, the studio albums from Moses. Stream free, buy direct, or find them on your favorite platform.', image: '/manus-storage/ChatGPTImageSep28,2026,07_34_57PM_14c05d91.png' },
   church: { title: 'CHURCH — MOSES SOG', description: 'Watch CHURCH by Moses ft Snoop, then take the full audio directly from MOSES SOG for a name-your-price contribution.', image: '/manus-storage/church-poster_8642bc0c.jpg' },
   instantly: { title: 'INSTANTLY: THE PROCESS — MOSES SOG', description: 'Ten songs. Ten videos. From the notebook to the mic. Hear the finished tracks and see the sessions behind them.', image: undefined },
+  marketplace: { title: 'Marketplace — MOSES SOG', description: 'Shop MOSES SOG projects directly: digital albums, visual releases, and archive recordings.', image: '/manus-storage/ChatGPTImageSep28,2026,07_34_57PM_14c05d91.png' },
 };
 
 function updateMeta(selector: string, content: string) {
@@ -70,6 +71,7 @@ const AiWithoutFear = lazy(() => import("./pages/AiWithoutFear"));
 const Music = lazy(() => import("./pages/Music"));
 const Church = lazy(() => import("./pages/Church"));
 const Instantly = lazy(() => import("./pages/Instantly"));
+const Marketplace = lazy(() => import("./pages/Marketplace"));
 
 function RouteFallback() {
   return (
@@ -90,6 +92,7 @@ function Router() {
       <Route path={"/music"} component={Music} />
       <Route path={"/church"} component={Church} />
       <Route path={"/instantly"} component={Instantly} />
+      <Route path={"/marketplace"} component={Marketplace} />
       <Route path={"/success"} component={Success} />
       <Route path={"/downloads"} component={Downloads} />
       <Route path={"/clarity"} component={ClarityProject} />
@@ -140,6 +143,8 @@ function App() {
         ? ROUTE_METADATA.church
       : currentPath.startsWith('/instantly')
         ? ROUTE_METADATA.instantly
+      : currentPath.startsWith('/marketplace')
+        ? ROUTE_METADATA.marketplace
       : currentPath.startsWith('/music')
         ? ROUTE_METADATA.music
       : currentPath.startsWith('/store')
