@@ -528,3 +528,22 @@ describe('MOSES marketplace separation', () => {
     expect(marketplaceSource).toContain('id="marketplace-grid"');
   });
 });
+
+describe('MOSES campaign link page', () => {
+  it('puts immediate listening, ownership, and release pathways before supporting links', () => {
+    const source = readFileSync(resolve(process.cwd(), 'client/src/pages/Links.tsx'), 'utf8');
+    expect(source).toContain('The current drop');
+    expect(source).toContain('href="/listen"');
+    expect(source).toContain('href="/clarity-sales"');
+    expect(source).toContain("route: '/instantly'");
+    expect(source).toContain("route: '/church'");
+    expect(source).toContain("route: '/dedication'");
+    expect(source).toContain('href="/music"');
+    expect(source).toContain('href="/store"');
+    expect(source).toContain('FINAL PRAYER');
+    expect(source).toContain('youtube.com/@MosesSOG');
+    expect(source).not.toContain('subscribe.addEmail');
+    expect(source.indexOf('id="featured-release"')).toBeLessThan(source.indexOf('id="link-page-pathways"'));
+    expect(source.indexOf('id="link-page-pathways"')).toBeLessThan(source.indexOf('id="links-videos"'));
+  });
+});
